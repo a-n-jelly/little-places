@@ -10,7 +10,8 @@ export default function PlaceCard({ place, onClick }) {
       onClick={() => onClick?.(place)}
       onKeyDown={(e) => e.key === 'Enter' && onClick?.(place)}
       data-testid="place-card"
-      className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+      className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer border-l-4"
+      style={{ borderLeftColor: color }}
     >
       <div className="flex justify-between items-start mb-2">
         <div>

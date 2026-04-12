@@ -5,3 +5,6 @@ dist/
 .env*.local
 .DS_Store
 *.log
+
+# Project notes — not part of the app
+state.md

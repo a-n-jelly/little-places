@@ -8,6 +8,7 @@ export function usePlaces() {
   const [search, setSearch]               = useState('')
   const [selectedStages, setSelectedStages]   = useState([])
   const [selectedAccess, setSelectedAccess]   = useState([])
+  const [selectedTypes, setSelectedTypes]     = useState([])
 
   // Load all places on mount
   useEffect(() => {
@@ -52,8 +53,12 @@ export function usePlaces() {
       )
     }
 
+    if (selectedTypes.length > 0) {
+      results = results.filter((p) => selectedTypes.includes(p.type))
+    }
+
     return results
-  }, [allPlaces, search, selectedStages, selectedAccess])
+  }, [allPlaces, search, selectedStages, selectedAccess, selectedTypes])
 
   function toggleStage(id) {
     setSelectedStages((prev) =>
@@ -64,6 +69,12 @@ export function usePlaces() {
   function toggleAccess(id) {
     setSelectedAccess((prev) =>
       prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]
+    )
+  }
+
+  function toggleType(type) {
+    setSelectedTypes((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
     )
   }
 
@@ -80,8 +91,10 @@ export function usePlaces() {
     setSearch,
     selectedStages,
     selectedAccess,
+    selectedTypes,
     toggleStage,
     toggleAccess,
+    toggleType,
     addPlace,
   }
 }

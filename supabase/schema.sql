@@ -51,3 +51,44 @@ create policy "Anyone can submit a place"
 create policy "Service role can update places"
   on places for update
   using (auth.role() = 'service_role');
+
+-- Events table
+create table if not exists events (
+  id            uuid primary key default gen_random_uuid(),
+  title         text not null,
+  place_id      uuid references places(id) on delete cascade,
+  day_of_week   text,           -- for recurring events (e.g. 'Monday')
+  time          text,           -- e.g. '10:00 AM'
+  age_range     text[] default '{}',
+  cost          text,
+  recurrence    text check (recurrence in ('weekly', 'monthly', 'one-off')),
+  date          date,           -- for one-off events
+  description   text,
+  is_seed       boolean default false,
+  created_at    timestamptz default now()
+);
+
+-- Index for querying events by place
+create index if not exists idx_events_place_id
+  on events (place_id);
+
+-- Index for querying by day of week (recurring events)
+create index if not exists idx_events_day_of_week
+  on events (day_of_week)
+  where day_of_week is not null;
+
+-- Index for querying one-off events by date
+create index if not exists idx_events_date
+  on events (date)
+  where date is not null;
+
+-- Row Level Security — public read, anyone can insert
+alter table events enable row level security;
+
+create policy "Anyone can read events"
+  on events for select
+  using (true);
+
+create policy "Anyone can submit an event"
+  on events for insert
+  with check (true);
