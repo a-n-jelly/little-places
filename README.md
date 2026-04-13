@@ -1,6 +1,6 @@
 # Little Places 🌿
 
-When I lived in London, there was a Google Maps list doing the rounds — hundreds of baby-friendly spots, crowdsourced by parents. Nobody could agree on what "baby-friendly" meant, the notes were inconsistent, and there was no way to filter for the thing you actually needed. A changing table. A quiet room. Somewhere that wouldn't judge you for a meltdown. Seattle has the same problem, and a Google Maps list with the same vibes.
+When I lived in London, there was a Google Maps list doing the rounds with hundreds of baby-friendly spots, crowdsourced by parents. Nobody could agree on what "baby-friendly" meant, the notes were inconsistent, and there was no way to filter for the thing you actually needed. A changing table. A quiet room. Somewhere that wouldn't judge you for a meltdown. Seattle has the same problem, and a Google Maps list with the same vibes.
 
 Little Places is what that list should have been.
 
@@ -10,13 +10,15 @@ Little Places is what that list should have been.
 
 ## The problem
 
-Google Maps doesn't know what a Changing Places facility is. Facebook groups are full of recommendations with no useful detail. Blogs go stale. And a tired parent doesn't have bandwidth to cross-reference all of it, check the weather, and figure out whether today is an indoor or outdoor situation.
+Google Maps doesn't know what a Changing Places facility is. Facebook groups and subreddits are full of recommendations but not in a single place. Blogs go stale. And a tired parent doesn't have bandwidth to cross-reference all of it, check the weather, and figure out whether today is an indoor or outdoor situation.
 
 ---
 
 ## Why can't I just ask ChatGPT?
 
-You could build a project, feed it your list, and get reasonable answers — but you'd be maintaining that data yourself, it would go stale the moment a place closes, and it still wouldn't know what the weather is doing or what's actually on this week.
+You can. It'll give you a confident list of places that may or may not still exist, with no idea what the weather is doing today, no knowledge of your kid's age, and no connection to what other Seattle parents actually recommend.
+
+If you're tech savvy, you could build an LLM project, feed it your list, and get reasonable answers — but you'd be maintaining that data yourself, it would go stale the moment a place closes, and it still wouldn't know what the weather is doing or what's actually on this week.
 
 Little Places uses an agent, not just a language model. When you ask it a question, it queries a live database of parent-vetted spots, checks current Seattle weather, and pulls real events happening this week. The answer is grounded in data that updates, not a document you last edited three months ago.
 
@@ -34,10 +36,10 @@ Little Places uses an agent, not just a language model. When you ask it a questi
 
 ## What's built
 
-- AI agent home screen with agentic tool loop (places, events, weather)
+- AI agent home screen with agentic tool loop (places, events, weather). *Currently seeded with dummy data. Plans to add community submission are in place*
 - Mapbox map view with sidebar, desktop and mobile
 - Filters: developmental stage (Baby through Tweens), accessibility, place type
-- Crowdsourced submissions, live in Supabase
+- Crowdsourced submissions, live in Supabase *Built but no data currently added through live submissions*
 - 39 unit tests
 
 ## What's next
@@ -49,7 +51,7 @@ Little Places uses an agent, not just a language model. When you ask it a questi
 
 ---
 
-See [DECISIONS.md](DECISIONS.md) for architectural decisions and their rationale.
-See [EVAL.md](EVAL.md) for how we measure whether the agent is actually giving good answers.
+See [DECISIONS.md](DECISIONS.md) for product,design and architectural decisions and their rationale. 
+See [EVAL.md](EVAL.md) for how we measure whether the agent is actually giving good answers. (Draft 1)
 
-*Built in Seattle, by a parent who still misses that London list. Just not what it became. 🌿*
+*Built in Seattle, by a parent who doesn't have the bandwith to plan. 🌿*
