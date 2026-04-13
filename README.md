@@ -28,7 +28,7 @@ Little Places uses an agent, not just a language model. When you ask it a questi
 
 **Agent-first, not map-first.** Most parents don't want to browse — they want to be told what to do. The default experience is a conversation. Browse mode is there for when they do want to explore.
 
-**Accessibility as structure.** Changing Places, sensory-friendly, autism-friendly, quiet spaces are first-class filters. The London list taught me that unstructured data is as good as no data.
+**Function over polish for v1.** The design will be revisited, but the structural decisions were made with that in mind to avoid a full refactor when that time comes.
 
 **No accounts for v1.** Anyone can submit a place. Reducing friction on contribution matters more than attribution right now.
 
@@ -48,7 +48,7 @@ Little Places uses an agent, not just a language model. When you ask it a questi
 - Crowdsourced submissions, live in Supabase *Built but no data currently added through live submissions*
 - 39 unit tests
 
-## What's next
+## What's next (high level and NOT prioritised)
 
 - Place submission wired into the map view
 - Geocoding so submitted places appear as markers
