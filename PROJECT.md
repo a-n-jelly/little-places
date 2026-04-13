@@ -59,7 +59,7 @@ Populate `.env` with working credentials so `pnpm dev` runs without errors.
 
 ## [T03] Make AgentPanel the app's landing view
 **Phase:** 2 — Agent home screen
-**Status:** todo
+**Status:** done
 
 ### Goal
 Replace the current list-first layout in `App.jsx` with a two-screen flow: agent home by default, with a way to switch to the browse/list view.
@@ -99,7 +99,7 @@ Confirm the `search_places` tool in `AgentPanel.jsx` works end-to-end with live 
 
 ## [T05] Migrate AgentPanel from Anthropic SDK to Gemini
 **Phase:** 2 — Agent home screen
-**Status:** todo
+**Status:** done — using Anthropic SDK with claude-haiku-4-5-20251001; Gemini deferred (billing issues, revisit later)
 **Blocks:** Vercel deploy (T02b)
 
 ### Goal

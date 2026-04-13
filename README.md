@@ -72,5 +72,6 @@ PRs to `main` require passing tests.
 ---
 
 See [DECISIONS.md](DECISIONS.md) for architectural decisions and their rationale.
+See [EVAL.md](EVAL.md) for the agent evaluation plan — how we know it's working well.
 
 *Built by a Seattle parent who got tired of Google Lists. 🌿*
