@@ -79,7 +79,7 @@ Replace the current list-first layout in `App.jsx` with a two-screen flow: agent
 
 ## [T04] Wire AgentPanel's search_places tool to real Supabase data
 **Phase:** 2 — Agent home screen
-**Status:** todo
+**Status:** done
 
 ### Goal
 Confirm the `search_places` tool in `AgentPanel.jsx` works end-to-end with live data and handles empty results and errors gracefully.
@@ -143,7 +143,7 @@ First live deploy. App should be functional: agent home screen works, browse/lis
 
 ## [T06a] Build MapView component
 **Phase:** 3 — Map view
-**Status:** in progress
+**Status:** done
 **Blocks:** T06b
 
 ### Goal
@@ -166,7 +166,7 @@ Build the Mapbox map as a standalone component — markers, colours, click handl
 
 ## [T06b] Build BrowseLayout (sidebar + map split)
 **Phase:** 3 — Map view
-**Status:** todo
+**Status:** done
 **Depends on:** T06a
 **Blocks:** T06c
 
@@ -194,7 +194,7 @@ Full browse layout: sidebar (search + collapsible filters + list or place detail
 
 ## [T06c] Update App.jsx navigation for map view
 **Phase:** 3 — Map view
-**Status:** todo
+**Status:** done
 **Depends on:** T06b
 
 ### Goal
@@ -260,24 +260,44 @@ Add geocoding (or manual lat/lng input) to `SubmitPlaceForm` so submitted places
 
 ---
 
-## [T11] Tighten loading, error, and empty states
+## [T11] Audit and tighten all unhappy states (loading, error, empty)
 **Phase:** 4 — Submission & list polish
 **Status:** todo
 
 ### Goal
-Ensure every data-dependent view has a clear loading state, a useful error state, and a non-confusing empty state.
+Audit every data-dependent view for missing or poor loading, error, and empty states. Fix anything that silently fails or confuses.
 
 ### Acceptance criteria
-- [ ] Place list shows a skeleton or spinner while `usePlaces` is loading (currently shows a plain text message — acceptable, but should be visually distinct)
+- [ ] Place list shows a skeleton or spinner while `usePlaces` is loading (currently plain text)
 - [ ] Error message in place list includes a "Retry" button that calls `load()` again
 - [ ] Empty state text distinguishes between "no places in the DB yet" vs "no places match your filters"
-- [ ] `AgentPanel` error state shows a user-readable message (already present — verify it covers network errors, not just API errors)
-- [ ] `MapView` error state renders the map container (not blank) with an overlay message
+- [ ] `AgentPanel` error state covers network errors, not just API errors (verify existing message)
+- [ ] `MapView`: if Mapbox token is missing or invalid, render the map container with an overlay error message rather than a blank/crashed view
+- [ ] `BrowseLayout` sidebar error and empty states are consistent with the above
 
 ### Tests to write
 - Unit (`usePlaces.test.js`): mock `getPlaces` throwing — assert `error` state is set and `loading` is false
 - Unit: assert retry button calls `load` again (spy on `getPlaces`)
 - Unit (`App.test.jsx`): mock empty Supabase response — assert correct empty state message renders
+
+---
+
+## [T06d] Mobile UX polish — bottom sheet drag + BrowseLayout tests
+**Phase:** 3 — Map view
+**Status:** todo — blocked on design settling
+**Depends on:** T06b
+
+### Goal
+Polish the mobile browse experience and lock in BrowseLayout tests once the design is stable. Holding these together because the tests aren't worth writing until the layout stops changing.
+
+### Acceptance criteria
+- [ ] Bottom sheet supports swipe/drag gesture (not just tap-to-toggle) — consider `@use-gesture/react` or a lightweight equivalent
+- [ ] Drag handle looks non-interactive if drag isn't supported; remove the visual affordance if we decide not to build it
+- [ ] BrowseLayout unit tests written: sidebar renders list by default, selecting a place switches to detail, "← Back to list" restores list, filter changes propagate to marker count and list
+
+### Notes
+- Bottom sheet drag is a design decision — revisit after the map view has been used on real devices
+- Don't write BrowseLayout tests until the layout and interactions are confirmed; they'll just need rewriting
 
 ---
 
