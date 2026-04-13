@@ -1,18 +1,27 @@
-# 🌿 Little Places
+# Little Places 🌿
 
-A crowdsourced, AI-powered directory of child and family-friendly places. Built for parents, by parents.
+A crowdsourced directory of child and family-friendly places in Seattle. Built for parents, by parents.
 
-**Stack:** React + Supabase + Anthropic API + Mapbox
+**Stack:** React + Vite + Tailwind + Supabase + Anthropic API + Mapbox
+
+---
+
+## What it does
+
+Open the app and ask the agent what to do today — it pulls real places from the database, checks the weather, and gives you a clear recommendation. No scrolling through lists, no guesswork.
+
+If you prefer to browse, switch to the list view to filter by age stage, accessibility needs, and place type. Anyone can submit a new place.
 
 ---
 
 ## Features
 
-- 🔍 **AI semantic search** — describe what you need in plain language
-- 👶 **Developmental stage filters** — Baby through Tweens+
-- ♿ **Accessibility-first** — Changing Places, sensory-friendly, autism-friendly
-- 📍 **Map + list view** — browse spatially or by search results  
-- ➕ **Crowdsourced** — anyone can submit a place
+- **AI agent home screen** — ask in plain language, get a specific recommendation
+- **Developmental stage filters** — Baby through Tweens
+- **Accessibility-first** — Changing Places, sensory-friendly, autism-friendly, quiet spaces
+- **Crowdsourced** — anyone can submit a place
+
+**In progress:** map view, semantic search, events
 
 ---
 
@@ -21,35 +30,47 @@ A crowdsourced, AI-powered directory of child and family-friendly places. Built 
 ```bash
 git clone https://github.com/yourusername/little-places.git
 cd little-places
-npm install
-cp .env.example .env   # fill in your keys
-npm run dev
+pnpm install
 ```
 
-See `.env.example` for required environment variables.
+Copy `.env.example` to `.env` and fill in your keys:
+
+```
+VITE_SUPABASE_URL=
+VITE_SUPABASE_ANON_KEY=
+VITE_ANTHROPIC_API_KEY=
+VITE_MAPBOX_TOKEN=
+```
+
+Then run the database setup (see below) and start the dev server:
+
+```bash
+pnpm dev
+```
 
 ## Database Setup
 
-Run `supabase/schema.sql` in your Supabase SQL editor.
+Run `supabase/schema.sql` then `supabase/seed.sql` in your Supabase SQL editor.
 
 ## Testing
 
 ```bash
-npm test                 # run all tests
-npm run test:watch       # watch mode
-npm run test:coverage    # with coverage report
+pnpm test                 # run all tests
+pnpm run test:watch       # watch mode
+pnpm run test:coverage    # with coverage report
 ```
 
-## Branching Strategy
+## Branching
 
 ```
 main   ← always deployable (Vercel auto-deploys)
-dev    ← integration branch
   └── feature/your-feature
 ```
 
-PRs to `main` require passing CI.
+PRs to `main` require passing tests.
 
 ---
+
+See [DECISIONS.md](DECISIONS.md) for architectural decisions and their rationale.
 
 *Built by a Seattle parent who got tired of Google Lists. 🌿*

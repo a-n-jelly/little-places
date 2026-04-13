@@ -190,7 +190,7 @@ export default function AgentPanel({ onBrowse }) {
       // Agentic loop — keep going until Claude stops using tools
       while (true) {
         const res = await client.messages.create({
-          model: 'claude-opus-4-6',
+          model: 'claude-haiku-4-5-20251001',
           max_tokens: 1024,
           system: SYSTEM_PROMPT,
           tools: TOOLS,
