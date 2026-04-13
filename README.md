@@ -1,77 +1,55 @@
 # Little Places 🌿
 
-A crowdsourced directory of child and family-friendly places in Seattle. Built for parents, by parents.
+When I lived in London, there was a Google Maps list doing the rounds — hundreds of baby-friendly spots, crowdsourced by parents. Nobody could agree on what "baby-friendly" meant, the notes were inconsistent, and there was no way to filter for the thing you actually needed. A changing table. A quiet room. Somewhere that wouldn't judge you for a meltdown. Seattle has the same problem, and a Google Maps list with the same vibes.
+
+Little Places is what that list should have been.
 
 **Stack:** React + Vite + Tailwind + Supabase + Anthropic API + Mapbox
 
 ---
 
-## What it does
+## The problem
 
-Open the app and ask the agent what to do today — it pulls real places from the database, checks the weather, and gives you a clear recommendation. No scrolling through lists, no guesswork.
-
-If you prefer to browse, switch to the list view to filter by age stage, accessibility needs, and place type. Anyone can submit a new place.
+Google Maps doesn't know what a Changing Places facility is. Facebook groups are full of recommendations with no useful detail. Blogs go stale. And a tired parent doesn't have bandwidth to cross-reference all of it, check the weather, and figure out whether today is an indoor or outdoor situation.
 
 ---
 
-## Features
+## Why can't I just ask ChatGPT?
 
-- **AI agent home screen** — ask in plain language, get a specific recommendation
-- **Developmental stage filters** — Baby through Tweens
-- **Accessibility-first** — Changing Places, sensory-friendly, autism-friendly, quiet spaces
-- **Crowdsourced** — anyone can submit a place
+You could build a project, feed it your list, and get reasonable answers — but you'd be maintaining that data yourself, it would go stale the moment a place closes, and it still wouldn't know what the weather is doing or what's actually on this week.
 
-**In progress:** map view, semantic search, events
+Little Places uses an agent, not just a language model. When you ask it a question, it queries a live database of parent-vetted spots, checks current Seattle weather, and pulls real events happening this week. The answer is grounded in data that updates, not a document you last edited three months ago.
 
 ---
 
-## Getting Started
+## Product decisions worth knowing
 
-```bash
-git clone https://github.com/yourusername/little-places.git
-cd little-places
-pnpm install
-```
+**Agent-first, not map-first.** Most parents don't want to browse — they want to be told what to do. The default experience is a conversation. Browse mode is there for when they do want to explore.
 
-Copy `.env.example` to `.env` and fill in your keys:
+**Accessibility as structure.** Changing Places, sensory-friendly, autism-friendly, quiet spaces are first-class filters. The London list taught me that unstructured data is as good as no data.
 
-```
-VITE_SUPABASE_URL=
-VITE_SUPABASE_ANON_KEY=
-VITE_ANTHROPIC_API_KEY=
-VITE_MAPBOX_TOKEN=
-```
+**No accounts for v1.** Anyone can submit a place. Reducing friction on contribution matters more than attribution right now.
 
-Then run the database setup (see below) and start the dev server:
+---
 
-```bash
-pnpm dev
-```
+## What's built
 
-## Database Setup
+- AI agent home screen with agentic tool loop (places, events, weather)
+- Mapbox map view with sidebar, desktop and mobile
+- Filters: developmental stage (Baby through Tweens), accessibility, place type
+- Crowdsourced submissions, live in Supabase
+- 39 unit tests
 
-Run `supabase/schema.sql` then `supabase/seed.sql` in your Supabase SQL editor.
+## What's next
 
-## Testing
-
-```bash
-pnpm test                 # run all tests
-pnpm run test:watch       # watch mode
-pnpm run test:coverage    # with coverage report
-```
-
-## Branching
-
-```
-main   ← always deployable (Vercel auto-deploys)
-  └── feature/your-feature
-```
-
-PRs to `main` require passing tests.
+- Place submission wired into the map view
+- Geocoding so submitted places appear as markers
+- Events surfaced through the agent
+- Semantic search via pgvector
 
 ---
 
 See [DECISIONS.md](DECISIONS.md) for architectural decisions and their rationale.
-See [EVAL.md](EVAL.md) for the agent evaluation plan — how we know it's working well.
+See [EVAL.md](EVAL.md) for how we measure whether the agent is actually giving good answers.
 
-*Built by a Seattle parent who got tired of Google Lists. 🌿*
+*Built in Seattle, by a parent who still misses that London list. Just not what it became. 🌿*
