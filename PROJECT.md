@@ -141,59 +141,74 @@ First live deploy. App should be functional: agent home screen works, browse/lis
 
 ## Phase 3 — Map view
 
-## [T06] Build MapView component with Mapbox
+## [T06a] Build MapView component
 **Phase:** 3 — Map view
-**Status:** todo
+**Status:** in progress
+**Blocks:** T06b
 
 ### Goal
-Create a `MapView` component that renders a Mapbox map centred on Seattle with a marker for each place that has `lat`/`lng` coordinates.
+Build the Mapbox map as a standalone component — markers, colours, click handler. No layout or sidebar.
 
 ### Acceptance criteria
-- [ ] `MapView` renders a full-viewport map using `react-map-gl` and `VITE_MAPBOX_TOKEN`
-- [ ] Each place with non-null `lat` and `lng` gets a marker on the map
-- [ ] Markers use a colour derived from `TYPE_COLORS` matching the place type
-- [ ] Clicking a marker opens a popup showing the place name, type, and address
-- [ ] Places without coordinates are silently skipped (no crash)
-- [ ] Map is accessible: markers have `aria-label` with the place name
+- [ ] Renders a Mapbox map centred on Seattle using `react-map-gl` and `VITE_MAPBOX_TOKEN`
+- [ ] Accepts `places` prop and `onSelectPlace(place)` callback
+- [ ] Each place with non-null `lat`/`lng` gets a marker coloured by `TYPE_COLORS[place.type]`
+- [ ] Clicking a marker calls `onSelectPlace(place)`
+- [ ] Places without coordinates are silently skipped
+- [ ] Markers have `aria-label` with the place name
 
 ### Tests to write
-- Unit (`MapView.test.jsx`): mock `react-map-gl` — assert one marker renders per place with valid coords
-- Unit (`MapView.test.jsx`): assert places with null `lat`/`lng` produce no marker
-- Unit (`MapView.test.jsx`): clicking a marker renders a popup with the place name
+- Unit (`MapView.test.jsx`): mock `react-map-gl` — assert markers render per place with valid coords
+- Assert null lat/lng produces no marker
+- Assert clicking marker calls `onSelectPlace`
 
 ---
 
-## [T07] Connect MapView to live Supabase data
+## [T06b] Build BrowseLayout (sidebar + map split)
 **Phase:** 3 — Map view
 **Status:** todo
+**Depends on:** T06a
+**Blocks:** T06c
 
 ### Goal
-`MapView` pulls places from Supabase (reusing `usePlaces`) and shows them as markers, keeping in sync with any active filters.
+Full browse layout: sidebar (search + collapsible filters + list or place detail) on left, map on right. Mobile: Google Maps pattern (map full screen, bottom sheet).
 
 ### Acceptance criteria
-- [ ] `MapView` accepts `places` as a prop (filtered list from `usePlaces`) so it stays in sync with the FilterBar
-- [ ] Map shows only the filtered subset when filters are active
-- [ ] Loading state: map renders but markers appear only once data has loaded
-- [ ] Error state: if `getPlaces` fails, the map still renders (empty) with an error message overlay
+- [ ] Desktop: 320px sidebar + map fills rest
+- [ ] Sidebar shows search, collapsible filter groups (Age, Type, Accessibility) with active count, and scrollable place list
+- [ ] Clicking a marker switches sidebar to single place detail + "← Back to list"
+- [ ] Filters update both map markers and list simultaneously
+- [ ] Mobile: map full screen, bottom sheet with search; pull up reveals list; marker tap shows place preview
+
+### New files
+- `src/components/BrowseLayout.jsx`
+- `src/components/FilterPanel.jsx` (collapsible filter groups, replaces FilterBar in browse context)
 
 ### Tests to write
-- Unit (`MapView.test.jsx`): assert marker count matches `places.length` prop
-- Integration: render `App` with MapView view active, mock Supabase returning 3 places, assert 3 markers appear
+- Assert sidebar renders place list by default
+- Assert selecting a place switches sidebar to detail view
+- Assert "← Back to list" restores list
+- Assert filter changes propagate to marker count and list
 
 ---
 
-## [T08] Wire up navigation between MapView and AgentPanel
+## [T06c] Update App.jsx navigation for map view
 **Phase:** 3 — Map view
 **Status:** todo
+**Depends on:** T06b
 
 ### Goal
-Create a clear three-way navigation between agent view, map view, and list view so parents can move between them without getting stuck.
+Wire BrowseLayout into App.jsx. "Browse the map →" goes to map view. Remove old list-only view.
 
 ### Acceptance criteria
-- [ ] "Browse the map →" in `AgentPanel` navigates to `MapView`
-- [ ] `MapView` has a button to return to `AgentPanel` and a toggle to switch to list view
-- [ ] List/browse view has a "Show map" button that opens `MapView`
-- [ ] Active view is tracked in state in `App.jsx` (values: `'agent'`, `'map'`, `'list'`)
+- [ ] View state updated: `'agent' | 'map'` (list is now inside BrowseLayout sidebar)
+- [ ] "Browse the map →" in AgentPanel renders BrowseLayout
+- [ ] "← Home" in BrowseLayout returns to AgentPanel
+
+### Tests to write
+- Assert app opens on AgentPanel
+- Assert "Browse the map →" renders BrowseLayout
+- Assert "← Home" returns to AgentPanel
 - [ ] Navigation is keyboard accessible (all buttons reachable by Tab, activated by Enter/Space)
 
 ### Tests to write
