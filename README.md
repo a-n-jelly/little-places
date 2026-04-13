@@ -32,6 +32,12 @@ Little Places uses an agent, not just a language model. When you ask it a questi
 
 **No accounts for v1.** Anyone can submit a place. Reducing friction on contribution matters more than attribution right now.
 
+**Mobile-first.** Designed for a parent with one hand and a buggy.
+
+**Events only in the agent, never on the map.** Browsing a map and asking "what's on today" are different jobs. Keeping them separate avoids cluttering the browse experience with time-sensitive data that needs context to be useful.
+
+**Client-side filtering.** Filters respond instantly without a round-trip to Supabase.
+
 ---
 
 ## What's built
