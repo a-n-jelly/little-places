@@ -19,7 +19,7 @@ Little Places is a crowdsourced directory of child-friendly spots in Seattle, bu
 
 ## [T01] Apply database schema and seed data
 **Phase:** 1 — Unblock & wire up
-**Status:** todo
+**Status:** done
 
 ### Goal
 Run `schema.sql` and `seed.sql` in Supabase so the app has a live database with real places to work with.
@@ -39,20 +39,19 @@ Run `schema.sql` and `seed.sql` in Supabase so the app has a live database with 
 
 ## [T02] Add environment variables and verify app starts
 **Phase:** 1 — Unblock & wire up
-**Status:** todo
+**Status:** done
 
 ### Goal
-Populate `.env` with working Supabase and Mapbox credentials so `pnpm dev` runs without errors.
+Populate `.env` with working credentials so `pnpm dev` runs without errors.
 
 ### Acceptance criteria
-- [ ] `.env` contains `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_MAPBOX_TOKEN`, `VITE_ANTHROPIC_API_KEY`
-- [ ] `pnpm dev` starts without throwing the "Missing Supabase environment variables" error from `supabase.js`
-- [ ] Opening the app in a browser shows the place list (not a blank screen or console errors)
-- [ ] `pnpm test` passes all existing tests (FilterBar, PlaceCard, SearchBar, filtering logic)
+- [x] `.env` contains `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_MAPBOX_TOKEN`, `VITE_GEMINI_API_KEY`
+- [x] `pnpm dev` starts without throwing the "Missing Supabase environment variables" error from `supabase.js`
+- [x] Opening the app in a browser shows the place list (not a blank screen or console errors)
+- [x] `pnpm test` passes all existing tests (FilterBar, PlaceCard, SearchBar, filtering logic)
 
 ### Tests to write
 - Unit: confirm `supabase.js` throws if env vars are missing — mock `import.meta.env` in a test
-- Manual smoke test: app loads, place cards render with data from Supabase
 
 ---
 
@@ -98,19 +97,45 @@ Confirm the `search_places` tool in `AgentPanel.jsx` works end-to-end with live 
 
 ---
 
-## [T05] Fix AgentPanel model name
+## [T05] Migrate AgentPanel from Anthropic SDK to Gemini
 **Phase:** 2 — Agent home screen
 **Status:** todo
+**Blocks:** Vercel deploy (T02b)
 
 ### Goal
-Update the hardcoded model in `AgentPanel.jsx` from the invalid `claude-opus-4-6` to a current supported model ID.
+Replace `@anthropic-ai/sdk` with the native `@google/generative-ai` SDK. The app currently has a Gemini API key but Anthropic SDK wired up — agent calls fail. Use the native SDK (not the OpenAI-compatible endpoint, which masks errors — same decision as idea-validator project).
 
 ### Acceptance criteria
-- [ ] `client.messages.create` uses a valid Anthropic model ID (e.g. `claude-opus-4-5` or `claude-sonnet-4-5`)
-- [ ] Agent queries complete without a model-not-found API error
+- [ ] `@anthropic-ai/sdk` removed from `package.json`; `@google/generative-ai` added
+- [ ] `AgentPanel.jsx` uses `GoogleGenerativeAI` client with `VITE_GEMINI_API_KEY`
+- [ ] Model set to `gemini-2.0-flash`
+- [ ] Tool definitions reformatted to Gemini `functionDeclarations` shape (same 3 tools: search_places, get_events, get_weather)
+- [ ] Agentic loop uses Gemini chat + `functionCalls()` pattern
+- [ ] `runTool()` logic unchanged
+- [ ] Agent responds correctly to a query like "indoor places for a toddler"
 
 ### Tests to write
-- Unit (`AgentPanel.test.jsx`): assert the model string passed to `messages.create` matches the expected value (prevents silent regressions when model names change)
+- Unit (`AgentPanel.test.jsx`): mock `@google/generative-ai` — assert a user message triggers `sendMessage`, and a function call causes `runTool` to be called
+- Unit (`AgentPanel.test.jsx`): assert the model string passed matches `gemini-2.0-flash`
+
+---
+
+## [T02b] Deploy to Vercel
+**Phase:** 2 — Agent home screen
+**Status:** done
+**Depends on:** T03, T05
+
+### Goal
+First live deploy. App should be functional: agent home screen works, browse/list view works, agent can query real data.
+
+### Acceptance criteria
+- [ ] Vercel project has env vars set: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_GEMINI_API_KEY`, `VITE_MAPBOX_TOKEN`
+- [ ] Production deploy serves the app without console errors
+- [ ] Agent responds to queries using live Supabase data
+- [ ] "Browse" navigates to the place list
+
+### Notes
+- Map view is not required for this deploy — "Browse the map →" routes to list view as placeholder until T06 is built
 
 ---
 
@@ -279,3 +304,20 @@ Deploy the `process-embeddings` Edge Function to Supabase and add a vector simil
 - Unit (`places.test.js`): mock the embedding API call and Supabase RPC — assert `semanticSearch` returns places sorted by similarity score
 - Unit: assert `semanticSearch('')` falls back to `getPlaces()` (no empty-string embedding call)
 - Note: the `process-embeddings` function currently generates a text summary rather than a true vector embedding — this needs to be updated to use an actual embedding model or a third-party embeddings API before deployment
+
+---
+
+## Backlog
+
+## [TB01] Move API keys server-side
+**Phase:** Backlog
+**Status:** todo
+
+### Goal
+Proxy Gemini (and any other) API calls through a server-side function so keys are not exposed in the browser bundle.
+
+### Notes
+- Currently `VITE_GEMINI_API_KEY` is bundled into the client-side JS and visible in DevTools — acceptable for v1 but not for a public app with real users
+- Mitigation for now: set a spending limit on the Gemini key in Google AI Studio
+- Only worth building if the app goes public and key abuse becomes a real risk — not needed for personal/demo use
+- Likely implementation: Vercel Edge Functions or a small API route that the frontend calls instead of hitting the AI provider directly

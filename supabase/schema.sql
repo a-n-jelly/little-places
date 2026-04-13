@@ -24,6 +24,7 @@ create table if not exists places (
   embedding         vector(1536),
   embedding_status  text default 'pending' check (embedding_status in ('pending', 'complete', 'failed')),
 
+  is_seed           boolean default false,
   created_at        timestamptz default now()
 );
 
@@ -39,15 +40,18 @@ create index if not exists idx_places_name_description
 -- Row Level Security — public read, anyone can insert
 alter table places enable row level security;
 
+drop policy if exists "Anyone can read places" on places;
 create policy "Anyone can read places"
   on places for select
   using (true);
 
+drop policy if exists "Anyone can submit a place" on places;
 create policy "Anyone can submit a place"
   on places for insert
   with check (true);
 
 -- Only service role (background job) can update
+drop policy if exists "Service role can update places" on places;
 create policy "Service role can update places"
   on places for update
   using (auth.role() = 'service_role');
@@ -85,10 +89,12 @@ create index if not exists idx_events_date
 -- Row Level Security — public read, anyone can insert
 alter table events enable row level security;
 
+drop policy if exists "Anyone can read events" on events;
 create policy "Anyone can read events"
   on events for select
   using (true);
 
+drop policy if exists "Anyone can submit an event" on events;
 create policy "Anyone can submit an event"
   on events for insert
   with check (true);

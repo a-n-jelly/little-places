@@ -4,8 +4,10 @@ import PlaceCard from './components/PlaceCard'
 import SearchBar from './components/SearchBar'
 import FilterBar from './components/FilterBar'
 import SubmitPlaceForm from './components/SubmitPlaceForm'
+import AgentPanel from './components/AgentPanel'
 
 function App() {
+  const [view, setView] = useState('agent') // 'agent' | 'list'
   const [showForm, setShowForm] = useState(false)
   const {
     places,
@@ -21,6 +23,22 @@ function App() {
     toggleType,
   } = usePlaces()
 
+  if (view === 'agent') {
+    return (
+      <div className="min-h-screen bg-slate-50">
+        <header className="bg-white border-b border-slate-100">
+          <div className="max-w-2xl mx-auto px-4 py-5">
+            <h1 className="text-2xl font-bold text-slate-800 mb-0.5">Little Places 🗺️</h1>
+            <p className="text-sm text-slate-400">Child-friendly spots in Seattle, by parents</p>
+          </div>
+        </header>
+        <main className="max-w-2xl mx-auto px-4">
+          <AgentPanel onBrowse={() => setView('list')} />
+        </main>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-slate-50">
       <header className="bg-white border-b border-slate-100">
@@ -30,12 +48,20 @@ function App() {
               <h1 className="text-2xl font-bold text-slate-800 mb-0.5">Little Places 🗺️</h1>
               <p className="text-sm text-slate-400">Child-friendly spots in Seattle, by parents</p>
             </div>
-            <button
-              onClick={() => setShowForm((v) => !v)}
-              className="rounded-full bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-600 transition-colors shadow-sm"
-            >
-              {showForm ? 'Cancel' : '+ Add place'}
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setView('agent')}
+                className="text-sm text-slate-500 hover:text-slate-700 transition-colors"
+              >
+                ← Home
+              </button>
+              <button
+                onClick={() => setShowForm((v) => !v)}
+                className="rounded-full bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-600 transition-colors shadow-sm"
+              >
+                {showForm ? 'Cancel' : '+ Add place'}
+              </button>
+            </div>
           </div>
         </div>
       </header>
