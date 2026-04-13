@@ -48,13 +48,16 @@ Little Places uses an agent, not just a language model. When you ask it a questi
 - Crowdsourced submissions, live in Supabase *Built but no data currently added through live submissions*
 - 39 unit tests
 
-## What's next (high level and NOT prioritised)
+## What's next
 
-- Place submission wired into the map view
-- Geocoding so submitted places appear as markers
-- Events surfaced through the agent
-- Semantic search via pgvector
-- V2 vision of agent
+**V1 — Where can I go?** *(current)*
+Child and family-friendly places in Seattle, vetted by parents. Ask the agent or browse the map. Filter by age, accessibility, and type. Submit a spot you love so other parents can find it too.
+
+**V2 — What can I do?**
+Events and activities surfaced through the agent, so you can ask what's actually on this week — not just where to go, but what's happening when you get there.
+
+**V3 — Plan my day**
+Itinerary planning — the agent combines places, events, and weather into a full day recommendation.
 
 ---
 
