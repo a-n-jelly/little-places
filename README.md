@@ -54,6 +54,7 @@ Little Places uses an agent, not just a language model. When you ask it a questi
 - Geocoding so submitted places appear as markers
 - Events surfaced through the agent
 - Semantic search via pgvector
+- V2 vision of agent
 
 ---
 
