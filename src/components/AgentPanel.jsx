@@ -164,7 +164,7 @@ Your job is to help parents figure out what to do with their kids today. When so
 If the weather is bad, lean toward indoor options. If they mention a specific age or need, use that to filter.
 Don't hedge or over-qualify. Just give them a good answer.`
 
-export default function AgentPanel({ onBrowse }) {
+export default function AgentPanel({ onBrowse, onSubmitPlace }) {
   const [query, setQuery] = useState('')
   const [response, setResponse] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -233,7 +233,7 @@ export default function AgentPanel({ onBrowse }) {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 py-12">
+    <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 py-12 relative">
       <div className="w-full max-w-xl">
         <h2 className="text-2xl font-semibold text-slate-800 mb-2">
           What are you looking for today?
@@ -289,6 +289,15 @@ export default function AgentPanel({ onBrowse }) {
           </button>
         </div>
       </div>
+
+      {/* FAB */}
+      <button
+        onClick={onSubmitPlace}
+        className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-green-600 text-white shadow-lg hover:bg-green-700 active:scale-95 transition-all flex items-center justify-center text-2xl z-30"
+        aria-label="Add a place"
+      >
+        +
+      </button>
     </div>
   )
 }

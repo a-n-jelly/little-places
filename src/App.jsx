@@ -2,9 +2,11 @@ import { useState } from 'react'
 import { usePlaces } from './hooks/usePlaces'
 import AgentPanel from './components/AgentPanel'
 import BrowseLayout from './components/BrowseLayout'
+import SubmitBottomSheet from './components/SubmitBottomSheet'
 
 function App() {
   const [view, setView] = useState('agent') // 'agent' | 'map'
+  const [showSubmitForm, setShowSubmitForm] = useState(false)
   const {
     places,
     loading,
@@ -17,7 +19,13 @@ function App() {
     toggleStage,
     toggleAccess,
     toggleType,
+    addPlace,
   } = usePlaces()
+
+  function handleSubmitSuccess(place) {
+    addPlace(place)
+    setShowSubmitForm(false)
+  }
 
   if (view === 'agent') {
     return (
@@ -29,27 +37,40 @@ function App() {
           </div>
         </header>
         <main className="max-w-2xl mx-auto px-4">
-          <AgentPanel onBrowse={() => setView('map')} />
+          <AgentPanel onBrowse={() => setView('map')} onSubmitPlace={() => setShowSubmitForm(true)} />
         </main>
+        <SubmitBottomSheet
+          isOpen={showSubmitForm}
+          onClose={() => setShowSubmitForm(false)}
+          onSuccess={handleSubmitSuccess}
+        />
       </div>
     )
   }
 
   return (
-    <BrowseLayout
-      places={places}
-      loading={loading}
-      error={error}
-      search={search}
-      setSearch={setSearch}
-      selectedStages={selectedStages}
-      selectedAccess={selectedAccess}
-      selectedTypes={selectedTypes}
-      onStageToggle={toggleStage}
-      onAccessToggle={toggleAccess}
-      onTypeToggle={toggleType}
-      onHome={() => setView('agent')}
-    />
+    <>
+      <BrowseLayout
+        places={places}
+        loading={loading}
+        error={error}
+        search={search}
+        setSearch={setSearch}
+        selectedStages={selectedStages}
+        selectedAccess={selectedAccess}
+        selectedTypes={selectedTypes}
+        onStageToggle={toggleStage}
+        onAccessToggle={toggleAccess}
+        onTypeToggle={toggleType}
+        onHome={() => setView('agent')}
+        onSubmitPlace={() => setShowSubmitForm(true)}
+      />
+      <SubmitBottomSheet
+        isOpen={showSubmitForm}
+        onClose={() => setShowSubmitForm(false)}
+        onSuccess={handleSubmitSuccess}
+      />
+    </>
   )
 }
 
