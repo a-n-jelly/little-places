@@ -284,20 +284,15 @@ Audit every data-dependent view for missing or poor loading, error, and empty st
 
 ## [T06d] Mobile UX polish — bottom sheet drag + BrowseLayout tests
 **Phase:** 3 — Map view
-**Status:** todo — blocked on design settling
+**Status:** done
 **Depends on:** T06b
 
-### Goal
-Polish the mobile browse experience and lock in BrowseLayout tests once the design is stable. Holding these together because the tests aren't worth writing until the layout stops changing.
-
-### Acceptance criteria
-- [ ] Bottom sheet supports swipe/drag gesture (not just tap-to-toggle) — consider `@use-gesture/react` or a lightweight equivalent
-- [ ] Drag handle looks non-interactive if drag isn't supported; remove the visual affordance if we decide not to build it
-- [ ] BrowseLayout unit tests written: sidebar renders list by default, selecting a place switches to detail, "← Back to list" restores list, filter changes propagate to marker count and list
+### What was done
+- Removed drag handle visual affordance from mobile bottom sheet (tap-to-toggle only)
+- BrowseLayout unit tests written and passing: sidebar renders list by default, selecting a place switches to detail, "← Back to list" restores list, filter changes propagate to markers and list
 
 ### Notes
-- Bottom sheet drag is a design decision — revisit after the map view has been used on real devices
-- Don't write BrowseLayout tests until the layout and interactions are confirmed; they'll just need rewriting
+- Drag gesture deferred to backlog (TB02) — revisit after used on real devices
 
 ---
 
@@ -343,6 +338,36 @@ Deploy the `process-embeddings` Edge Function to Supabase and add a vector simil
 ---
 
 ## Backlog
+
+## [TB02] Bottom sheet swipe/drag gesture
+**Phase:** Backlog
+**Status:** todo
+
+### Goal
+Add swipe/drag support to the mobile bottom sheet in `BrowseLayout` so users can drag it up and down rather than just tapping.
+
+### Notes
+- Tap-to-toggle is the current behaviour — functional but not native-feeling
+- Consider `@use-gesture/react` or a lightweight equivalent
+- Revisit after the map view has been used on real devices
+
+---
+
+## [TB03] Design refresh — Google Maps look and feel
+**Phase:** Backlog
+**Status:** in progress
+
+### Goal
+Update the visual design based on Figma. Changes are to look and feel (not structure) — map view and browse experience should feel more like Google Maps. Centralised theming via CSS custom properties and Tailwind tokens; no hardcoded design values in components.
+
+### Acceptance criteria
+- [ ] Figma CSS tokens wired in (`src/styles/theme.css`)
+- [ ] Quicksand font loaded via Fontsource
+- [ ] `tw-animate-css` installed and available
+- [ ] All components use theme tokens, no hardcoded colours/radii/spacing
+- [ ] No regression in existing tests
+
+---
 
 ## [TB01] Move API keys server-side
 **Phase:** Backlog

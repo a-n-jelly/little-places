@@ -1,4 +1,7 @@
-@import "tailwindcss";
+@import './fonts.css';
+@import './tailwind.css';
+@import './theme.css';
+
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -7,6 +10,6 @@
 body {
   margin: 0;
   min-width: 320px;
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Quicksand', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
