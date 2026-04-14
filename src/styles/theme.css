@@ -32,6 +32,7 @@
   --coral: #F28B6E;
   --yellow: #F9E4A0;
   --off-white: #FAFAF7;
+  --sky: #EAF4F8;
 }
 
 @theme inline {
@@ -65,6 +66,7 @@
   --color-coral: var(--coral);
   --color-yellow: var(--yellow);
   --color-off-white: var(--off-white);
+  --color-sky: var(--sky);
 }
 
 @layer base {

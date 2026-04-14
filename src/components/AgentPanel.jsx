@@ -20,22 +20,22 @@ const SUGGESTIONS = [
 function IllustrationPlaceholder() {
   return (
     <div className="relative w-full h-full flex items-end justify-center overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-[#EAF4F8] to-accent/30 rounded-2xl" />
+      <div className="absolute inset-0 bg-gradient-to-b from-sky to-accent/30 rounded-2xl" />
       <svg viewBox="0 0 400 100" className="absolute bottom-0 w-full" preserveAspectRatio="none">
-        <path d="M0 80 Q80 55 160 70 Q240 85 320 60 Q370 45 400 65 L400 100 L0 100Z" fill="#A8C5A0" fillOpacity="0.35" />
-        <path d="M0 90 Q100 70 200 80 Q300 90 400 78 L400 100 L0 100Z" fill="#A8C5A0" fillOpacity="0.5" />
+        <path d="M0 80 Q80 55 160 70 Q240 85 320 60 Q370 45 400 65 L400 100 L0 100Z" fill="var(--sage)" fillOpacity="0.35" />
+        <path d="M0 90 Q100 70 200 80 Q300 90 400 78 L400 100 L0 100Z" fill="var(--sage)" fillOpacity="0.5" />
       </svg>
       <svg viewBox="0 0 60 90" className="absolute bottom-4 right-16 h-20 opacity-20">
-        <path d="M28 85V45L25 30H35L32 45V85H28Z" fill="#2D3436" />
-        <path d="M18 35C18 28 22 22 30 22C38 22 42 28 42 35H18Z" fill="#2D3436" />
-        <circle cx="30" cy="20" r="4" fill="#2D3436" />
+        <path d="M28 85V45L25 30H35L32 45V85H28Z" fill="var(--foreground)" />
+        <path d="M18 35C18 28 22 22 30 22C38 22 42 28 42 35H18Z" fill="var(--foreground)" />
+        <circle cx="30" cy="20" r="4" fill="var(--foreground)" />
       </svg>
       <svg viewBox="0 0 100 80" className="relative h-16 mb-1 opacity-40">
-        <circle cx="28" cy="28" r="8" fill="#A8C5A0" />
-        <path d="M20 42C20 36 23 34 28 34C33 34 36 36 36 42V58H20V42Z" fill="#A8C5A0" />
-        <path d="M36 50H60L65 38C65 34 60 32 56 32H48" stroke="#2D3436" strokeWidth="3" strokeLinecap="round" />
-        <circle cx="44" cy="58" r="5" stroke="#2D3436" strokeWidth="2.5" fill="none" />
-        <circle cx="60" cy="58" r="5" stroke="#2D3436" strokeWidth="2.5" fill="none" />
+        <circle cx="28" cy="28" r="8" fill="var(--sage)" />
+        <path d="M20 42C20 36 23 34 28 34C33 34 36 36 36 42V58H20V42Z" fill="var(--sage)" />
+        <path d="M36 50H60L65 38C65 34 60 32 56 32H48" stroke="var(--foreground)" strokeWidth="3" strokeLinecap="round" />
+        <circle cx="44" cy="58" r="5" stroke="var(--foreground)" strokeWidth="2.5" fill="none" />
+        <circle cx="60" cy="58" r="5" stroke="var(--foreground)" strokeWidth="2.5" fill="none" />
       </svg>
     </div>
   )

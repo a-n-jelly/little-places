@@ -37,7 +37,7 @@ export default function MapView({ places = [], onSelectPlace }) {
             aria-label={place.name}
             title={place.name}
             className="w-4 h-4 rounded-full border-2 border-white shadow-md cursor-pointer transition-transform hover:scale-125 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500"
-            style={{ backgroundColor: TYPE_COLORS[place.type] ?? '#94a3b8' }}
+            style={{ backgroundColor: TYPE_COLORS[place.type] ?? 'var(--muted-foreground)' }}
           />
         </Marker>
       ))}
@@ -51,9 +51,9 @@ export default function MapView({ places = [], onSelectPlace }) {
           closeOnClick={false}
         >
           <div className="p-1 min-w-[160px]">
-            <p className="font-semibold text-slate-800 text-sm leading-tight">{popupPlace.name}</p>
-            <p className="text-xs text-slate-500 mt-0.5">{popupPlace.type}</p>
-            <p className="text-xs text-slate-400 mt-0.5 leading-snug">{popupPlace.address}</p>
+            <p className="font-semibold text-foreground text-sm leading-tight">{popupPlace.name}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">{popupPlace.type}</p>
+            <p className="text-xs text-muted-foreground/70 mt-0.5 leading-snug">{popupPlace.address}</p>
           </div>
         </Popup>
       )}
