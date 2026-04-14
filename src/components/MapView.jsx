@@ -1,11 +1,38 @@
 import { useState, useCallback } from 'react'
 import Map, { Marker, Popup } from 'react-map-gl/mapbox'
 import 'mapbox-gl/dist/mapbox-gl.css'
-import { TYPE_COLORS } from '../lib/constants'
+import { TYPE_COLORS, CAT_CFG } from '../lib/constants'
 
 const SEATTLE_CENTER = { longitude: -122.33, latitude: 47.60 }
 
-export default function MapView({ places = [], onSelectPlace }) {
+function DropPin({ color, emoji, selected }) {
+  const W = selected ? 38 : 32
+  const H = selected ? 48 : 40
+  const emojiSize = selected ? 16 : 13
+  const bulbTopPct = (11 / 30) * 100
+
+  return (
+    <div style={{ position: 'relative', width: W, height: H, filter: 'drop-shadow(0 3px 8px rgba(0,0,0,0.18))', cursor: 'pointer' }}>
+      <svg width={W} height={H} viewBox="0 0 24 30" fill="none">
+        <path d="M12 30C12 30 22 19 22 11C22 5.47715 17.5228 1 12 1C6.47715 1 2 5.47715 2 11C2 19 12 30 12 30Z" fill={color} />
+        <circle cx="12" cy="11" r="8.5" fill="white" />
+      </svg>
+      <span style={{
+        position: 'absolute',
+        top: `${bulbTopPct}%`,
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        fontSize: emojiSize,
+        lineHeight: 1,
+        pointerEvents: 'none',
+      }}>
+        {emoji}
+      </span>
+    </div>
+  )
+}
+
+export default function MapView({ places = [], onSelectPlace, selectedPlace }) {
   const [popupPlace, setPopupPlace] = useState(null)
 
   const handleMarkerClick = useCallback((e, place) => {
@@ -33,12 +60,13 @@ export default function MapView({ places = [], onSelectPlace }) {
           anchor="bottom"
           onClick={(e) => handleMarkerClick(e, place)}
         >
-          <button
-            aria-label={place.name}
-            title={place.name}
-            className="w-4 h-4 rounded-full border-2 border-white shadow-md cursor-pointer transition-transform hover:scale-125 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500"
-            style={{ backgroundColor: TYPE_COLORS[place.type] ?? 'var(--muted-foreground)' }}
-          />
+          <button aria-label={place.name} title={place.name} className="focus:outline-none">
+            <DropPin
+              color={selectedPlace?.id === place.id ? 'var(--coral)' : (TYPE_COLORS[place.type] ?? 'var(--muted-foreground)')}
+              emoji={CAT_CFG[place.type]?.emoji ?? '📍'}
+              selected={selectedPlace?.id === place.id}
+            />
+          </button>
         </Marker>
       ))}
 
