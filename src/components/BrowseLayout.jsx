@@ -156,15 +156,14 @@ export default function BrowseLayout({
         <div
           className={`absolute bottom-0 left-0 right-0 z-10 bg-white rounded-t-2xl shadow-2xl transition-all duration-300 ${sheetHeights[sheetState]} flex flex-col`}
         >
-          {/* Drag handle + toggle */}
+          {/* Tap to expand/collapse */}
           <button
             onClick={() => setSheetState((s) => s === 'peek' ? 'list' : 'peek')}
             className="flex flex-col items-center pt-3 pb-2 w-full"
             aria-label={sheetState === 'peek' ? 'Show place list' : 'Collapse'}
           >
-            <span className="w-10 h-1 bg-slate-200 rounded-full" />
             {sheetState === 'peek' && (
-              <span className="text-xs text-slate-400 mt-1.5">
+              <span className="text-xs text-slate-400">
                 {loading ? 'Loading…' : `${places.length} places`}
               </span>
             )}
