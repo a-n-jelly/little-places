@@ -17,6 +17,7 @@ export default function BrowseLayout({
   onAccessToggle,
   onTypeToggle,
   onHome,
+  onSubmitPlace,
 }) {
   const [selectedPlace, setSelectedPlace] = useState(null)
   // Mobile bottom sheet: 'peek' | 'list' | 'detail'
@@ -116,6 +117,14 @@ export default function BrowseLayout({
         {/* Map */}
         <div className="flex-1 relative">
           <MapView places={places} onSelectPlace={handleSelectPlace} />
+          {/* FAB */}
+          <button
+            onClick={onSubmitPlace}
+            className="absolute bottom-6 right-6 w-14 h-14 rounded-full bg-green-600 text-white shadow-lg hover:bg-green-700 active:scale-95 transition-all flex items-center justify-center text-2xl z-10"
+            aria-label="Add a place"
+          >
+            +
+          </button>
         </div>
       </div>
 
@@ -132,6 +141,15 @@ export default function BrowseLayout({
           className="absolute top-4 left-4 z-10 bg-white rounded-full px-3 py-1.5 text-sm text-slate-600 shadow-md border border-slate-200"
         >
           ← Home
+        </button>
+
+        {/* FAB — positioned above bottom sheet */}
+        <button
+          onClick={onSubmitPlace}
+          className="absolute bottom-20 right-4 z-20 w-12 h-12 rounded-full bg-green-600 text-white shadow-lg hover:bg-green-700 active:scale-95 transition-all flex items-center justify-center text-2xl"
+          aria-label="Add a place"
+        >
+          +
         </button>
 
         {/* Bottom sheet */}

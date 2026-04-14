@@ -16,10 +16,17 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",
     "@supabase/supabase-js": "^2.98.0",
+    "lucide-react": "^1.8.0",
     "mapbox-gl": "^3.19.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-map-gl": "^8.1.0"
+    "react-map-gl": "^8.1.0",
+    "vaul": "^1.1.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "html-encoding-sniffer": "^5.0.0"
+    }
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
@@ -36,6 +43,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "happy-dom": "^20.9.0",
     "jsdom": "^28.1.0",
     "postcss": "^8.5.8",
     "tailwindcss": "^4.2.1",

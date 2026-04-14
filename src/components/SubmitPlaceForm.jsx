@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { submitPlace } from '../lib/places'
 import { STAGES, ACCESSIBILITY_TAGS, PLACE_TAGS, PLACE_TYPES } from '../lib/constants'
 
@@ -11,12 +11,21 @@ const EMPTY_FORM = {
   accessibility: [],
   tags: [],
   submitted_by: '',
+  lat: null,
+  lng: null,
 }
 
 export default function SubmitPlaceForm({ onSuccess, onCancel }) {
   const [form, setForm] = useState(EMPTY_FORM)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(null)
+
+  // Venue search state
+  const [venueQuery, setVenueQuery] = useState('')
+  const [venueResults, setVenueResults] = useState([])
+  const [venueSearching, setVenueSearching] = useState(false)
+  const [venueSelected, setVenueSelected] = useState(false)
+  const debounceRef = useRef(null)
 
   function setField(field, value) {
     setForm((f) => ({ ...f, [field]: value }))
@@ -31,6 +40,49 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
     }))
   }
 
+  function handleVenueQueryChange(e) {
+    const q = e.target.value
+    setVenueQuery(q)
+    setVenueSelected(false)
+    setField('name', q)
+
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    if (!q.trim() || q.length < 3) {
+      setVenueResults([])
+      return
+    }
+
+    debounceRef.current = setTimeout(async () => {
+      setVenueSearching(true)
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q + ' Seattle')}&format=json&limit=5&countrycodes=us`,
+          { headers: { 'Accept-Language': 'en' } }
+        )
+        const data = await res.json()
+        setVenueResults(data)
+      } catch {
+        setVenueResults([])
+      } finally {
+        setVenueSearching(false)
+      }
+    }, 400)
+  }
+
+  function selectVenue(venue) {
+    const displayName = venue.display_name.split(',').slice(0, 3).join(',')
+    setVenueQuery(venue.display_name.split(',')[0])
+    setForm((f) => ({
+      ...f,
+      name: venue.display_name.split(',')[0],
+      address: displayName,
+      lat: parseFloat(venue.lat),
+      lng: parseFloat(venue.lon),
+    }))
+    setVenueResults([])
+    setVenueSelected(true)
+  }
+
   async function handleSubmit(e) {
     e.preventDefault()
     setError(null)
@@ -38,6 +90,8 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
     try {
       const place = await submitPlace(form)
       setForm(EMPTY_FORM)
+      setVenueQuery('')
+      setVenueSelected(false)
       onSuccess?.(place)
     } catch (err) {
       setError(err.message)
@@ -48,18 +102,55 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {/* Name */}
-      <div>
+
+      {/* Venue search */}
+      <div className="relative">
         <label className="block text-sm font-medium text-slate-700 mb-1">
           Place name <span className="text-red-400">*</span>
         </label>
         <input
           type="text"
           required
-          value={form.name}
-          onChange={(e) => setField('name', e.target.value)}
-          placeholder="e.g. Green Lake Park"
+          value={venueQuery}
+          onChange={handleVenueQueryChange}
+          placeholder="Search for a venue…"
           className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+          autoComplete="off"
+        />
+        {venueSearching && (
+          <p className="text-xs text-slate-400 mt-1">Searching…</p>
+        )}
+        {venueResults.length > 0 && (
+          <ul className="absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-md text-sm overflow-hidden">
+            {venueResults.map((v) => (
+              <li key={v.place_id}>
+                <button
+                  type="button"
+                  onClick={() => selectVenue(v)}
+                  className="w-full text-left px-3 py-2 hover:bg-slate-50 text-slate-700 truncate"
+                >
+                  {v.display_name}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+        {venueSelected && (
+          <p className="text-xs text-green-600 mt-1">✓ Location found</p>
+        )}
+      </div>
+
+      {/* Address — auto-filled, editable */}
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-1">
+          Address <span className="text-slate-400 font-normal">(auto-filled)</span>
+        </label>
+        <input
+          type="text"
+          value={form.address}
+          onChange={(e) => setField('address', e.target.value)}
+          placeholder="Auto-filled when you select a venue"
+          className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 text-slate-500"
         />
       </div>
 
@@ -81,28 +172,12 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
         </select>
       </div>
 
-      {/* Address */}
-      <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1">
-          Address <span className="text-red-400">*</span>
-        </label>
-        <input
-          type="text"
-          required
-          value={form.address}
-          onChange={(e) => setField('address', e.target.value)}
-          placeholder="e.g. 7201 E Green Lake Dr N, Seattle"
-          className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
-        />
-      </div>
-
       {/* Description */}
       <div>
         <label className="block text-sm font-medium text-slate-700 mb-1">
-          Description <span className="text-red-400">*</span>
+          Description <span className="text-slate-400 font-normal">(optional)</span>
         </label>
         <textarea
-          required
           rows={3}
           value={form.description}
           onChange={(e) => setField('description', e.target.value)}
@@ -211,7 +286,7 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
         <button
           type="submit"
           disabled={submitting}
-          className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+          className="flex-1 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50"
         >
           {submitting ? 'Submitting…' : 'Submit place'}
         </button>
