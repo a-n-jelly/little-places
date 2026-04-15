@@ -35,6 +35,14 @@ function DropPin({ color, emoji, selected }) {
 export default function MapView({ places = [], onSelectPlace, selectedPlace }) {
   const [popupPlace, setPopupPlace] = useState(null)
 
+  if (!import.meta.env.VITE_MAPBOX_TOKEN) {
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-off-white">
+        <p className="text-sm text-destructive font-medium">Map unavailable — Mapbox token is missing</p>
+      </div>
+    )
+  }
+
   const handleMarkerClick = useCallback((e, place) => {
     e.originalEvent?.stopPropagation()
     setPopupPlace(place)

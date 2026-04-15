@@ -33,8 +33,10 @@ const places = [
 
 const defaultProps = {
   places,
+  allPlaces: places,
   loading: false,
   error: null,
+  onRetry: vi.fn(),
   search: '',
   setSearch: vi.fn(),
   selectedStages: [],
@@ -90,5 +92,30 @@ describe('BrowseLayout', () => {
     render(<BrowseLayout {...defaultProps} />)
     fireEvent.click(screen.getAllByRole('button', { name: /add a place/i })[0])
     expect(defaultProps.onSubmitPlace).toHaveBeenCalledTimes(1)
+  })
+
+  // ── T11: unhappy states ──────────────────────────────────────────────────
+
+  it('shows a loading skeleton while loading', () => {
+    render(<BrowseLayout {...defaultProps} loading={true} places={[]} allPlaces={[]} />)
+    expect(screen.getByLabelText('Loading places')).toBeInTheDocument()
+  })
+
+  it('shows error message and retry button on error', () => {
+    const onRetry = vi.fn()
+    render(<BrowseLayout {...defaultProps} loading={false} error="Failed to load" places={[]} allPlaces={[]} onRetry={onRetry} />)
+    expect(screen.getAllByText('Failed to load').length).toBeGreaterThan(0)
+    fireEvent.click(screen.getAllByRole('button', { name: /retry/i })[0])
+    expect(onRetry).toHaveBeenCalledTimes(1)
+  })
+
+  it('shows "no places in the directory yet" when allPlaces is empty', () => {
+    render(<BrowseLayout {...defaultProps} places={[]} allPlaces={[]} />)
+    expect(screen.getAllByText(/no places in the directory yet/i).length).toBeGreaterThan(0)
+  })
+
+  it('shows "no spots match your filters" when allPlaces has items but filtered is empty', () => {
+    render(<BrowseLayout {...defaultProps} places={[]} allPlaces={places} />)
+    expect(screen.getAllByText(/no spots match your filters/i).length).toBeGreaterThan(0)
   })
 })

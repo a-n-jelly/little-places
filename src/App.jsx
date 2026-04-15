@@ -22,8 +22,10 @@ function App() {
   const [showSubmitForm, setShowSubmitForm] = useState(false)
   const {
     places,
+    allPlaces,
     loading,
     error,
+    load,
     search,
     setSearch,
     selectedStages,
@@ -79,8 +81,10 @@ function App() {
         ) : (
           <BrowseLayout
             places={places}
+            allPlaces={allPlaces}
             loading={loading}
             error={error}
+            onRetry={load}
             search={search}
             setSearch={setSearch}
             selectedStages={selectedStages}

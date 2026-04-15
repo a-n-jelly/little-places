@@ -120,8 +120,10 @@ function PlaceListRow({ place, isSelected, onClick }) {
 
 export default function BrowseLayout({
   places,
+  allPlaces,
   loading,
   error,
+  onRetry,
   search,
   setSearch,
   selectedStages,
@@ -138,7 +140,7 @@ export default function BrowseLayout({
   const [likedIds, setLikedIds] = useState([])
   const [activeCat, setActiveCat] = useState('all')
 
-  const filteredPlaces = activeCat === 'all'
+  const filteredPlaces = places || activeCat === 'all'
     ? places
     : places.filter(p => p.type === activeCat)
 
@@ -254,18 +256,45 @@ export default function BrowseLayout({
                       {loading ? 'Loading…' : `${filteredPlaces.length} spot${filteredPlaces.length !== 1 ? 's' : ''} nearby`}
                     </p>
                   </div>
-                  {error && (
-                    <p className="text-center text-destructive py-8 text-sm px-5">{error}</p>
+                  {loading && (
+                    <div className="px-5 pt-2 space-y-3" aria-label="Loading places">
+                      {[...Array(5)].map((_, i) => (
+                        <div key={i} className="flex items-center gap-3 animate-pulse">
+                          <div className="w-10 h-10 rounded-xl bg-black/[0.07] flex-shrink-0" />
+                          <div className="flex-1 space-y-1.5">
+                            <div className="h-3 bg-black/[0.07] rounded-full w-3/4" />
+                            <div className="h-2.5 bg-black/[0.05] rounded-full w-1/2" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   )}
-                  {!loading && !error && filteredPlaces.length === 0 && (
-                    <div className="text-center py-16 px-6">
-                      <p className="font-bold text-foreground text-sm mb-1">No spots found</p>
-                      <button onClick={() => setActiveCat('all')} className="mt-2 text-xs font-bold text-coral underline">
-                        Clear filters
+                  {!loading && error && (
+                    <div className="text-center py-12 px-6">
+                      <p className="text-sm text-destructive mb-3">{error}</p>
+                      <button
+                        onClick={onRetry}
+                        className="text-xs font-bold text-coral underline"
+                      >
+                        Retry
                       </button>
                     </div>
                   )}
-                  {filteredPlaces.map(place => (
+                  {!loading && !error && filteredPlaces.length === 0 && (
+                    <div className="text-center py-16 px-6">
+                      {allPlaces.length === 0 ? (
+                        <p className="font-bold text-foreground text-sm">No places in the directory yet</p>
+                      ) : (
+                        <>
+                          <p className="font-bold text-foreground text-sm mb-1">No spots match your filters</p>
+                          <button onClick={() => setActiveCat('all')} className="mt-2 text-xs font-bold text-coral underline">
+                            Clear filters
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  )}
+                  {!loading && !error && filteredPlaces.map(place => (
                     <PlaceListRow
                       key={place.id}
                       place={place}

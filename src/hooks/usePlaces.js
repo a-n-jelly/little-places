@@ -10,21 +10,23 @@ export function usePlaces() {
   const [selectedAccess, setSelectedAccess]   = useState([])
   const [selectedTypes, setSelectedTypes]     = useState([])
 
+  async function load() {
+    try {
+      setLoading(true)
+      setError(null)
+      const data = await getPlaces()
+      setAllPlaces(data)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   // Load all places on mount
   useEffect(() => {
-    async function load() {
-      try {
-        setLoading(true)
-        const data = await getPlaces()
-        setAllPlaces(data)
-      } catch (err) {
-        setError(err.message)
-      } finally {
-        setLoading(false)
-      }
-    }
     load()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Client-side filtering
   const filtered = useMemo(() => {
@@ -87,6 +89,7 @@ export function usePlaces() {
     allPlaces,
     loading,
     error,
+    load,
     search,
     setSearch,
     selectedStages,
