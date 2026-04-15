@@ -288,8 +288,8 @@ Audit every data-dependent view for missing or poor loading, error, and empty st
 **Depends on:** T06b
 
 ### What was done
-- Removed drag handle visual affordance from bottom sheet (tap-to-toggle only)
-- BrowseLayout unit tests written and passing: sidebar renders list by default, selecting a place switches to detail, "← Back to list" restores list, filter changes propagate to marker count and list
+- Removed drag handle visual affordance from mobile bottom sheet (tap-to-toggle only)
+- BrowseLayout unit tests written and passing: sidebar renders list by default, selecting a place switches to detail, "← Back to list" restores list, filter changes propagate to markers and list
 
 ### Notes
 - Drag gesture deferred to backlog (TB02) — revisit after used on real devices
@@ -344,7 +344,7 @@ Deploy the `process-embeddings` Edge Function to Supabase and add a vector simil
 **Status:** todo
 
 ### Goal
-Add swipe/drag support to the mobile bottom sheet in `BrowseLayout` so users can drag it up and down rather than just tapping the handle.
+Add swipe/drag support to the mobile bottom sheet in `BrowseLayout` so users can drag it up and down rather than just tapping.
 
 ### Notes
 - Tap-to-toggle is the current behaviour — functional but not native-feeling
@@ -355,20 +355,18 @@ Add swipe/drag support to the mobile bottom sheet in `BrowseLayout` so users can
 
 ## [TB03] Design refresh — Google Maps look and feel
 **Phase:** Backlog
-**Status:** todo
+**Status:** in progress
 
 ### Goal
-Update the visual design of the app based on Figma changes. Changes are to look and feel (not structure) — map view and browse experience should feel more like Google Maps.
+Update the visual design based on Figma. Changes are to look and feel (not structure) — map view and browse experience should feel more like Google Maps. Centralised theming via CSS custom properties and Tailwind tokens; no hardcoded design values in components.
 
 ### Acceptance criteria
-- [ ] Design changes reviewed from Figma and scoped into specific component changes
-- [ ] Map view styling updated (markers, controls, overlay elements)
-- [ ] Browse layout updated to match new look and feel
-- [ ] Palette and component styles updated where needed
+- [ ] Figma CSS tokens wired in (`src/styles/theme.css`)
+- [ ] Quicksand font loaded via Fontsource
+- [ ] `tw-animate-css` installed and available
+- [ ] All components use theme tokens, no hardcoded colours/radii/spacing
 - [ ] No regression in existing tests
 
-### Notes
-- Scope to be confirmed once Figma designs are shared — ticket to be broken down before implementation
 
 ---
 

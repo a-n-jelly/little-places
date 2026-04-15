@@ -15,12 +15,7 @@ React + Vite + Tailwind + Supabase + Anthropic API + Mapbox
 - No user accounts for v1
 
 ## Palette
-- Primary green: #16a34a
-- Background: #f8fafc
-- Cards: #ffffff
-- Text: #1e293b
-- Muted: #94a3b8
-- Accessibility accent: #2563eb
+See `src/styles/theme.css` for all design tokens.
 
 ## What's Built — Do Not Modify Without Running Tests
 - src/components/PlaceCard.jsx
