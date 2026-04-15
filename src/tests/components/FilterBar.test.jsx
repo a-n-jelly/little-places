@@ -46,12 +46,12 @@ describe('FilterBar', () => {
   it('shows active state for selected stages', () => {
     render(<FilterBar {...defaultProps} selectedStages={['toddler']} />)
     const btn = screen.getByTestId('stage-filter-toddler')
-    expect(btn.className).toContain('bg-emerald-50')
+    expect(btn.dataset.active).toBe('true')
   })
 
   it('shows active state for selected access filters', () => {
     render(<FilterBar {...defaultProps} selectedAccess={['wheelchair']} />)
     const btn = screen.getByTestId('access-filter-wheelchair')
-    expect(btn.className).toContain('bg-teal-50')
+    expect(btn.dataset.active).toBe('true')
   })
 })

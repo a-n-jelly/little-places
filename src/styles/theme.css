@@ -33,6 +33,42 @@
   --yellow: #F9E4A0;
   --off-white: #FAFAF7;
   --sky: #EAF4F8;
+
+  /* Shadows */
+  --shadow-sm:    0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md:    0 4px 16px rgba(0,0,0,0.10);
+  --shadow-lg:    0 8px 32px rgba(0,0,0,0.14);
+  --shadow-coral: 0 6px 20px rgba(242,139,110,0.30);
+
+  /* Overlay */
+  --overlay: rgba(0,0,0,0.40);
+
+  /* Standardised opacity values */
+  --border-subtle: rgba(0,0,0,0.05);
+  --bg-hover:      rgba(0,0,0,0.02);
+  --bg-pressed:    rgba(0,0,0,0.05);
+
+  /* Stage chip colours */
+  --stage-baby-bg:       rgba(249,228,160,0.70);
+  --stage-baby-text:     #92400e;
+  --stage-toddler-bg:    rgba(168,197,160,0.20);
+  --stage-toddler-text:  #166534;
+  --stage-preschool-bg:  rgba(242,139,110,0.15);
+  --stage-preschool-text:#b91c1c;
+  --stage-bigkids-bg:    #ede9fe;
+  --stage-bigkids-text:  #7c3aed;
+  --stage-tweens-bg:     #dbeafe;
+  --stage-tweens-text:   #1d4ed8;
+
+  /* Form button — selected states */
+  --btn-selected-bg:     rgba(242,139,110,0.12);
+  --btn-selected-border: #F28B6E;
+  --btn-selected-text:   #c2440a;
+
+  /* Form button — secondary selected states (accessibility chips) */
+  --btn-secondary-bg:     rgba(168,197,160,0.20);
+  --btn-secondary-border: #A8C5A0;
+  --btn-secondary-text:   #166534;
 }
 
 @theme inline {

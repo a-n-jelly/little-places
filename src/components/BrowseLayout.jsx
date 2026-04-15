@@ -12,19 +12,19 @@ const STAGE_LABELS = {
   tweens:    'Tweens+',
 }
 
-const STAGE_COLORS = {
-  baby:      'bg-yellow/70 text-amber-800',
-  toddler:   'bg-sage/20 text-green-800',
-  preschool: 'bg-coral/15 text-red-700',
-  bigkids:   'bg-purple-100 text-purple-700',
-  tweens:    'bg-blue-100 text-blue-700',
+const STAGE_STYLE = {
+  baby:      { background: 'var(--stage-baby-bg)',      color: 'var(--stage-baby-text)'      },
+  toddler:   { background: 'var(--stage-toddler-bg)',   color: 'var(--stage-toddler-text)'   },
+  preschool: { background: 'var(--stage-preschool-bg)', color: 'var(--stage-preschool-text)' },
+  bigkids:   { background: 'var(--stage-bigkids-bg)',   color: 'var(--stage-bigkids-text)'   },
+  tweens:    { background: 'var(--stage-tweens-bg)',    color: 'var(--stage-tweens-text)'    },
 }
 
 function StarRow({ rating }) {
   return (
     <div className="flex items-center gap-1">
       {[1, 2, 3, 4, 5].map(i => (
-        <Star key={i} size={11} className={i <= Math.round(rating) ? 'text-yellow-400 fill-current' : 'text-black/10'} />
+        <Star key={i} size={11} className={i <= Math.round(rating) ? 'text-yellow fill-current' : 'text-foreground/10'} />
       ))}
       <span className="text-sm font-bold text-foreground ml-1">{rating > 0 ? rating : '—'}</span>
     </div>
@@ -40,7 +40,7 @@ function PlaceDetail({ place, likedIds, onToggleLike }) {
       <div className="flex items-start gap-3 mb-3">
         <div
           className="flex items-center justify-center rounded-2xl flex-shrink-0"
-          style={{ width: 50, height: 50, background: `${cfg.color}20` }}
+          style={{ width: 50, height: 50, background: `${cfg.color}33` }}
         >
           <span style={{ fontSize: 22 }}>{cfg.emoji}</span>
         </div>
@@ -50,7 +50,8 @@ function PlaceDetail({ place, likedIds, onToggleLike }) {
         </div>
         <button
           onClick={e => onToggleLike(place.id, e)}
-          className="w-9 h-9 rounded-full bg-black/[0.04] hover:bg-black/[0.07] flex items-center justify-center flex-shrink-0 transition-colors mt-0.5"
+          className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-colors mt-0.5"
+          style={{ background: 'var(--bg-pressed)' }}
         >
           <Heart size={15} className={isLiked ? 'text-coral fill-current' : 'text-muted-foreground'} />
         </button>
@@ -63,7 +64,11 @@ function PlaceDetail({ place, likedIds, onToggleLike }) {
       {place.stages?.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mb-4">
           {place.stages.map(stage => (
-            <span key={stage} className={`text-[10px] font-black px-2.5 py-1 rounded-full ${STAGE_COLORS[stage] ?? 'bg-gray-100 text-gray-600'}`}>
+            <span
+              key={stage}
+              className="text-[10px] font-black px-2.5 py-1 rounded-full"
+              style={STAGE_STYLE[stage] ?? { background: 'var(--muted)', color: 'var(--muted-foreground)' }}
+            >
               {STAGE_LABELS[stage] ?? stage}
             </span>
           ))}
@@ -72,7 +77,7 @@ function PlaceDetail({ place, likedIds, onToggleLike }) {
 
       <button
         className="w-full bg-coral text-white py-3.5 rounded-2xl font-black flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
-        style={{ boxShadow: '0 6px 20px rgba(242,139,110,0.30)' }}
+        style={{ boxShadow: 'var(--shadow-coral)' }}
       >
         View full details
         <ChevronRight size={16} strokeWidth={2.5} />
@@ -91,13 +96,13 @@ function PlaceListRow({ place, isSelected, onClick }) {
     <motion.button
       whileHover={{ x: 2 }}
       onClick={onClick}
-      className={`flex items-center gap-3.5 px-5 py-4 w-full text-left border-b border-black/[0.04] transition-colors ${
-        isSelected ? 'bg-coral/[0.05] border-l-[3px] border-l-coral pl-[17px]' : 'hover:bg-black/[0.01]'
+      className={`flex items-center gap-3.5 px-5 py-4 w-full text-left border-b border-border/50 transition-colors ${
+        isSelected ? 'bg-coral/[0.05] border-l-[3px] border-l-coral pl-[17px]' : 'hover:bg-muted/40'
       }`}
     >
       <div
         className="flex items-center justify-center rounded-xl flex-shrink-0"
-        style={{ width: 40, height: 40, background: `${cfg.color}20` }}
+        style={{ width: 40, height: 40, background: `${cfg.color}33` }}
       >
         <span style={{ fontSize: 18 }}>{cfg.emoji}</span>
       </div>
@@ -168,12 +173,10 @@ export default function BrowseLayout({
             className={`flex-shrink-0 flex items-center gap-1.5 pl-2 pr-3 py-[7px] rounded-full text-xs font-bold transition-all ${
               isActive
                 ? 'bg-coral text-white'
-                : 'bg-white/95 text-muted-foreground hover:bg-white hover:text-foreground'
+                : 'bg-white text-muted-foreground hover:text-foreground'
             }`}
             style={{
-              boxShadow: isActive
-                ? '0 3px 12px rgba(242,139,110,0.38)'
-                : '0 2px 10px rgba(0,0,0,0.11)',
+              boxShadow: isActive ? 'var(--shadow-coral)' : 'var(--shadow-sm)',
             }}
           >
             <span style={{ fontSize: 13 }}>{cat.emoji}</span>
@@ -190,17 +193,17 @@ export default function BrowseLayout({
       <div className="hidden md:flex h-screen">
         <aside
           className="w-[360px] flex-shrink-0 flex flex-col h-full bg-white relative z-20"
-          style={{ boxShadow: '4px 0 32px rgba(0,0,0,0.06)', borderRight: '1px solid rgba(0,0,0,0.04)' }}
+          style={{ boxShadow: 'var(--shadow-md)', borderRight: '1px solid var(--border-subtle)' }}
         >
           {/* Header */}
-          <div className="px-5 pt-5 pb-4 flex-shrink-0 border-b border-black/[0.04]">
+          <div className="px-5 pt-5 pb-4 flex-shrink-0 border-b" style={{ borderColor: 'var(--border-subtle)' }}>
             <div className="flex items-center justify-between mb-4">
               <span className="font-black text-foreground tracking-tight">Little Places</span>
               <div className="flex items-center gap-1">
                 <button
                   onClick={onHome}
                   aria-label="Home"
-                  className="px-3 py-1.5 rounded-full text-xs font-bold text-muted-foreground hover:bg-black/[0.04] transition-colors"
+                  className="px-3 py-1.5 rounded-full text-xs font-bold text-muted-foreground hover:bg-muted transition-colors"
                 >
                   Ask AI
                 </button>
@@ -216,13 +219,13 @@ export default function BrowseLayout({
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Parks, cafes, museums…"
-                className="w-full bg-off-white/80 rounded-xl pl-9 pr-4 py-2.5 text-sm font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border border-black/[0.05]"
+                className="w-full bg-off-white rounded-xl pl-9 pr-4 py-2.5 text-sm font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border border-border/50"
               />
             </div>
           </div>
 
           {/* List / detail */}
-          <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(0,0,0,0.08) transparent' }}>
+          <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: 'thin', scrollbarColor: 'var(--border-subtle) transparent' }}>
             <AnimatePresence>
               {selectedPlace ? (
                 <motion.div
@@ -235,7 +238,7 @@ export default function BrowseLayout({
                   <button
                     onClick={handleBackToList}
                     aria-label="Back to list"
-                    className="flex items-center gap-1.5 px-5 py-3 text-xs font-bold text-muted-foreground hover:text-foreground w-full text-left border-b border-black/[0.04] hover:bg-black/[0.02] transition-colors"
+                    className="flex items-center gap-1.5 px-5 py-3 text-xs font-bold text-muted-foreground hover:text-foreground w-full text-left border-b border-border/50 hover:bg-muted/40 transition-colors"
                   >
                     ← Back to list
                   </button>
@@ -295,7 +298,7 @@ export default function BrowseLayout({
             onClick={onSubmitPlace}
             aria-label="Add a place"
             className="absolute bottom-8 right-4 z-10 flex items-center justify-center rounded-full bg-coral text-white active:scale-90 transition-all"
-            style={{ width: 52, height: 52, boxShadow: '0 6px 24px rgba(242,139,110,0.46)' }}
+            style={{ width: 52, height: 52, boxShadow: 'var(--shadow-coral)' }}
           >
             <Plus size={24} strokeWidth={2.5} />
           </button>
@@ -324,8 +327,8 @@ export default function BrowseLayout({
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Parks, cafes, museums…"
-              className="w-full bg-white/96 backdrop-blur-2xl rounded-2xl pl-9 pr-4 py-3 text-sm font-medium outline-none placeholder:text-muted-foreground/38 text-foreground"
-              style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.12)', border: '1px solid rgba(255,255,255,0.75)' }}
+              className="w-full bg-white backdrop-blur rounded-2xl pl-9 pr-4 py-3 text-sm font-medium outline-none placeholder:text-muted-foreground/40 text-foreground"
+              style={{ boxShadow: 'var(--shadow-md)', border: '1px solid var(--border-subtle)' }}
             />
           </div>
         </div>
@@ -335,7 +338,7 @@ export default function BrowseLayout({
           onClick={onSubmitPlace}
           aria-label="Add a place"
           className="absolute right-4 z-10 flex items-center justify-center rounded-full bg-coral text-white active:scale-90 transition-all"
-          style={{ width: 52, height: 52, boxShadow: '0 6px 24px rgba(242,139,110,0.46)', bottom: '5.5rem' }}
+          style={{ width: 52, height: 52, boxShadow: 'var(--shadow-coral)', bottom: '5.5rem' }}
         >
           <Plus size={24} strokeWidth={2.5} />
         </button>
@@ -350,15 +353,15 @@ export default function BrowseLayout({
               exit={{ y: '108%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 280, mass: 0.9 }}
               className="absolute bottom-0 left-0 right-0 z-20 bg-white overflow-hidden"
-              style={{ borderRadius: '28px 28px 0 0', boxShadow: '0 -6px 40px rgba(0,0,0,0.14)', paddingBottom: '5rem' }}
+              style={{ borderRadius: '28px 28px 0 0', boxShadow: '0 -8px 32px rgba(0,0,0,0.12)', paddingBottom: '5rem' }}
             >
               <div className="flex justify-center pt-3 pb-1">
-                <div className="w-9 h-1 rounded-full bg-black/10" />
+                <div className="w-9 h-1 rounded-full bg-border" />
               </div>
               <button
                 onClick={handleBackToList}
                 aria-label="Back to list"
-                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-black/[0.05] hover:bg-black/[0.09] flex items-center justify-center z-10 transition-colors"
+                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center z-10 transition-colors"
               >
                 <X size={13} strokeWidth={2.5} />
               </button>
@@ -369,8 +372,8 @@ export default function BrowseLayout({
 
         {/* Bottom nav */}
         <nav
-          className="absolute bottom-0 left-0 right-0 z-10 flex justify-between items-center px-10 pb-8 pt-3.5 bg-white/96"
-          style={{ backdropFilter: 'blur(20px)', borderTop: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 -4px 18px rgba(0,0,0,0.06)' }}
+          className="absolute bottom-0 left-0 right-0 z-10 flex justify-between items-center px-10 pb-8 pt-3.5 bg-white/95 backdrop-blur-sm"
+          style={{ borderTop: '1px solid var(--border-subtle)', boxShadow: '0 -4px 16px rgba(0,0,0,0.06)' }}
         >
           <button
             onClick={onHome}

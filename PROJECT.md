@@ -370,6 +370,33 @@ Update the visual design based on Figma. Changes are to look and feel (not struc
 
 ---
 
+## [TB04] Document design system in DESIGN.md
+**Phase:** Backlog
+**Status:** todo
+
+### Goal
+Extract design language and rules into a permanent `DESIGN.md` file, then delete temporary Figma reference files (`FigmaUI/`, `FigmaPages/`).
+
+### Acceptance criteria
+- [ ] `DESIGN.md` created with design language documentation:
+  - Form input styling rules (padding, border-radius, focus states)
+  - Button hierarchy and states (primary, secondary, tertiary with token mappings)
+  - Spacing and padding rhythm
+  - Shadow/elevation system and when to use each token
+  - Typography scale and usage
+  - Token application rules (when to use semantic names vs. direct hex)
+- [ ] Design principles extracted from `AddPlace.tsx`
+- [ ] `src/components/FigmaUI/` directory deleted
+- [ ] `src/components/FigmaPages/` directory deleted
+- [ ] CLAUDE.md updated to reference DESIGN.md instead of Figma files
+
+### Notes
+- FigmaUI was created for reference only, never integrated into the app
+- DESIGN.md serves as the permanent design reference for implementation consistency
+- Smaller codebase with clearer design intent
+
+---
+
 ## [TB01] Move API keys server-side
 **Phase:** Backlog
 **Status:** todo

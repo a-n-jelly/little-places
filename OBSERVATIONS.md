@@ -17,3 +17,9 @@ filters and search need to persist when clicking through on map. Need to create 
 ### [2026-04-12 22:20]
 review what is really needed for card panel
 
+### [2026-04-15]
+UI design needed for error/retry state in browse sidebar (currently functional but unstyled)
+
+### [2026-04-15]
+UI design needed for empty states — "no places in directory yet" and "no spots match your filters" — both need a design pass
+

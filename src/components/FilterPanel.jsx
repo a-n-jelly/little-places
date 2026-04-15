@@ -5,19 +5,22 @@ function FilterGroup({ title, activeCount, children }) {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="border-b border-slate-100 last:border-0">
+    <div className="border-b border-border last:border-0">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-foreground hover:bg-muted transition-colors"
       >
         <span>{title}</span>
         <span className="flex items-center gap-2">
           {activeCount > 0 && (
-            <span className="text-xs font-semibold text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full">
+            <span
+              className="text-xs font-semibold px-1.5 py-0.5 rounded-full"
+              style={{ background: 'var(--btn-secondary-bg)', color: 'var(--btn-secondary-text)' }}
+            >
               {activeCount}
             </span>
           )}
-          <span className="text-slate-400 text-xs">{open ? '▲' : '▼'}</span>
+          <span className="text-muted-foreground text-xs">{open ? '▲' : '▼'}</span>
         </span>
       </button>
       {open && <div className="px-4 pb-3 space-y-2">{children}</div>}
@@ -32,7 +35,7 @@ function Checkbox({ id, label, checked, onChange, color }) {
         type="checkbox"
         checked={checked}
         onChange={() => onChange(id)}
-        className="rounded border-slate-300 text-green-600 focus:ring-green-500 cursor-pointer"
+        className="rounded border-border text-primary focus:ring-ring cursor-pointer"
       />
       {color && (
         <span
@@ -40,7 +43,7 @@ function Checkbox({ id, label, checked, onChange, color }) {
           style={{ backgroundColor: color }}
         />
       )}
-      <span className="text-sm text-slate-600 group-hover:text-slate-800 transition-colors">
+      <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
         {label}
       </span>
     </label>
@@ -56,7 +59,7 @@ export default function FilterPanel({
   onTypeToggle,
 }) {
   return (
-    <div className="border-y border-slate-100 bg-white">
+    <div className="border-y border-border bg-card">
       <FilterGroup title="Age" activeCount={selectedStages.length}>
         {STAGES.map((s) => (
           <Checkbox

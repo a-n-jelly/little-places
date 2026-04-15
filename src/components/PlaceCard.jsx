@@ -10,29 +10,29 @@ export default function PlaceCard({ place, onClick }) {
       onClick={() => onClick?.(place)}
       onKeyDown={(e) => e.key === 'Enter' && onClick?.(place)}
       data-testid="place-card"
-      className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer border-l-4"
+      className="bg-card rounded-2xl p-5 border border-border shadow-sm hover:shadow-md transition-shadow cursor-pointer border-l-4"
       style={{ borderLeftColor: color }}
     >
       <div className="flex justify-between items-start mb-2">
         <div>
           <span
             className="text-xs font-bold px-2 py-1 rounded-full"
-            style={{ background: color + '22', color }}
+            style={{ background: color + '33', color }}
           >
             {place.type?.toUpperCase()}
           </span>
-          <h3 className="mt-2 text-base font-bold text-slate-800">{place.name}</h3>
-          <p className="text-xs text-slate-400 mt-0.5">📍 {place.address}</p>
+          <h3 className="mt-2 text-base font-bold text-foreground">{place.name}</h3>
+          <p className="text-xs text-muted-foreground mt-0.5">📍 {place.address}</p>
         </div>
         {place.rating > 0 && (
-          <span className="text-yellow-400 text-sm">
+          <span className="text-yellow text-sm">
             {'★'.repeat(Math.floor(place.rating))}
-            <span className="text-slate-400 ml-1">{place.rating}</span>
+            <span className="text-muted-foreground ml-1">{place.rating}</span>
           </span>
         )}
       </div>
 
-      <p className="text-sm text-slate-500 mt-2 leading-relaxed line-clamp-2">
+      <p className="text-sm text-muted-foreground mt-2 leading-relaxed line-clamp-2">
         {place.description}
       </p>
 
@@ -42,7 +42,8 @@ export default function PlaceCard({ place, onClick }) {
           return (
             <span
               key={s}
-              className="text-xs px-2 py-0.5 rounded-full bg-green-50 text-green-700"
+              className="text-xs px-2 py-0.5 rounded-full"
+              style={{ background: 'var(--btn-secondary-bg)', color: 'var(--btn-secondary-text)' }}
             >
               {stage?.label}
             </span>
@@ -53,7 +54,8 @@ export default function PlaceCard({ place, onClick }) {
           return (
             <span
               key={a}
-              className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-700"
+              className="text-xs px-2 py-0.5 rounded-full"
+              style={{ background: 'var(--btn-selected-bg)', color: 'var(--btn-selected-text)' }}
             >
               {tag?.label}
             </span>
@@ -62,7 +64,7 @@ export default function PlaceCard({ place, onClick }) {
       </div>
 
       {place.submitted_by && (
-        <p className="text-xs text-slate-300 mt-3">Added by {place.submitted_by}</p>
+        <p className="text-xs text-muted-foreground/50 mt-3">Added by {place.submitted_by}</p>
       )}
     </div>
   )
