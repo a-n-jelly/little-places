@@ -50,7 +50,7 @@ function PlaceDetail({ place, likedIds, onToggleLike }) {
         </div>
         <button
           onClick={e => onToggleLike(place.id, e)}
-          className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-colors mt-0.5"
+          className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-colors duration-100 ease-out mt-0.5"
           style={{ background: 'var(--bg-pressed)' }}
         >
           <Heart size={15} className={isLiked ? 'text-coral fill-current' : 'text-muted-foreground'} />
@@ -76,7 +76,7 @@ function PlaceDetail({ place, likedIds, onToggleLike }) {
       )}
 
       <button
-        className="w-full bg-coral text-white py-3.5 rounded-2xl font-black flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
+        className="w-full bg-coral text-white py-3.5 rounded-2xl font-black flex items-center justify-center gap-2 active:scale-[0.98] transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
         style={{ boxShadow: 'var(--shadow-coral)' }}
       >
         View full details
@@ -94,9 +94,9 @@ function PlaceListRow({ place, isSelected, onClick }) {
 
   return (
     <motion.button
-      whileHover={{ x: 2 }}
+      whileHover={{ x: 2, transition: { type: 'tween', duration: 0.08, ease: 'easeOut' } }}
       onClick={onClick}
-      className={`flex items-center gap-3.5 px-5 py-4 w-full text-left border-b border-border/50 transition-colors ${
+      className={`flex items-center gap-3.5 px-5 py-4 w-full text-left border-b border-border/50 transition-colors duration-100 ease-out ${
         isSelected ? 'bg-coral/[0.05] border-l-[3px] border-l-coral pl-[17px]' : 'hover:bg-muted/40'
       }`}
     >
@@ -170,7 +170,7 @@ export default function BrowseLayout({
           <button
             key={cat.id}
             onClick={() => setActiveCat(cat.id)}
-            className={`flex-shrink-0 flex items-center gap-1.5 pl-2 pr-3 py-[7px] rounded-full text-xs font-bold transition-all ${
+            className={`flex-shrink-0 flex items-center gap-1.5 pl-2 pr-3 py-[7px] rounded-full text-xs font-bold transition-[color,background-color,box-shadow] duration-100 ease-out ${
               isActive
                 ? 'bg-coral text-white'
                 : 'bg-white text-muted-foreground hover:text-foreground'
@@ -203,7 +203,7 @@ export default function BrowseLayout({
                 <button
                   onClick={onHome}
                   aria-label="Home"
-                  className="px-3 py-1.5 rounded-full text-xs font-bold text-muted-foreground hover:bg-muted transition-colors"
+                  className="px-3 py-1.5 rounded-full text-xs font-bold text-muted-foreground hover:bg-muted transition-colors duration-100 ease-out"
                 >
                   Ask AI
                 </button>
@@ -238,7 +238,7 @@ export default function BrowseLayout({
                   <button
                     onClick={handleBackToList}
                     aria-label="Back to list"
-                    className="flex items-center gap-1.5 px-5 py-3 text-xs font-bold text-muted-foreground hover:text-foreground w-full text-left border-b border-border/50 hover:bg-muted/40 transition-colors"
+                    className="flex items-center gap-1.5 px-5 py-3 text-xs font-bold text-muted-foreground hover:text-foreground w-full text-left border-b border-border/50 hover:bg-muted/40 transition-colors duration-100 ease-out"
                   >
                     ← Back to list
                   </button>
@@ -297,7 +297,7 @@ export default function BrowseLayout({
           <button
             onClick={onSubmitPlace}
             aria-label="Add a place"
-            className="absolute bottom-8 right-4 z-10 flex items-center justify-center rounded-full bg-coral text-white active:scale-90 transition-all"
+            className="absolute bottom-8 right-4 z-10 flex items-center justify-center rounded-full bg-coral text-white active:scale-90 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
             style={{ width: 52, height: 52, boxShadow: 'var(--shadow-coral)' }}
           >
             <Plus size={24} strokeWidth={2.5} />
@@ -337,7 +337,7 @@ export default function BrowseLayout({
         <button
           onClick={onSubmitPlace}
           aria-label="Add a place"
-          className="absolute right-4 z-10 flex items-center justify-center rounded-full bg-coral text-white active:scale-90 transition-all"
+          className="absolute right-4 z-10 flex items-center justify-center rounded-full bg-coral text-white active:scale-90 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
           style={{ width: 52, height: 52, boxShadow: 'var(--shadow-coral)', bottom: '5.5rem' }}
         >
           <Plus size={24} strokeWidth={2.5} />
@@ -361,7 +361,7 @@ export default function BrowseLayout({
               <button
                 onClick={handleBackToList}
                 aria-label="Back to list"
-                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center z-10 transition-colors"
+                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center z-10 transition-colors duration-100 ease-out"
               >
                 <X size={13} strokeWidth={2.5} />
               </button>
@@ -378,14 +378,14 @@ export default function BrowseLayout({
           <button
             onClick={onHome}
             aria-label="Home"
-            className="flex flex-col items-center gap-0.5 text-muted-foreground transition-all"
+            className="flex flex-col items-center gap-0.5 text-muted-foreground transition-colors duration-100 ease-out"
           >
             <Sparkles size={21} strokeWidth={2} />
             <span className="text-[9px] font-black uppercase tracking-wide">Ask</span>
           </button>
           <button
             disabled
-            className="flex flex-col items-center gap-0.5 text-coral scale-110 transition-all"
+            className="flex flex-col items-center gap-0.5 text-coral scale-110 transition-[color,transform] duration-100 ease-out"
           >
             <MapIcon size={21} strokeWidth={2.5} />
             <span className="text-[9px] font-black uppercase tracking-wide">Explore</span>
@@ -393,7 +393,7 @@ export default function BrowseLayout({
           <button
             onClick={onSubmitPlace}
             aria-label="Add a place"
-            className="flex flex-col items-center gap-0.5 text-muted-foreground transition-all"
+            className="flex flex-col items-center gap-0.5 text-muted-foreground transition-colors duration-100 ease-out"
           >
             <Plus size={21} strokeWidth={2} />
             <span className="text-[9px] font-black uppercase tracking-wide">Add</span>

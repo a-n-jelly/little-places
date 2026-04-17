@@ -1,25 +1,24 @@
-# Observations
+DECIDE: Chat — single line input vs back-and-forth conversation flow
+DECIDE: Trust design — how do we establish data credibility for users
+DECIDE: User verification model — how can users confirm a place is accurate
+DECIDE: Tag capture — freeform vs structured, how do we consolidate
 
-A running log of notes, bugs, and ideas captured during testing and use.
-Triage periodically into PROJECT.md as tickets or backlog items.
+## Design skill — deferred / later
 
----
+_From little-places-design rollout; pick up with `/triage` or a design ticket._
 
-### [2026-04-12 22:00]
-chat is single line prompt rather than back and forth conversation. Need product decision on this.
+- **Personal `design-foundations` skill** (`~/.cursor/skills/` and/or `~/.claude/skills/`) — cross-project craft: distilled Eric Kennedy–style bullets in your own words, spacing/type habits, critique style. Point `little-places-design` at it when ready.
+- **Eric Kennedy bullets** — add 8–15 actionable bullets (your phrasing) into `design-foundations`; keep course material out of the repo.
+- **Optional Cursor “Design” agent** — short system prompt that loads `little-places-design` + `design-foundations` without duplicating full rules.
+- **Claude Code: designer-skills plugin** — optional `/plugin marketplace add Owl-Listener/designer-skills` if you want slash-command workflows; skill stays canonical.
+- **Document type scale in one place** — `theme.css` references `var(--text-*)` (Tailwind theme); add a short comment block or table in `theme.css` if the scale is hard to discover.
+- **Content & tone subsection** — family-facing voice notes, empty/error copy guidelines in the skill or a tiny `CONTENT.md` when you care about copy consistency.
+- **Motion** — `prefers-reduced-motion` policy and transition tokens if you add animation beyond defaults.
+- **Dark mode** — if `.dark` ships for users: verify critical screens in both themes after visual changes (hooks exist in `theme.css`).
+- **Symlink vs duplicate** — `.claude` and `.cursor` skills are duplicated for portability; switch to one file + symlink if you want a single source on your machine.
 
-### [2026-04-12 22:00]
-design needed for response from agent
+## UI — interaction timing (follow-up)
 
-### [2026-04-12 22:15]
-filters and search need to persist when clicking through on map. Need to create a new design for the maps - might be easiest to go with google-like design elements before exploring alternatives.
+_After 100ms transition pass (Apr 2026): hover-on feels better; **mouse-out / hover end** still feels sluggish on some controls._ Possible directions later: asymmetric durations (faster exit), `transition-behavior`, audit `transition-*` on components that chain box-shadow/transform, Framer Motion vs CSS overlap.
 
-### [2026-04-12 22:20]
-review what is really needed for card panel
-
-### [2026-04-15]
-UI design needed for error/retry state in browse sidebar (currently functional but unstyled)
-
-### [2026-04-15]
-UI design needed for empty states — "no places in directory yet" and "no spots match your filters" — both need a design pass
-
+_Fix later — not blocking._

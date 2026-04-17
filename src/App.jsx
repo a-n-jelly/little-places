@@ -52,19 +52,19 @@ function App() {
         <nav className="flex items-center gap-8">
           <button
             onClick={() => setView('agent')}
-            className={cn('font-medium transition-colors hover:text-primary', view === 'agent' ? 'text-primary font-bold' : 'text-muted-foreground')}
+            className={cn('font-medium transition-colors duration-100 ease-out hover:text-primary', view === 'agent' ? 'text-primary font-bold' : 'text-muted-foreground')}
           >
             Ask AI
           </button>
           <button
             onClick={() => setView('map')}
-            className={cn('font-medium transition-colors hover:text-primary', view === 'map' ? 'text-primary font-bold' : 'text-muted-foreground')}
+            className={cn('font-medium transition-colors duration-100 ease-out hover:text-primary', view === 'map' ? 'text-primary font-bold' : 'text-muted-foreground')}
           >
             Explore
           </button>
           <button
             onClick={() => setShowSubmitForm(true)}
-            className="bg-secondary text-secondary-foreground px-5 py-2.5 rounded-full font-bold shadow-sm hover:shadow-md transition-all active:scale-95 flex items-center gap-2"
+            className="bg-secondary text-secondary-foreground px-5 py-2.5 rounded-full font-bold shadow-sm hover:shadow-md transition-[color,background-color,box-shadow,transform] duration-100 ease-out active:scale-95 flex items-center gap-2"
           >
             <PlusCircle size={20} />
             Add Place
@@ -99,7 +99,7 @@ function App() {
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-md border-t border-border px-10 pb-8 pt-4 flex justify-between items-center z-50 shadow-lg">
         <button
           onClick={() => setView('agent')}
-          className={cn('flex flex-col items-center gap-1 transition-all', view === 'agent' ? 'text-primary scale-110' : 'text-muted-foreground')}
+          className={cn('flex flex-col items-center gap-1 transition-[color,transform] duration-100 ease-out', view === 'agent' ? 'text-primary scale-110' : 'text-muted-foreground')}
         >
           <Sparkles size={24} strokeWidth={view === 'agent' ? 2.5 : 2} />
           <span className="text-[10px] font-bold uppercase tracking-wide">Ask</span>
@@ -107,7 +107,7 @@ function App() {
 
         <button
           onClick={() => setShowSubmitForm(true)}
-          className="relative -top-10 bg-primary text-primary-foreground p-4 rounded-full shadow-xl shadow-primary/30 flex items-center justify-center active:scale-90 transition-all ring-4 ring-background"
+          className="relative -top-10 bg-primary text-primary-foreground p-4 rounded-full shadow-xl shadow-primary/30 flex items-center justify-center active:scale-90 transition-[color,background-color,transform,box-shadow] duration-100 ease-out ring-4 ring-background"
           aria-label="Add a place"
         >
           <PlusCircle size={28} />
@@ -115,7 +115,7 @@ function App() {
 
         <button
           onClick={() => setView('map')}
-          className={cn('flex flex-col items-center gap-1 transition-all', view === 'map' ? 'text-secondary scale-110' : 'text-muted-foreground')}
+          className={cn('flex flex-col items-center gap-1 transition-[color,transform] duration-100 ease-out', view === 'map' ? 'text-secondary scale-110' : 'text-muted-foreground')}
         >
           <Map size={24} strokeWidth={view === 'map' ? 2.5 : 2} />
           <span className="text-[10px] font-bold uppercase tracking-wide">Explore</span>

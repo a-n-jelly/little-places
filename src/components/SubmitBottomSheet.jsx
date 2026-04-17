@@ -26,7 +26,7 @@ export default function SubmitBottomSheet({ isOpen, onClose, onSuccess }) {
             <h2 className="text-base font-bold text-foreground">Add a place</h2>
             <button
               onClick={onClose}
-              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted text-muted-foreground transition-colors"
+              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted text-muted-foreground transition-colors duration-100 ease-out"
               aria-label="Close"
             >
               <X size={14} strokeWidth={2.5} />

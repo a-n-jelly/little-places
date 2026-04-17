@@ -56,7 +56,7 @@ export function AddPlace() {
     address: '',
     category: '',
     ages: [] as string[],
-    accessibility: [] as string[],
+    child_friendly_features: [] as string[],
     description: '',
     url: '',
   });
@@ -76,9 +76,9 @@ export function AddPlace() {
   const toggleAccessibility = (id: string) => {
     setFormData(prev => ({
       ...prev,
-      accessibility: prev.accessibility.includes(id) 
-        ? prev.accessibility.filter(a => a !== id) 
-        : [...prev.accessibility, id]
+      child_friendly_features: prev.child_friendly_features.includes(id) 
+        ? prev.child_friendly_features.filter(a => a !== id) 
+        : [...prev.child_friendly_features, id]
     }));
   };
 
@@ -93,7 +93,7 @@ export function AddPlace() {
         address: '3801 Discovery Park Blvd, Seattle, WA 98199',
         category: 'parks',
         ages: ['baby', 'toddler', 'preschool'],
-        accessibility: ['wheelchair', 'sensory'],
+        child_friendly_features: ['wheelchair', 'sensory'],
         description: 'A beautiful natural park with amazing views of the Sound. Perfect for families!',
       }));
       setIsPopulating(false);
@@ -134,7 +134,7 @@ export function AddPlace() {
             <input 
               type="text" 
               placeholder="Paste URL or type name to auto-fill..."
-              className="w-full bg-white border border-black/5 focus:border-sage/30 rounded-xl pl-11 pr-4 py-3 text-sm font-medium outline-none transition-all shadow-sm"
+              className="w-full bg-white border border-black/5 focus:border-sage/30 rounded-xl pl-11 pr-4 py-3 text-sm font-medium outline-none transition-[color,background-color,border-color,box-shadow] duration-100 ease-out shadow-sm"
               onBlur={(e) => handleSmartPopulate(e.target.value)}
             />
             {isPopulating && (
@@ -159,7 +159,7 @@ export function AddPlace() {
               value={formData.name}
               onChange={(e) => setFormData({...formData, name: e.target.value})}
               placeholder="e.g. Discovery Park"
-              className="w-full bg-off-white border border-black/5 focus:border-coral/30 rounded-xl px-4 py-2.5 text-sm font-bold outline-none transition-all"
+              className="w-full bg-off-white border border-black/5 focus:border-coral/30 rounded-xl px-4 py-2.5 text-sm font-bold outline-none transition-[color,background-color,border-color,box-shadow] duration-100 ease-out"
             />
           </div>
 
@@ -172,7 +172,7 @@ export function AddPlace() {
                 value={formData.address}
                 onChange={(e) => setFormData({...formData, address: e.target.value})}
                 placeholder="Location"
-                className="w-full bg-off-white border border-black/5 focus:border-coral/30 rounded-xl pl-9 pr-4 py-2.5 text-sm font-bold outline-none transition-all"
+                className="w-full bg-off-white border border-black/5 focus:border-coral/30 rounded-xl pl-9 pr-4 py-2.5 text-sm font-bold outline-none transition-[color,background-color,border-color,box-shadow] duration-100 ease-out"
               />
             </div>
           </div>
@@ -189,7 +189,7 @@ export function AddPlace() {
                   type="button"
                   onClick={() => setFormData({...formData, category: cat.id})}
                   className={cn(
-                    "flex items-center gap-2 px-3 py-2 rounded-lg border transition-all text-xs font-bold",
+                    "flex items-center gap-2 px-3 py-2 rounded-lg border transition-[color,background-color,border-color,box-shadow] duration-100 ease-out text-xs font-bold",
                     formData.category === cat.id 
                       ? "bg-sage border-sage text-white shadow-sm" 
                       : "bg-white border-black/5 text-muted-foreground hover:border-sage/20"
@@ -211,7 +211,7 @@ export function AddPlace() {
                   type="button"
                   onClick={() => toggleAge(age.id)}
                   className={cn(
-                    "px-2.5 py-1.5 rounded-md text-[10px] font-bold transition-all border",
+                    "px-2.5 py-1.5 rounded-md text-[10px] font-bold transition-[color,background-color,border-color,box-shadow] duration-100 ease-out border",
                     formData.ages.includes(age.id)
                       ? "bg-yellow border-yellow text-foreground"
                       : "bg-white border-black/5 text-muted-foreground hover:border-yellow/20"
@@ -234,15 +234,15 @@ export function AddPlace() {
                 type="button"
                 onClick={() => toggleAccessibility(acc.id)}
                 className={cn(
-                  "flex items-center gap-2.5 p-2 rounded-xl border transition-all text-left",
-                  formData.accessibility.includes(acc.id)
+                  "flex items-center gap-2.5 p-2 rounded-xl border transition-[color,background-color,border-color,box-shadow] duration-100 ease-out text-left",
+                  formData.child_friendly_features.includes(acc.id)
                     ? "bg-sage/5 border-sage text-sage font-bold"
                     : "bg-white border-black/5 text-muted-foreground hover:border-sage/10"
                 )}
               >
                 <div className={cn(
                   "w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0",
-                  formData.accessibility.includes(acc.id) ? "bg-sage text-white" : "bg-off-white"
+                  formData.child_friendly_features.includes(acc.id) ? "bg-sage text-white" : "bg-off-white"
                 )}>
                   <acc.icon size={14} />
                 </div>
@@ -260,7 +260,7 @@ export function AddPlace() {
             onChange={(e) => setFormData({...formData, description: e.target.value})}
             rows={2}
             placeholder="What makes it special?"
-            className="w-full bg-off-white border border-black/5 focus:border-coral/30 rounded-xl px-4 py-2.5 text-sm font-medium outline-none transition-all resize-none"
+            className="w-full bg-off-white border border-black/5 focus:border-coral/30 rounded-xl px-4 py-2.5 text-sm font-medium outline-none transition-[color,background-color,border-color,box-shadow] duration-100 ease-out resize-none"
           />
         </div>
 
@@ -270,7 +270,7 @@ export function AddPlace() {
             type="submit"
             disabled={!formData.name || isSubmitted}
             className={cn(
-              "w-full py-3.5 rounded-xl font-bold text-sm shadow-lg transition-all flex items-center justify-center gap-2 relative overflow-hidden",
+              "w-full py-3.5 rounded-xl font-bold text-sm shadow-lg transition-[color,background-color,border-color,box-shadow,transform] duration-100 ease-out flex items-center justify-center gap-2 relative overflow-hidden",
               isSubmitted 
                 ? "bg-green-500 text-white" 
                 : "bg-coral text-white shadow-coral/20 hover:shadow-coral/30 active:scale-[0.98] disabled:opacity-50"
@@ -332,7 +332,7 @@ export function AddPlace() {
                 
                 <Drawer.Root open={isOpen} onOpenChange={setIsOpen}>
                   <Drawer.Trigger asChild>
-                    <button className="w-full bg-coral text-white py-5 rounded-2xl font-black text-lg shadow-xl shadow-coral/30 flex items-center justify-center gap-3 active:scale-95 transition-all">
+                    <button className="w-full bg-coral text-white py-5 rounded-2xl font-black text-lg shadow-xl shadow-coral/30 flex items-center justify-center gap-3 active:scale-95 transition-[color,background-color,transform,box-shadow] duration-100 ease-out">
                       Add a Place
                       <ChevronRight size={20} strokeWidth={3} />
                     </button>

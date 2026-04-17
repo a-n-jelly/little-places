@@ -1,0 +1,33 @@
+# blog_places.txt
+#
+# Manually curated places from blog sources:
+#   Seattle's Child, ParentMap, SeattleMet, Fairies & Frogs
+#
+# Format (one place per line):
+#   Name | Type | Address (optional — if omitted, geocoder will search by name)
+#
+# Valid types: Park | Café | Museum | Attraction | Library | Playground | Other
+#
+# Lines starting with # and blank lines are ignored.
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# INSTRUCTIONS:
+#   1. Go through the blog articles below and add every child-friendly Seattle
+#      place mentioned. One line per place.
+#   2. If you know the address, add it after a second |. Otherwise leave it out.
+#   3. Run: node scripts/process-blog-places.js
+#
+# Sources to check:
+#   Seattle's Child:  https://www.seattleschild.com
+#   ParentMap:        https://www.parentmap.com/articles
+#   SeattleMet:       https://www.seattlemet.com/things-to-do/family
+#   Fairies & Frogs:  https://fairiesandfrogs.com
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# EXAMPLES (delete these and replace with real entries):
+#
+# Seattle Children's Museum | Museum | 305 Harrison St, Seattle, WA
+# Volunteer Park | Park
+# Cafe Solstice | Café | 4116 University Way NE, Seattle, WA
+# KidsQuest Children's Museum | Museum | 1116 108th Ave NE, Bellevue, WA
+# Woodland Park Zoo | Attraction | 5500 Phinney Ave N, Seattle, WA

@@ -11,7 +11,7 @@ export default function FilterBar({ selectedStages, selectedAccess, selectedType
               key={s.id}
               onClick={() => onStageToggle(s.id)}
               data-testid={`stage-filter-${s.id}`}
-              className="text-xs px-3 py-1.5 rounded-full border font-semibold transition-colors"
+              className="text-xs px-3 py-1.5 rounded-full border font-semibold transition-colors duration-100 ease-out"
               data-active={selectedStages.includes(s.id)}
               style={
                 selectedStages.includes(s.id)
@@ -35,7 +35,7 @@ export default function FilterBar({ selectedStages, selectedAccess, selectedType
               <button
                 key={type}
                 onClick={() => onTypeToggle(type)}
-                className="text-xs px-3 py-1.5 rounded-full border font-semibold transition-colors"
+                className="text-xs px-3 py-1.5 rounded-full border font-semibold transition-colors duration-100 ease-out"
                 style={active
                   ? { background: color + '33', borderColor: color, color }
                   : { background: 'var(--card)', borderColor: 'var(--border)', color: 'var(--muted-foreground)' }
@@ -57,7 +57,7 @@ export default function FilterBar({ selectedStages, selectedAccess, selectedType
               key={a.id}
               onClick={() => onAccessToggle(a.id)}
               data-testid={`access-filter-${a.id}`}
-              className="text-xs px-3 py-1.5 rounded-full border font-semibold transition-colors"
+              className="text-xs px-3 py-1.5 rounded-full border font-semibold transition-colors duration-100 ease-out"
               data-active={selectedAccess.includes(a.id)}
               style={
                 selectedAccess.includes(a.id)

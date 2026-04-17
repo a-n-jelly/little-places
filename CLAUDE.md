@@ -1,33 +1,26 @@
-# Little Places 🌿
+# Little Places
 
-Crowdsourced AI-powered directory of child and family-friendly 
-places in Seattle. Built for parents, by parents.
+Crowdsourced family-friendly directory for Seattle.
 
 ## Stack
-React + Vite + Tailwind + Supabase + Anthropic API + Mapbox
+React + Vite + Tailwind + Supabase + Anthropic SDK + Mapbox
 
-## Design Decisions (do not change without discussion)
-- Agent is the home screen entry point — not the map
-- Two modes: Agent mode (default) and Browse mode
-- Map is primary in Browse mode, place list on the side
-- Events only surface via the agent — never shown on the map
-- Mobile first
-- No user accounts for v1
+## Design rules (DO NOT CHANGE)
+- UI iteration and layout: follow `.claude/skills/little-places-design/SKILL.md` (mirrored at `.cursor/skills/little-places-design/` for Cursor).
+- Home screen: AgentPanel by default — never the map.
+- Two modes: Agent and Browse. Map is primary in Browse, list on the side.
+- Events surface via agent ONLY — never on the map or as browse items.
+- Mobile first. No user accounts for v1.
+- Palette: `src/styles/theme.css` — don't hardcode colours.
 
-## Palette
-See `src/styles/theme.css` for all design tokens.
+## Protected files (no modification without tests)
+`PlaceCard.jsx`, `FilterBar.jsx`, `SearchBar.jsx`, `usePlaces.js`, `places.js`, `constants.js`
 
-## What's Built — Do Not Modify Without Running Tests
-- src/components/PlaceCard.jsx
-- src/components/FilterBar.jsx
-- src/components/SearchBar.jsx
-- src/hooks/usePlaces.js
-- src/lib/places.js
-- src/lib/constants.js
+Run `npm test` before every commit. Never push failing tests.
 
-## Tests
-35 tests passing. Run `npm test` before every commit.
-Never push if tests are failing.
-
-## What Needs Building Next
-See plan.md for current sprint and next actions, if plan.md does not exist, then head to project.md for the next item and tell me. 
+## Files
+- `project.md` — PRD, phases, parking lot, decisions log (open on demand only)
+- `state.md` — current status, branch, test count, recent ships and decisions (read every session)
+- `plan.md` — active ticket: goal, acceptance criteria, open questions (read every session)
+- `backlog.md` — prioritised queue, max 15 items (open when picking next ticket)
+- `observations.md` — raw notes; process with /triage

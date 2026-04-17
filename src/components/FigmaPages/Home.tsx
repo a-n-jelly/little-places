@@ -91,7 +91,7 @@ export function Home() {
         <div className="relative group max-w-xl mx-auto mb-10 px-2">
           <div className="absolute -inset-4 bg-gradient-to-r from-coral/20 via-yellow/20 to-sage/20 rounded-[3rem] blur-3xl opacity-100 transition-opacity duration-700" />
           
-          <div className="relative bg-white rounded-[2rem] p-1.5 shadow-2xl border-2 border-black/5 flex items-center gap-1 transition-all focus-within:scale-[1.02] focus-within:ring-8 focus-within:ring-coral/10 focus-within:border-coral/30">
+          <div className="relative bg-white rounded-[2rem] p-1.5 shadow-2xl border-2 border-black/5 flex items-center gap-1 transition-[transform,box-shadow,border-color] duration-150 ease-out focus-within:scale-[1.02] focus-within:ring-8 focus-within:ring-coral/10 focus-within:border-coral/30">
             <div className="pl-5 text-coral">
               <Search size={22} strokeWidth={3} />
             </div>
@@ -102,7 +102,7 @@ export function Home() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
-            <button className="bg-coral text-white px-6 md:px-8 py-4 rounded-[1.5rem] font-black text-base shadow-lg shadow-coral/30 hover:bg-coral/90 active:scale-95 transition-all flex items-center gap-2">
+            <button className="bg-coral text-white px-6 md:px-8 py-4 rounded-[1.5rem] font-black text-base shadow-lg shadow-coral/30 hover:bg-coral/90 active:scale-95 transition-[color,background-color,transform,box-shadow] duration-100 ease-out flex items-center gap-2">
               <span>Go</span>
               <Sparkles size={18} strokeWidth={3} />
             </button>

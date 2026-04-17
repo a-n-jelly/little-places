@@ -27,8 +27,8 @@ vi.mock('../../components/MapView', () => ({
 }))
 
 const places = [
-  { id: '1', name: 'Green Lake Park', type: 'Park', address: '7201 E Green Lake Dr N', description: 'Great loop.', stages: [], accessibility: [], tags: [], rating: 0 },
-  { id: '2', name: 'Seattle Aquarium', type: 'Attraction', address: '1483 Alaskan Way', description: 'Marine life.', stages: [], accessibility: [], tags: [], rating: 0 },
+  { id: '1', name: 'Green Lake Park', type: 'Park', address: '7201 E Green Lake Dr N', description: 'Great loop.', stages: [], child_friendly_features: [], tags: [], rating: 0 },
+  { id: '2', name: 'Seattle Aquarium', type: 'Attraction', address: '1483 Alaskan Way', description: 'Marine life.', stages: [], child_friendly_features: [], tags: [], rating: 0 },
 ]
 
 const defaultProps = {

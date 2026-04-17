@@ -66,11 +66,11 @@ const TOOLS = [
           description:
             'Age stages to filter by. Options: baby, toddler, preschool, bigkids, tweens',
         },
-        accessibility: {
+        child_friendly_features: {
           type: 'array',
           items: { type: 'string' },
           description:
-            'Accessibility requirements. Options: wheelchair, changing_places, sensory_friendly, autism_friendly, quiet_space, blue_badge',
+            'Child-friendly features to filter by. Options: wheelchair, changing_places, sensory_friendly, autism_friendly, quiet_space, blue_badge',
         },
         limit: {
           type: 'number',
@@ -116,11 +116,11 @@ const TOOLS = [
 
 async function runTool(name, input) {
   if (name === 'search_places') {
-    const { keyword, stages = [], accessibility = [], limit = 5 } = input
+    const { keyword, stages = [], child_friendly_features = [], limit = 5 } = input
 
     let query = supabase
       .from('places')
-      .select('id, name, type, address, description, stages, accessibility, rating, lat, lng')
+      .select('id, name, type, address, description, stages, child_friendly_features, rating, lat, lng')
       .limit(limit)
 
     if (keyword?.trim()) {
@@ -129,7 +129,7 @@ async function runTool(name, input) {
       )
     }
     if (stages.length > 0) query = query.overlaps('stages', stages)
-    if (accessibility.length > 0) query = query.contains('accessibility', accessibility)
+    if (child_friendly_features.length > 0) query = query.contains('child_friendly_features', child_friendly_features)
 
     const { data, error } = await query
     if (error) return { error: error.message }
@@ -303,7 +303,7 @@ export default function AgentPanel({ onBrowse, onSubmitPlace }) {
           <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 via-accent/20 to-secondary/20 rounded-[3rem] blur-3xl opacity-100 transition-opacity duration-700" />
           <form
             onSubmit={handleSubmit}
-            className="relative bg-card rounded-[2rem] p-1.5 shadow-2xl border-2 border-black/5 flex items-center gap-1 transition-all focus-within:scale-[1.02] focus-within:ring-8 focus-within:ring-primary/10 focus-within:border-primary/30"
+            className="relative bg-card rounded-[2rem] p-1.5 shadow-2xl border-2 border-black/5 flex items-center gap-1 transition-[transform,box-shadow,border-color] duration-150 ease-out focus-within:scale-[1.02] focus-within:ring-8 focus-within:ring-primary/10 focus-within:border-primary/30"
           >
             <div className="pl-5 text-primary">
               <Search size={22} strokeWidth={3} />
@@ -320,7 +320,7 @@ export default function AgentPanel({ onBrowse, onSubmitPlace }) {
             <button
               type="submit"
               disabled={!query.trim() || loading}
-              className="bg-primary text-primary-foreground px-6 md:px-8 py-4 rounded-[1.5rem] font-black text-base shadow-lg shadow-primary/30 hover:bg-primary/90 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-2"
+              className="bg-primary text-primary-foreground px-6 md:px-8 py-4 rounded-[1.5rem] font-black text-base shadow-lg shadow-primary/30 hover:bg-primary/90 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed transition-[color,background-color,transform,box-shadow,opacity] duration-100 ease-out flex items-center gap-2"
             >
               {loading ? (
                 <>
@@ -359,8 +359,8 @@ export default function AgentPanel({ onBrowse, onSubmitPlace }) {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3 + idx * 0.1 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.05, transition: { type: 'tween', duration: 0.12, ease: 'easeOut' } }}
+              whileTap={{ scale: 0.95, transition: { type: 'tween', duration: 0.08 } }}
               onClick={() => setQuery(s.label)}
               className={cn('flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold shadow-sm border border-white/50', s.color)}
             >
@@ -373,7 +373,7 @@ export default function AgentPanel({ onBrowse, onSubmitPlace }) {
         <div>
           <button
             onClick={onBrowse}
-            className="text-sm text-primary hover:text-primary/80 font-medium transition-colors"
+            className="text-sm text-primary hover:text-primary/80 font-medium transition-colors duration-100 ease-out"
           >
             Browse the map →
           </button>

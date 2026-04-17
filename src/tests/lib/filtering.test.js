@@ -20,7 +20,7 @@ function filterPlaces(places, { search = '', stages = [], access = [] }) {
   }
 
   if (access.length > 0) {
-    results = results.filter((p) => access.every((a) => p.accessibility?.includes(a)))
+    results = results.filter((p) => access.every((a) => p.child_friendly_features?.includes(a)))
   }
 
   return results
@@ -33,7 +33,7 @@ const PLACES = [
     type: 'Park',
     description: 'Beautiful lake with pram-friendly paths.',
     stages: ['toddler', 'preschool'],
-    accessibility: ['wheelchair', 'blue_badge'],
+    child_friendly_features: ['wheelchair', 'blue_badge'],
     tags: ['Pram Accessible', 'Free Entry'],
   },
   {
@@ -42,7 +42,7 @@ const PLACES = [
     type: 'Museum',
     description: 'Hands-on exhibits for young children.',
     stages: ['baby', 'toddler'],
-    accessibility: ['wheelchair', 'sensory_friendly', 'autism_friendly'],
+    child_friendly_features: ['wheelchair', 'sensory_friendly', 'autism_friendly'],
     tags: ['Soft Play', 'Nursing Area'],
   },
   {
@@ -51,7 +51,7 @@ const PLACES = [
     type: 'Park',
     description: 'Splash pad and great playground.',
     stages: ['toddler', 'bigkids'],
-    accessibility: ['wheelchair'],
+    child_friendly_features: ['wheelchair'],
     tags: ['Free Entry', 'Fenced Area'],
   },
 ]
@@ -101,13 +101,13 @@ describe('filterPlaces', () => {
     expect(results).toHaveLength(2)
   })
 
-  it('filters by single accessibility tag', () => {
+  it('filters by single child_friendly_features tag', () => {
     const results = filterPlaces(PLACES, { access: ['sensory_friendly'] })
     expect(results).toHaveLength(1)
     expect(results[0].name).toBe("Seattle Children's Museum")
   })
 
-  it('filters by multiple accessibility tags (AND logic)', () => {
+  it('filters by multiple child_friendly_features tags (AND logic)', () => {
     const results = filterPlaces(PLACES, { access: ['wheelchair', 'autism_friendly'] })
     expect(results).toHaveLength(1)
     expect(results[0].name).toBe("Seattle Children's Museum")

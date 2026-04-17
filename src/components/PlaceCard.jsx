@@ -10,7 +10,7 @@ export default function PlaceCard({ place, onClick }) {
       onClick={() => onClick?.(place)}
       onKeyDown={(e) => e.key === 'Enter' && onClick?.(place)}
       data-testid="place-card"
-      className="bg-card rounded-2xl p-5 border border-border shadow-sm hover:shadow-md transition-shadow cursor-pointer border-l-4"
+      className="bg-card rounded-2xl p-5 border border-border shadow-sm hover:shadow-md transition-shadow duration-100 ease-out cursor-pointer border-l-4"
       style={{ borderLeftColor: color }}
     >
       <div className="flex justify-between items-start mb-2">
@@ -49,7 +49,7 @@ export default function PlaceCard({ place, onClick }) {
             </span>
           )
         })}
-        {place.accessibility?.slice(0, 2).map((a) => {
+        {place.child_friendly_features?.slice(0, 2).map((a) => {
           const tag = ACCESSIBILITY_TAGS.find((t) => t.id === a)
           return (
             <span

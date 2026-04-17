@@ -72,6 +72,10 @@
 }
 
 @theme inline {
+  /* Snappy interactive feedback (buttons, hovers) — explicit durations still win */
+  --default-transition-duration: 100ms;
+  --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -135,5 +139,13 @@
     font-size: var(--text-base);
     font-weight: 600;
     line-height: 1.5;
+  }
+
+  /* Remove legacy touch delay on interactive elements */
+  button,
+  [type="button"],
+  [type="submit"],
+  [role="button"] {
+    touch-action: manipulation;
   }
 }

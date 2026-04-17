@@ -43,11 +43,11 @@ vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ json: async () => [] }))
 // ── Fixtures ────────────────────────────────────────────────────────────────
 
 const seedPlaces = [
-  { id: '1', name: 'Green Lake Park', type: 'Park', address: '7201 E Green Lake Dr N', description: 'Great lake loop.', stages: [], accessibility: [], tags: [], rating: 0 },
+  { id: '1', name: 'Green Lake Park', type: 'Park', address: '7201 E Green Lake Dr N', description: 'Great lake loop.', stages: [], child_friendly_features: [], tags: [], rating: 0 },
 ]
 
 const newPlace = {
-  id: '2', name: 'Woodland Park Zoo', type: 'Park', address: '5500 Phinney Ave N', description: 'Amazing zoo.', stages: [], accessibility: [], tags: [], rating: 0,
+  id: '2', name: 'Woodland Park Zoo', type: 'Park', address: '5500 Phinney Ave N', description: 'Amazing zoo.', stages: [], child_friendly_features: [], tags: [], rating: 0,
 }
 
 // ── Helpers ─────────────────────────────────────────────────────────────────

@@ -8,7 +8,7 @@ function FilterGroup({ title, activeCount, children }) {
     <div className="border-b border-border last:border-0">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-foreground hover:bg-muted transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-foreground hover:bg-muted transition-colors duration-100 ease-out"
       >
         <span>{title}</span>
         <span className="flex items-center gap-2">
@@ -43,7 +43,7 @@ function Checkbox({ id, label, checked, onChange, color }) {
           style={{ backgroundColor: color }}
         />
       )}
-      <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+      <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors duration-100 ease-out">
         {label}
       </span>
     </label>

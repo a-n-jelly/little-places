@@ -1,0 +1,192 @@
+name,type,address,lat,lng,place_id,google_types,rating,user_ratings_total
+Good Voyage,Café,"8520 14th Ave S, Seattle, WA 98108, USA",47.5267385,-122.3145648,ChIJIweuNC1DkFQR32HzHy6hYGE,bar|cafe|establishment|food|point_of_interest|restaurant|store,4.8,170
+Volunteer Park Cafe & Pantry,Café,"1501 17th Ave E, Seattle, WA 98112, USA",47.6324747,-122.3101398,ChIJLWGLg90VkFQREfImduJ7gjA,bakery|cafe|establishment|food|liquor_store|point_of_interest|restaurant|store,4.4,1029
+Lune Cafe,Café,"107 1st Ave S, Seattle, WA 98104, USA",47.6013795,-122.3345335,ChIJU6O0Y_1rkFQRw0BduR7xyBU,cafe|establishment|food|point_of_interest,4.5,1156
+Rita’s Cafe,Café,"Located in, 808 3rd Ave, Seattle, WA 98104, USA",47.60453469999999,-122.332822,ChIJBw069C5rkFQRO185EgzEDZ8,cafe|establishment|food|point_of_interest,5,25
+Stone Way Cafe,Café,"3525 Stone Way N, Seattle, WA 98103, USA",47.6502986,-122.343056,ChIJFT0nhQEVkFQRrRIi9IzF8m0,cafe|establishment|food|point_of_interest|store,4.6,1702
+Lost Lake Cafe & Lounge,Café,"1505 10th Ave, Seattle, WA 98122, USA",47.6143793,-122.3196434,ChIJ-TzzQ8xqkFQRH5sj_1Pd6bE,bar|establishment|food|point_of_interest|restaurant,4.2,4376
+Bang Bang Cafe,Café,"2460 Western Ave, Seattle, WA 98121, USA",47.61402289999999,-122.3492388,ChIJ5Y74B04VkFQRvoWKWLoETmA,bakery|cafe|establishment|food|point_of_interest|restaurant|store,4.4,750
+Portage Bay Cafe - South Lake Union,Café,"391 Terry Ave N, Seattle, WA 98109, USA",47.621843,-122.337419,ChIJ7ZC5oTcVkFQR4tJqYR-hWbU,cafe|establishment|food|point_of_interest|restaurant,4.2,3689
+Hangar Cafe,Café,"6261 13th Ave S, Seattle, WA 98108, USA",47.5467194,-122.3164449,ChIJWRgaZOxBkFQRArhWsxJvll0,cafe|establishment|food|point_of_interest|restaurant|store,4.5,1007
+Piedmont Café,Café,"1215 Seneca St Suite 100, Seattle, WA 98101, USA",47.6115511,-122.3242818,ChIJfXq9EVxrkFQR4o4w3a_0H10,cafe|establishment|food|point_of_interest|store,4.9,242
+The 5 Point Cafe,Café,"415 Cedar St, Seattle, WA 98121, USA",47.6180712,-122.3473786,ChIJibX4ME8VkFQRypD16V31l-Q,bar|establishment|food|point_of_interest|restaurant,4.3,8623
+Tailwind Café at Good Weather,Café,"In the Alley, 1424 11th Ave, Seattle, WA 98122, USA",47.6136274,-122.3178001,ChIJzzHlqLRrkFQRcwN4t8PTzIk,bar|cafe|establishment|food|point_of_interest|restaurant|store,4.7,179
+Biscuit Bitch Pike Place,Café,"1909 1st Ave, Seattle, WA 98101, USA",47.61036499999999,-122.3417,ChIJ9Z7V1rJqkFQR4PQw1WfZh3M,cafe|establishment|food|point_of_interest|restaurant|store,4.4,3815
+Jollidaze Cafe,Café,"519 6th Ave S #110, Seattle, WA 98104, USA",47.5977971,-122.3265245,ChIJ-6-74YdrkFQRUldIRIh6Z7s,cafe|establishment|food|point_of_interest|restaurant|store,4.8,131
+Bacco Cafe,Café,"86 Pine St, Seattle, WA 98101, USA",47.6100546,-122.3413612,ChIJsShv3bJqkFQRNhAXcjjvtSU,cafe|establishment|food|point_of_interest|restaurant,4.5,1871
+Storyville Coffee Pike Place,Café,"94 Pike St Top floor Suite 34, Seattle, WA 98101, USA",47.60895,-122.3404309,ChIJBR3G8LJqkFQRWD2Wzn0qG3c,bakery|cafe|establishment|food|point_of_interest|store,4.6,3010
+Oddfellows Café + Bar,Café,"1525 10th Ave, Seattle, WA 98122, USA",47.6148992,-122.319643,ChIJZ7BwWsxqkFQRW7n0QdDE1eg,bar|cafe|establishment|food|point_of_interest|restaurant,4.3,1832
+The Outer Rim,Café,"2821 Thorndyke Ave W, Seattle, WA 98119, USA",47.6454647,-122.3830255,ChIJwR7VH2cVkFQRaLCer42Ou_Y,cafe|establishment|food|point_of_interest|store,4.9,177
+Storyville Coffee,Café,"1001 1st Ave, Seattle, WA 98104, USA",47.6047465,-122.3366066,ChIJoVOXybFqkFQRA-8a2OmkD3I,bakery|cafe|establishment|food|point_of_interest|store,4.6,810
+Hood Famous Bakeshop (Chinatown-ID),Café,"504 5th Ave S #107a, Seattle, WA 98104, USA",47.5980429,-122.3275238,ChIJEWssZr5rkFQRel6OnOIsQog,bakery|cafe|establishment|food|point_of_interest|store,4.6,653
+Yard House,Café,"1501 4th Ave, Seattle, WA 98101, USA",47.61051,-122.33735,ChIJSxHAcbNqkFQRimpTht7bPsM,bar|establishment|food|meal_takeaway|point_of_interest|restaurant,4.4,6262
+Alder & Ash,Café,"629 Pike St, Seattle, WA 98101, USA",47.6113175,-122.3334013,ChIJiajxot1rkFQRemLl_XPhBoo,establishment|food|point_of_interest|restaurant,4.4,739
+Ludi's Restaurant,Café,"120 Stewart St, Seattle, WA 98101, USA",47.610944,-122.3407198,ChIJbUAe611rkFQR_EFtZDsxaT4,establishment|food|point_of_interest|restaurant,4.6,2309
+Toulouse Petit Kitchen & Lounge,Café,"601 Queen Anne Ave N, Seattle, WA 98109, USA",47.6247613,-122.3569487,ChIJ_UHsyUMVkFQRucL7Hw-w7UE,bar|establishment|food|point_of_interest|restaurant,4.4,6460
+The Fisherman's Restaurant Seattle,Café,"1301 Alaskan Wy, Seattle, WA 98101, USA",47.605956,-122.341148,ChIJs-Di-61qkFQRlo6i3JGwHqA,bar|establishment|food|point_of_interest|restaurant,3.9,2601
+Lola,Café,"2000 B 4th Ave, Seattle, WA 98121, USA",47.613369,-122.3401471,ChIJF1wFnkwVkFQRTgUNrzxCBtQ,establishment|food|point_of_interest|restaurant,4.4,4495
+The Hart and the Hunter,Café,"109 Pine St, Seattle, WA 98101, USA",47.6099065,-122.3404332,ChIJL0zcZMprkFQRpiWglnqZ5zE,establishment|food|point_of_interest|restaurant,4.3,583
+How to Cook a Wolf,Café,"2208 Queen Anne Ave N, Seattle, WA 98109, USA",47.6387234,-122.3566423,ChIJa-hJdxIVkFQRZ7LNdZtTpv4,bar|establishment|food|point_of_interest|restaurant,4.5,1170
+Marination Ma Kai,Café,"1660 Harbor Ave SW, Seattle, WA 98126, USA",47.58943619999999,-122.3805702,ChIJsRF59nJAkFQRKis-uc-e_1k,bar|establishment|food|point_of_interest|restaurant,4.5,3639
+The George,Café,"411 University St, Seattle, WA 98101, USA",47.60805509999999,-122.3334547,ChIJkSxTm_xrkFQRyBwGa8MfLvQ,establishment|food|point_of_interest|restaurant,4.2,752
+Pasta Casalinga,Café,"93 Pike St #201, Seattle, WA 98101, USA",47.6084776,-122.3399556,ChIJAdP3V7JqkFQRh3g6UpDngzY,establishment|food|point_of_interest|restaurant,4.6,948
+Musubi Kai Seattle,Café,"108 Union St, Seattle, WA 98101, USA",47.608103,-122.3387789,ChIJuRd6ryBrkFQRgM7rGsivREs,establishment|food|point_of_interest|restaurant,4.7,295
+Von's 1000Spirits,Café,"1225 1st Ave, Seattle, WA 98101, USA",47.6066052,-122.3384085,ChIJYSjPILJqkFQRE-m7s1g6K0Y,bar|establishment|food|point_of_interest|restaurant,4.6,7094
+Tilikum Place Cafe,Café,"407 Cedar St, Seattle, WA 98121, USA",47.6179313,-122.3476593,ChIJ6TtIO08VkFQRRNn6uHOo27g,bar|establishment|food|point_of_interest|restaurant,4.6,1945
+familyfriend,Café,"3315 Beacon Ave S, Seattle, WA 98144, USA",47.5735734,-122.309043,ChIJPUrZoF5rkFQRblaP-mjuc3o,bar|establishment|food|point_of_interest|restaurant,4.2,438
+Ba Bar Capitol Hill,Café,"550 12th Ave, Seattle, WA 98122, USA",47.607007,-122.316498,ChIJnWShMMZqkFQRNz0WW0Mea9E,bar|cafe|establishment|food|meal_takeaway|point_of_interest|restaurant,4.4,2518
+Saigon Drip Cafe,Café,"161 S Washington St, Seattle, WA 98104, USA",47.6007541,-122.3323471,ChIJo_oHZdxrkFQRBGQajOZ1PCU,establishment|food|point_of_interest|restaurant,4.9,1690
+5 Spot,Café,"1502 Queen Anne Ave N, Seattle, WA 98109, USA",47.6325638,-122.3567032,ChIJyQk_QWsVkFQRBlbqLDPveRU,cafe|establishment|food|point_of_interest|restaurant|store,4.6,3581
+Sound View Cafe,Café,"1501 Pike Pl #501, Seattle, WA 98101, USA",47.6086274,-122.3407369,ChIJkX3s-LJqkFQRLapGrbyHfD0,establishment|food|point_of_interest|restaurant,4.3,1057
+Portage Bay Cafe,Café,"4130 Roosevelt Way NE, Seattle, WA 98105, USA",47.6576245,-122.3176877,ChIJzZzBbfQUkFQRP0f0nUznInY,cafe|establishment|food|point_of_interest|restaurant,4.3,2483
+Pete's Eggnest,Café,"7717 Greenwood Ave N, Seattle, WA 98103, USA",47.68530029999999,-122.3554994,ChIJ2c0RYyMUkFQRRAHJsGe6vV4,establishment|food|point_of_interest|restaurant,4.6,1201
+Wild Mountain Cafe,Café,"1408 NW 85th St, Seattle, WA 98117, USA",47.6908389,-122.3745444,ChIJGYRT54IWkFQRBMisgvsgrAk,cafe|establishment|food|point_of_interest|restaurant,4.6,722
+Seattle Children's Museum,Museum,"305 Harrison St, Seattle, WA 98109, USA",47.621394,-122.350884,ChIJsQLp1UUVkFQR4_LfZUzGukI,establishment|museum|point_of_interest|tourist_attraction,4.3,1728
+Pacific Science Center,Museum,"200 Sue Bird Ct N, Seattle, WA 98109, USA",47.62004,-122.3515628,ChIJAxZWvUwVkFQRPuvwC7JTqZk,establishment|museum|point_of_interest|tourist_attraction,4.5,7466
+PACCAR IMAX Theater at Pacific Science Center,Museum,"200 Sue Bird Ct N, Seattle, WA 98109, USA",47.61982039999999,-122.3507218,ChIJm1csoEUVkFQRZaSm9KvhWGM,establishment|movie_theater|point_of_interest,4.5,624
+Science Center Outdoor Water Area,Museum,"200 2nd Ave, Seattle, WA 98109, USA",47.6191565,-122.3516502,ChIJOR3Ou7oVkFQRwo2zzSCe6i4,establishment|museum|point_of_interest,4.3,21
+Museum of Illusions - Seattle,Museum,"1330 5th Ave, Seattle, WA 98101, USA",47.6096365,-122.3344339,ChIJJw0ZWa5rkFQR0QhsKVQ9vck,establishment|museum|point_of_interest|tourist_attraction,4.7,1625
+Laser Dome at the Pacific Science Center,Museum,"200 2nd Ave, Seattle, WA 98109, USA",47.6190604,-122.351863,ChIJc3GJj0UVkFQRwLD1TCbHuhA,establishment|point_of_interest,4.6,198
+Kids Science Labs - Seattle,Museum,"405 NE 71st St, Seattle, WA 98115, USA",47.6797349,-122.32407,ChIJ_wDwA20UkFQRFtxuL6EDJ1g,establishment|museum|point_of_interest,4.8,22
+Tropical Butterfly House,Museum,"200 2nd Ave, Seattle, WA 98109, USA",47.6190292,-122.3504859,ChIJc80YYk8VkFQRN8oK-40N_50,establishment|point_of_interest|tourist_attraction,4.7,59
+The ART INN Seattle - Family Room with car parking included,Museum,"Seattle, WA 98122, USA",47.60602189999999,-122.3156815,ChIJX1RGUMZqkFQRZkNfP__eGiA,establishment|lodging|point_of_interest,0,0
+Kids Discovery Museum,Museum,"301 Ravine Ln NE, Bainbridge Island, WA 98110, USA",47.6261421,-122.5147891,ChIJQSVrv7k-kFQR_8Ry1UmgT6Q,establishment|museum|point_of_interest|school|tourist_attraction,4.3,426
+KidsQuest Children's Museum,Museum,"1116 108th Ave NE, Bellevue, WA 98004, USA",47.6208569,-122.1959171,ChIJc8TRNYxskFQR9PcffBOC2gc,establishment|museum|point_of_interest|tourist_attraction,4.5,1996
+Seattle Aquarium,Attraction,"1483 Alaskan Way Pier 59, Seattle, WA 98101, USA",47.6074002,-122.3429559,ChIJQ_oEiK1qkFQRg3bU4l3mmWs,aquarium|establishment|point_of_interest|tourist_attraction|zoo,4.3,22880
+Seattle Public Library - Central Library,Library,"1000 4th Ave, Seattle, WA 98104, USA",47.6066621,-122.3321837,ChIJ55fLWVtBkFQR0v31eadEoLM,establishment|library|point_of_interest|tourist_attraction,4.7,1905
+Capitol Hill Branch - The Seattle Public Library,Library,"425 Harvard Ave E, Seattle, WA 98102, USA",47.6230001,-122.3223973,ChIJ1Y9IDC4VkFQRteLhIs-Bf4I,establishment|library|point_of_interest,4.4,156
+International District/Chinatown Branch - The Seattle Public Library,Library,"713 8th Ave S, Seattle, WA 98104, USA",47.59623269999999,-122.3227843,ChIJn-krn71qkFQR54uojagWKD8,establishment|library|point_of_interest,4.4,46
+Douglass-Truth Branch - The Seattle Public Library,Library,"2300 E Yesler Wy, Seattle, WA 98122, USA",47.6019184,-122.3016502,ChIJz7j3fcJqkFQR4IjrnHLzv74,establishment|library|point_of_interest,4.5,113
+Beacon Hill Branch - The Seattle Public Library,Library,"2821 Beacon Ave S #5813, Seattle, WA 98144, USA",47.5780836,-122.3114756,ChIJQ2xGQIdqkFQRDAwVMNgC7gI,establishment|library|point_of_interest,4.7,109
+Queen Anne Branch - The Seattle Public Library,Library,"400 W Garfield St, Seattle, WA 98119, USA",47.6338132,-122.362667,ChIJEw6qRGwVkFQRNJYY6wj_LXY,establishment|library|point_of_interest,4.7,101
+Friends of The Seattle Public Library,Library,"Central Library, 1000 4th Ave Level 3, Seattle, WA 98104, USA",47.60667249999999,-122.3325813,ChIJp5sIFUoVkFQRqTRE-_YZSSY,establishment|point_of_interest,4.7,10
+Fremont Branch - The Seattle Public Library,Library,"731 N 35th St, Seattle, WA 98103, USA",47.6500583,-122.3484854,ChIJoz291gAVkFQR5-kw3WppwvU,establishment|library|point_of_interest,4.6,86
+West Seattle Branch - The Seattle Public Library,Library,"2306 42nd Ave SW, Seattle, WA 98116, USA",47.5826878,-122.3847333,ChIJ3VcWbG9AkFQR-NsDgadjWO4,establishment|library|point_of_interest,4.7,79
+Madrona-Sally Goldmark Branch - The Seattle Public Library,Library,"1134 33rd Ave, Seattle, WA 98122, USA",47.6126792,-122.2900362,ChIJ3XHObSdrkFQR1ZG6wstVcZ8,establishment|library|point_of_interest,4.6,33
+Montlake Branch - The Seattle Public Library,Library,"2401 24th Ave E, Seattle, WA 98112, USA",47.6404159,-122.302498,ChIJU2vyhcMUkFQRG9TOL-sJups,establishment|library|point_of_interest,4.6,49
+Olympic Garage,Library,"415 Seneca St, Seattle, WA 98101, USA",47.6077339,-122.3331217,ChIJNeh4UrFqkFQRqtY_XqSDD8w,establishment|parking|point_of_interest,3.1,153
+Greenwood Branch - The Seattle Public Library,Library,"8016 Greenwood Ave N, Seattle, WA 98103, USA",47.6874519,-122.3547574,ChIJ7eJjtyMUkFQRlrk_dVTDvxk,establishment|library|point_of_interest,4.7,133
+Columbia Branch - The Seattle Public Library,Library,"4721 Rainier Ave S, Seattle, WA 98118, USA",47.5599006,-122.2869591,ChIJv5x3_wxqkFQRs76P7-fM9GE,establishment|library|point_of_interest,4.7,70
+Magnolia Branch - The Seattle Public Library,Library,"2801 34th Ave W, Seattle, WA 98199, USA",47.64532630000001,-122.4013851,ChIJVwuub4YVkFQRgmCNdfT17B4,establishment|library|point_of_interest,4.8,68
+Northeast Branch - The Seattle Public Library,Library,"6801 35th Ave NE, Seattle, WA 98115, USA",47.6778874,-122.2907311,ChIJK8hUloYTkFQRyiMM-7TC7Ho,establishment|library|point_of_interest,4.6,109
+High Point Branch - The Seattle Public Library,Library,"3411 SW Raymond St, Seattle, WA 98126, USA",47.5480682,-122.3758825,ChIJyyxAAAVBkFQRIwwgKaMThyA,establishment|library|point_of_interest,4.4,62
+Freeway Park,Library,"700 Seneca St, Seattle, WA 98101, USA",47.609308,-122.330903,ChIJSx5JLLRqkFQRwnvCxhDzA3o,establishment|park|point_of_interest|tourist_attraction,4.2,1156
+Wallingford Branch - The Seattle Public Library,Library,"1501 N 45th St, Seattle, WA 98103, USA",47.6612832,-122.3387458,ChIJxZL2KlcUkFQRvMj-zXRI3H0,establishment|library|point_of_interest,4.3,46
+Sky View Observatory - Columbia Center,Library,"700 4th Ave, Seattle, WA 98104, USA",47.6043639,-122.3310111,ChIJi-OPx7BqkFQR9TDCUWqViHc,establishment|point_of_interest|tourist_attraction,4.7,3726
+PlayDate SEA,Attraction,"1275 Mercer St, Seattle, WA 98109, USA",47.6236257,-122.330639,ChIJ07Tp8jAVkFQRnFaSwuWzyUQ,cafe|establishment|food|point_of_interest,4.3,701
+Twinkle Land Play Cafe,Attraction,"15510 Lake Hills Blvd, Bellevue, WA 98007, USA",47.6036403,-122.1316221,ChIJV3Z_PABtkFQRG94eTrkS13M,establishment|point_of_interest,4.3,339
+Nick's Magnificent,Attraction,"1430 NW Mall St, Issaquah, WA 98027, USA",47.5446524,-122.0601102,ChIJ4YB_HwBvkFQRAJjm9p3EimI,establishment|point_of_interest,4.8,177
+Kids Magic Lab,Attraction,"7325 166th Ave NE f235, Redmond, WA 98052, USA",47.6701853,-122.1200276,ChIJm5Um8LVzkFQRY54hsNcDZ9k,establishment|point_of_interest,4.7,136
+Ballard Playspace,Attraction,"1460 NW 73rd St, Seattle, WA 98117, USA",47.6817583,-122.3749213,ChIJmzZriiwUkFQRa3hjJrrBm7Y,establishment|point_of_interest,4.6,96
+Funtastic Playtorium,Attraction,"4077 Factoria Square Mall SE, Bellevue, WA 98006, USA",47.57371939999999,-122.1725,ChIJp7Rt-1RpkFQR4ZmoUW2DRMA,establishment|point_of_interest,4.2,516
+Safari,Attraction,"2876 Southcenter Blvd, Tukwila, WA 98188, USA",47.45847250000001,-122.2569299,ChIJF8RjDtNckFQRYLtmk5OTJCA,establishment|point_of_interest,4.5,426
+Nixi City Play + Cafe,Attraction,"1437 NW Richmond Beach Rd # E, Shoreline, WA 98177, USA",47.7694397,-122.376915,ChIJyfLYFwARkFQRPEOD9lmPm7Y,establishment|point_of_interest,4.8,57
+Funtastic Playtorium Alderwood,Attraction,"3000 184th St SW #676, Lynnwood, WA 98037, USA",47.8294399,-122.2752836,ChIJCf5nM3MFkFQRX2MdPOjm16M,establishment|point_of_interest,4.2,564
+Kids Cove @ The Square,Attraction,"212 Bellevue Way NE, Bellevue, WA 98004, USA",47.6156269,-122.2035472,ChIJfRF2c4ZskFQRjztFEA3Ef2k,establishment|point_of_interest,4,115
+WiggleWorks Kids,Attraction,"15600 NE 8th St Suite G2, Bellevue, WA 98008, USA",47.6184436,-122.1304309,ChIJ34yt0LBtkFQRcOHmK0af2Hs,establishment|point_of_interest,3.8,447
+Ahoy Kitsap Playland,Attraction,"5934 WA-303, Bremerton, WA 98311, USA",47.6150952,-122.626681,ChIJa6jPEiQ6kFQR7s2XZHk1qV8,cafe|establishment|food|point_of_interest|restaurant,4.3,634
+Wunderkind,Attraction,"3318 NE 55th St, Seattle, WA 98105, USA",47.6686478,-122.2919477,ChIJi7FB9oAUkFQRu5ETzau_RV0,bar|cafe|establishment|food|point_of_interest,4,128
+Play at the center,Attraction,"370 Thomas St, Seattle, WA 98109, USA",47.6217682,-122.3497367,ChIJz9uqfEYVkFQRVu1saZX2C9k,establishment|point_of_interest,4.7,26
+The Ridge Activity Center,Attraction,"3827 Maltby Rd, Bothell, WA 98021, USA",47.8137889,-122.1811498,ChIJGddpYgUPkFQRmhIH2cU984w,establishment|gym|health|point_of_interest,4.7,443
+Safari Auburn,Attraction,"1101 Outlet Collection Way Suite 1049, Auburn, WA 98001, USA",47.2992841,-122.2432708,ChIJe6JoaTZZkFQR0UMI9J2qKkM,establishment|point_of_interest,4.6,270
+Gas Works Park Kid Playground,Attraction,"2101 N Northlake Way, Seattle, WA 98103, USA",47.64579029999999,-122.3332984,ChIJc0mManwVkFQRvR1ZhLBABSE,establishment|point_of_interest,4.3,27
+Elevated Sportz Trampoline Park & Event Center,Attraction,"18311 Bothell Everett Hwy #140, Bothell, WA 98012, USA",47.8318555,-122.2078521,ChIJXaWT3_kFkFQRzG1tfZbo8OM,amusement_park|cafe|establishment|food|point_of_interest,4.2,1984
+The Jungle Gym,Attraction,"816 SW 152nd St, Burien, WA 98166, USA",47.4668949,-122.3453145,ChIJvc1RvZ1EkFQR9NYbK7-T25M,establishment|gym|health|point_of_interest|school,4.7,194
+Children Play Area,Attraction,"3rd floor, Bellevue Square, 575 Bellevue Way NE, Bellevue, WA 98004, USA",47.6151195,-122.2033949,ChIJ74Dwa4ZskFQRZh6nK_t2DRQ,establishment|point_of_interest,4.4,13
+Sky Zone Trampoline Park,Attraction,"455 Andover Park E, Tukwila, WA 98188, USA",47.4516537,-122.2518081,ChIJjxawQ9pckFQRhmsUWZEGzRg,establishment|point_of_interest,4.1,4110
+Sky Zone Trampoline Park,Attraction,"24000 Van Ry Blvd Suite 100, Mountlake Terrace, WA 98043, USA",47.78060079999999,-122.3156074,ChIJrYaNnd0RkFQRYqyL-eFr6Mc,establishment|point_of_interest,4,302
+Urban Air Trampoline and Adventure Park,Attraction,"400 Strander Blvd, Tukwila, WA 98188, USA",47.4562085,-122.2524535,ChIJg5ggRQBdkFQR0h9t-MpvLPg,amusement_park|establishment|health|point_of_interest|school,3.5,18
+Urban Air Trampoline and Adventure Park,Attraction,"1502 SE Everett Mall Way, Everett, WA 98208, USA",47.9114679,-122.212479,ChIJYfd2bQAHkFQR4551RLCL_gs,amusement_park|establishment|point_of_interest,4.2,137
+Activate Tukwila,Attraction,"300 Andover Park W Unit 650, Tukwila, WA 98188, USA",47.45432659999999,-122.2536413,ChIJmcsF0WFdkFQRx68vYlGc9tc,establishment|point_of_interest,5,467
+Sky Zone Trampoline Park,Attraction,"1765 22nd Ave S, Seattle, WA 98144, USA",47.5871509,-122.3041318,ChIJH0GPFgxrkFQRjvdLDGhydkI,amusement_park|establishment|point_of_interest,2.5,10
+Adventure Alley,Attraction,"2135 Sheridan Rd D, Bremerton, WA 98310, USA",47.58807909999999,-122.6144933,ChIJtZZ_Adk5kFQRY1VWaBXwVu0,establishment|point_of_interest,4.5,21
+"""Artists At Play"" Playground",Attraction,"305 Harrison St, Seattle, WA 98109, USA",47.6218952,-122.3492217,ChIJCyV7ZUYVkFQR8EKzY5kBPn0,establishment|point_of_interest,4.7,891
+Seattle Children's PlayGarden,Attraction,"1745 24th Ave S, Seattle, WA 98144, USA",47.587275,-122.3019611,ChIJm88mfNZqkFQR5BOQZnoa-CE,establishment|point_of_interest,4.6,153
+The Little Gym of Seattle at Maple Leaf,Attraction,"8830 Roosevelt Way NE, Seattle, WA 98115, USA",47.69293159999999,-122.3173054,ChIJLR3ryQoUkFQRZb7_-EVfdXI,establishment|gym|health|point_of_interest|school,4.9,206
+The Little Gym of Seattle at Interbay,Attraction,"2213 15th Ave W, Seattle, WA 98119, USA",47.6390628,-122.3765715,ChIJ4yeX03YVkFQRdaIkZJza8Ps,establishment|gym|health|point_of_interest|school,4.9,152
+Seattle Gymnastics Academy - Ballard,Attraction,"1415 NW 52nd St, Seattle, WA 98107, USA",47.66618219999999,-122.3747906,ChIJDcas-sYVkFQRV580ZJati0U,establishment|gym|health|point_of_interest,4.4,53
+Seattle Gymnastics Academy - Columbia City,Attraction,"5034 37th Ave S #200, Seattle, WA 98118, USA",47.556159,-122.2860065,ChIJmw2HpQ5qkFQRI-haE0E6xKY,establishment|gym|health|point_of_interest,3.5,62
+The Little Gym of West Seattle,Attraction,"7025 California Ave SW, Seattle, WA 98136, USA",47.5400437,-122.387519,ChIJu3AhxBdBkFQRmlfYVAuAI60,establishment|gym|health|point_of_interest|school,5,178
+Seattle Athletic Club,Attraction,"2020 Western Ave, Seattle, WA 98121, USA",47.6108856,-122.3440399,ChIJxRG0N00VkFQRDKdpTdUwLtc,establishment|gym|health|point_of_interest,4.3,166
+Yesler Community Center,Attraction,"917 E Yesler Wy, Seattle, WA 98122, USA",47.60151,-122.320222,ChIJRbDI17hqkFQRJxdIHdse8To,establishment|point_of_interest,4.3,293
+My Gym Bellevue Children's Fitness Center,Attraction,"4070 148th Ave NE, Redmond, WA 98052, USA",47.6467596,-122.1407742,ChIJ3R49_7ltkFQRtUh9KBMflUs,establishment|gym|health|point_of_interest|school,4.5,69
+Miller Community Center,Attraction,"330 19th Ave E, Seattle, WA 98112, USA",47.6217681,-122.306964,ChIJAZpvKdVqkFQRFoUYHG8OkiA,establishment|point_of_interest,4.4,212
+Jefferson Community Center,Attraction,"3801 Beacon Ave S, Seattle, WA 98108, USA",47.5696993,-122.3079517,ChIJWR7wZXhqkFQR2chT-PFZQ4A,establishment|point_of_interest,4.6,189
+Seattle Gymnastics Academy - Lake City,Attraction,"12535 26th Ave NE, Seattle, WA 98125, USA",47.7204539,-122.3007743,ChIJDYYZpmURkFQRyXjZzdm37UQ,establishment|gym|health|point_of_interest,4.4,41
+Pratt Park & Spraypark,Park,"201 20th Ave S, Seattle, WA 98144, USA",47.60071929999999,-122.3074558,ChIJPZQO6sFqkFQR9sQMLDZHT0A,establishment|park|point_of_interest,4.3,277
+Northacres Park,Park,"12718 1st Ave NE, Seattle, WA 98125, USA",47.721789,-122.327208,ChIJdcvKyEYRkFQRem886FnPXYU,establishment|park|point_of_interest,4.4,706
+Lake Union Spraypark,Park,"Valley Street and, 860 Terry Ave N, Seattle, WA 98109, USA",47.6263572,-122.3376545,ChIJ_7dCvikVkFQRwsx0KVu5QmU,amusement_park|establishment|park|point_of_interest,4.3,15
+Northacres Spraypark,Park,"12718 1st Ave NE, Seattle, WA 98125, USA",47.7220698,-122.3285167,ChIJ-9R9IEcRkFQRJAj04ZeaFQc,amusement_park|establishment|point_of_interest,4.6,192
+East Queen Anne Playground & Wading Pool,Park,"1912 Warren Ave N, Seattle, WA 98109, USA",47.6360295,-122.3539233,ChIJPXQ0oxMVkFQR9thd41WTvr8,establishment|park|point_of_interest,4.5,171
+Fritz Hedges Waterway Park,Park,"1117 NE Boat St, Seattle, WA 98105, USA",47.6520661,-122.3159908,ChIJZVlrjM8VkFQRZxEyEgaphVY,establishment|park|point_of_interest,4.8,179
+Spraypark,Park,"1100 SW Cloverdale St, Seattle, WA 98106, USA",47.527037,-122.3495613,ChIJdRejBgBBkFQRZfWy8KzLJcE,amusement_park|establishment|point_of_interest,5,5
+Wallingford Playfield Wading Pool,Park,"4219 Wallingford Ave N, Seattle, WA 98103, USA",47.65895039999999,-122.3365341,ChIJuc7GVFYUkFQR7XwqdkbaH_k,amusement_park|establishment|point_of_interest,4.5,41
+Volunteer Park Wading Pool,Park,"1417 E Highland Dr, Seattle, WA 98112, USA",47.6320702,-122.3139396,ChIJJ4Db0JEVkFQRXNJ85gjHRlM,amusement_park|establishment|point_of_interest,4.4,19
+Waterfall Garden,Park,"219 2nd Ave S, Seattle, WA 98104, USA",47.6002312,-122.3320588,ChIJteupenNrkFQR9Af94utuQOY,establishment|park|point_of_interest,4.6,1196
+Crossroads Water Spray Playground,Park,"999 164th Ave NE, Bellevue, WA 98008, USA",47.6175114,-122.1229063,ChIJT7TSErltkFQRvAYJ2VXHPHs,establishment|point_of_interest|tourist_attraction,4.6,963
+"John C. Little, Sr. Park",Park,"6961 37th Ave S, Seattle, WA 98118, USA",47.5396393,-122.2866612,ChIJDSYHFQJCkFQROpHMyn48ICY,establishment|park|point_of_interest,4.3,143
+View Ridge Playfield Wading Pool,Park,"4408 NE 70th St, Seattle, WA 98115, USA",47.6798516,-122.2812542,ChIJMwtcUJsTkFQRSMt2Em6AG0M,amusement_park|establishment|point_of_interest,3.9,15
+Spraypark,Park,"Seattle, WA 98104, USA",47.601399,-122.3208772,ChIJV4cMWgBrkFQRwMKdeD3rh3A,amusement_park|establishment|point_of_interest,5,1
+Ron K. Bills Spraypark,Park,"300 19th Ave E, Seattle, WA 98112, USA",47.62154169999999,-122.3066071,ChIJX0nBMdVqkFQRhENm2qMXt70,amusement_park|establishment|point_of_interest,4.3,9
+Van Asselt Playground Park,Park,"7050 Beacon Ave S, Seattle, WA 98108, USA",47.53943839999999,-122.2938738,ChIJM5n67fdBkFQR0p99-KSbEPk,establishment|park|point_of_interest,4.4,166
+Highland Park,Park,"1100 SW Cloverdale St, Seattle, WA 98106, USA",47.5276712,-122.3489661,ChIJ70OrcHtBkFQR157gJuS-yjc,establishment|park|point_of_interest,4.5,295
+Soundview Playfield & Wading Pool,Park,"1590 NW 90th St, Seattle, WA 98117, USA",47.69540079999999,-122.3790726,ChIJPbMxKpsWkFQRzg4dP90Hha4,establishment|park|point_of_interest,4.3,202
+Georgetown Spraypark,Park,"750 S Homer St, Seattle, WA 98108, USA",47.5522271,-122.321323,ChIJr046LABBkFQR-PMqU6pOlz0,amusement_park|establishment|point_of_interest,5,3
+E.C. Hughes Playground,Park,"2805 SW Holden St, Seattle, WA 98126, USA",47.5333419,-122.3692136,ChIJA7jFcWxBkFQRobji0_Eq5Vg,establishment|park|point_of_interest,4.4,156
+Schmitz Preserve Park,Park,"5551 SW Admiral Wy, Seattle, WA 98116, USA",47.57456089999999,-122.4005692,ChIJEVkhtItAkFQRklI_Z1OajXI,establishment|park|point_of_interest|tourist_attraction,4.8,470
+Wolf Tree Nature Area,Park,"Seattle, WA 98199, USA",47.666272,-122.4125765,ChIJr3IafvcVkFQRPBDX2psYDwQ,establishment|point_of_interest,4.9,12
+Redmond Watershed Preserve,Park,"21760 NE Novelty Hill Rd, Redmond, WA 98053, USA",47.7065365,-122.0467355,ChIJ8R1lBa0MkFQRplIALA5mx10,establishment|park|point_of_interest|tourist_attraction,4.7,716
+Arboretum Waterfront Trail,Park,"Arboretum Waterfront Trail, Seattle, WA 98112, USA",47.6462426,-122.2956569,ChIJOefy1ewVkFQRgAH5JxMHlwo,establishment|point_of_interest,4.6,50
+Interlaken Park,Park,"2451 Delmar Drive East, Seattle, WA 98102, USA",47.6354698,-122.3084,ChIJEeprvNsUkFQRPvlME87_68Q,establishment|park|point_of_interest|tourist_attraction,4.6,366
+Leschi-Lake Dell Natural Area,Park,"3525 E Terrace St, Seattle, WA 98122, USA",47.6049871,-122.2871921,ChIJu6tmi-BqkFQR97GE7ikExSI,establishment|park|point_of_interest|tourist_attraction,4.5,61
+Schmitz Park Trailhead,Park,"Schmitz Preserve Park, 5463 SW Stevens St, Seattle, WA 98116, USA",47.5775218,-122.4023016,ChIJ6fHHeRVBkFQRRsCoGv3F3Dg,establishment|point_of_interest,4.8,22
+Foster Point Trail,Park,"Foster Point Trail, Seattle, WA 98112, USA",47.6422366,-122.2917503,ChIJJ8H-WMcUkFQR_ev_pZz_s50,establishment|park|point_of_interest|tourist_attraction,4.7,125
+Kingfisher Natural Area on Thornton Creek,Park,"17th Ave NE &, NE 104th St, Seattle, WA 98125, USA",47.70383899999999,-122.3097149,ChIJAYjWaOMTkFQRMAHH80LAqJY,establishment|park|point_of_interest,4.4,60
+End of Burke Gilman Trail,Park,"Seaview &, Golden Gardens Park Rd, Seattle, WA 98117, USA",47.68779,-122.4024398,ChIJsY7svMQXkFQR9Tvu9tX15V4,establishment|park|point_of_interest,4.9,23
+Discovery Park,Park,"Seattle, WA 98199, USA",47.6613197,-122.4171413,ChIJn0CO4fAVkFQRIGP6pMpCmFE,establishment|park|point_of_interest|tourist_attraction,4.8,8286
+Elliott Bay Park,Park,"Elliott Bay Trail, Seattle, WA 98119, USA",47.6268789,-122.3759473,ChIJ04O7uWYVkFQRgIDFtkKnB7Q,establishment|park|point_of_interest,4.7,295
+Taylor Creek & Trail,Park,"68th Ave S. &, Holyoke Way S S, Seattle, WA 98178, USA",47.5086234,-122.2479652,ChIJ6TXKigpDkFQRbkRqSvNHjrw,establishment|point_of_interest,4.7,69
+Burke Gilman Trail,Park,"NE 93rd &, NE 94th St, Seattle, WA 98115, USA",47.6959282,-122.2780479,ChIJf4Ibcb8TkFQRivsruH9iuEg,establishment|point_of_interest,4.5,34
+Grace Cole Nature Park,Park,"16735 30th Ave NE, Lake Forest Park, WA 98155, USA",47.7491455,-122.2966159,ChIJs9WPRK4RkFQR7TdstSAkkA0,establishment|park|point_of_interest|tourist_attraction,4.4,100
+Frink Park,Park,"398 Lake Washington Blvd S, Seattle, WA 98144, USA",47.5992194,-122.2908351,ChIJ1ehawuVqkFQR7FCyds1Wc6U,establishment|park|point_of_interest|tourist_attraction,4.6,124
+Angle Lake Park Nature Trail,Park,"SeaTac, WA 98188, USA",47.4262096,-122.293994,ChIJ91kvCbhbkFQRttEHQPIzTZY,establishment|point_of_interest,4.2,19
+Central Park Trail,Park,"2150 S Norman St, Seattle, WA 98144, USA",47.5938489,-122.3043557,ChIJl08Tx-xqkFQRPhDqu9Abx0o,establishment|point_of_interest,4.8,12
+Myrtle Edwards Park,Park,"3130 Alaskan Way, Seattle, WA 98121, USA",47.619438,-122.361817,ChIJ4yjQRVwVkFQRGgpA_cetS70,establishment|park|point_of_interest|tourist_attraction,4.7,1697
+Golden Gardens Beach,Park,"Seaview Pl NW, Seattle, WA 98117, USA",47.69154289999999,-122.4044577,ChIJc5ItrscXkFQRfcIBRm0jCF4,establishment|point_of_interest,4.8,151
+Ravenna Park Picnic Shelter #1,Park,"2000 NE 58th St, Seattle, WA 98105, USA",47.6711372,-122.3048159,ChIJM4N6rP0VkFQRQIjZxBrI3r8,establishment|point_of_interest,4.8,25
+Marina Park Picnic Area,Park,"25 Lakeshore Plaza, Kirkland, WA 98033, USA",47.67497239999999,-122.2079464,ChIJC56VbD4TkFQRZxCWulIYbDo,establishment|point_of_interest,4.9,14
+Alki Beach Park,Park,"2665 Alki Ave SW, Seattle, WA 98116, USA",47.5801902,-122.4084891,ChIJ75GZ5YVAkFQRD5DR36vUwQM,establishment|park|point_of_interest|tourist_attraction,4.7,9318
+Picnic Point Park,Park,"7231 Picnic Point Rd, Edmonds, WA 98036, USA",47.8801358,-122.3318775,ChIJ4UHa_n4DkFQRLEKZx2Up2K4,establishment|park|point_of_interest|tourist_attraction,4.6,1911
+Picnic Shelter #3,Park,"Unnamed Road, Seattle, WA 98136, USA",47.5272002,-122.3960828,ChIJ0aMgz9tBkFQREyWsgViNdMA,establishment|point_of_interest,4.7,42
+Matthews Beach Park,Park,"5100 NE 93rd St, Seattle, WA 98115, USA",47.69650799999999,-122.2737762,ChIJn9QzzrgTkFQR_3_jS-a1i2Q,establishment|park|point_of_interest|tourist_attraction,4.5,1769
+Pioneer Square Habitat Beach,Park,"Washington Street Public Boat Landing, 199 Alaskan Wy, Seattle, WA 98104, USA",47.6012869,-122.3363981,ChIJW_B2qcxrkFQRYiflQUFYgjg,establishment|park|point_of_interest,4.9,34
+Discovery Park Beach,Park,"Fort Lawton Beach, 122.434422, Seattle, WA 98199, USA",47.6600535,-122.4311708,ChIJf0naBDg_kFQRfvgSJaRIrM8,establishment|point_of_interest,4.6,111
+Waverly Beach Park,Park,"633 Waverly Park Way, Kirkland, WA 98033, USA",47.6869314,-122.2166368,ChIJcUt4bvoSkFQR7K_IXwWKJpw,establishment|park|point_of_interest|tourist_attraction,4.7,1099
+Chism Beach Park,Park,"9600 SE 11th St, Bellevue, WA 98004, USA",47.5999272,-122.2107867,ChIJqzUhbR9rkFQRQK6lztN-kPs,establishment|park|point_of_interest,4.6,237
+Pritchard Beach Bath House,Park,"8400 55th Ave S, Seattle, WA 98118, USA",47.529789,-122.2636083,ChIJKQf1cQpCkFQRY_Wv-y4SPhk,establishment|point_of_interest|tourist_attraction,4.5,200
+Lowman Beach Park,Park,"7017 Beach Dr SW, Seattle, WA 98136, USA",47.5401444,-122.3964091,ChIJqzMjaiNBkFQRdUsko1yarps,establishment|park|point_of_interest|tourist_attraction,4.6,652
+Pritchard Island Beach,Park,"8400 55th Ave S, Seattle, WA 98118, USA",47.5286558,-122.2628937,ChIJjd1ViQpCkFQR4P2zLqh8D6w,establishment|park|point_of_interest|tourist_attraction,4.5,366
+Richmond Beach Saltwater Park,Park,"2021 NW 190th St, Shoreline, WA 98177, USA",47.7658449,-122.3833971,ChIJafU2WaQQkFQR4oI9uVn9-Ok,establishment|park|point_of_interest|tourist_attraction,4.7,3192
+Carkeek Park,Park,"950 NW Carkeek Park Rd, Seattle, WA 98177, USA",47.7115955,-122.3682005,ChIJyVw29LsWkFQRtWZ3uO0R9hA,establishment|park|point_of_interest|tourist_attraction,4.7,4359
+Calkins Point Sand Beach,Park,"Mercer Island, WA 98040, USA",47.5951582,-122.2279235,ChIJ8YJRL4JrkFQRdnf1tnffqoE,establishment|park|point_of_interest,4.7,65
+Me-Kwa-Mooks Park,Park,"4430 Beach Dr SW, Seattle, WA 98116, USA",47.5637293,-122.4058928,ChIJ7U63bu5AkFQR8k4dt9R5vv8,establishment|park|point_of_interest,4.4,360
+Carkeek Park Picnic Area,Park,"NW Carkeek Park Rd, Seattle, WA 98177, USA",47.7125102,-122.3770131,ChIJ99HHTFAXkFQRKeB6W9M-2ag,establishment|point_of_interest,4.9,8
+Picnic Party Seattle,Park,"309 S Cloverdale St Unit D30, Seattle, WA 98108, USA",47.5258111,-122.3311989,ChIJ79hAsVprkFQR76QdkLEgsvc,establishment|point_of_interest,5,81
+Washington Park Arboretum,Park,"2300 Arboretum Dr E, Seattle, WA 98112, USA",47.6364162,-122.2958146,ChIJgTy59sYUkFQRin5kehZcTqI,establishment|point_of_interest|tourist_attraction,4.8,8120
+Center for Urban Horticulture,Park,"3501 NE 41st St, Seattle, WA 98105, USA",47.6575198,-122.2900402,ChIJB7zhYpoUkFQRiilY13__Z5U,establishment|point_of_interest|tourist_attraction,4.8,113
+Highline SeaTac Botanical Garden,Park,"13735 24th Ave S, SeaTac, WA 98168, USA",47.4795849,-122.3037382,ChIJh1MKBw5DkFQRYlvD-y7bh-A,establishment|point_of_interest|tourist_attraction,4.6,1102
+Carl S. English Jr. Botanical Garden,Park,"3015 NW 54th St, Seattle, WA 98107, USA",47.6667457,-122.3974825,ChIJ0xiwDcIVkFQR94m4NKC6MrI,establishment|park|point_of_interest|tourist_attraction,4.7,854
+Pacific Connections Gardens at Washington Park Arboretum,Park,"2300 Arboretum Dr E, Seattle, WA 98112, USA",47.6299883,-122.2947965,ChIJTWMBdNIUkFQRgk7qGbVu_eo,establishment|point_of_interest|tourist_attraction,4.9,160
+Kubota Garden,Park,"9817 55th Ave S, Seattle, WA 98118, USA",47.5134676,-122.2658737,ChIJA2y97GVCkFQRLhpMnRq2Nd8,establishment|park|point_of_interest|tourist_attraction,4.7,5322
+Bellevue Botanical Garden,Park,"12001 Main St, Bellevue, WA 98005, USA",47.6091944,-122.1787564,ChIJtyvP_2ZskFQRAz9MdO6RqfM,establishment|point_of_interest|tourist_attraction,4.7,6255
+Streissguth Gardens,Park,"1640 Broadway E, Seattle, WA 98102, USA",47.634908,-122.321004,ChIJ012etiAVkFQRC_S9MrDaTLg,establishment|park|point_of_interest|tourist_attraction,4.7,162
+Seattle Japanese Garden,Park,"1075 E Lk Washington Blvd, Seattle, WA 98112, USA",47.6290005,-122.2962936,ChIJQ3K1QtIUkFQRNM3jmnMDMVk,establishment|point_of_interest|tourist_attraction,4.6,4486
+Volunteer Park Conservatory,Park,"1400 E Galer St, Seattle, WA 98112, USA",47.632123,-122.315728,ChIJW1CAetgUkFQRPxHiXgoMMi4,establishment|park|point_of_interest|tourist_attraction,4.8,1534
+Vista Gardens,Park,"124 NE 31st St, Bremerton, WA 98310, USA",47.5925497,-122.6504922,ChIJC4qMq1c3kFQRen6eSfOqkX4,establishment|point_of_interest,5,79
+Japanese Maples,Park,"J. A. Witt Winter Garden, Azalea Way, Seattle, WA 98112, USA",47.6374732,-122.2950558,ChIJ4ZBveQQVkFQRclaw4N4S90g,establishment|point_of_interest,4.5,29
+Arboretum Foundation,Park,"2300 Arboretum Dr E, Seattle, WA 98112, USA",47.6397163,-122.2944631,ChIJgTy59sYUkFQRVEfKdJ7twqo,establishment|point_of_interest|tourist_attraction,4.7,140
+Seattle Chinese Garden,Park,"6000 16th Ave SW, Seattle, WA 98106, USA",47.5517747,-122.3524943,ChIJPSZWuqVBkFQR2DUWt9wXI4w,establishment|point_of_interest|tourist_attraction,4.6,855
+Heronswood Garden,Park,"7530 NE 288th St, Kingston, WA 98346, USA",47.82080939999999,-122.5490891,ChIJ0dSF8NkekFQRaRsnJHmk4Gw,establishment|point_of_interest|store|tourist_attraction,4.9,348
+Parsons Gardens,Park,"650 W Highland Dr, Seattle, WA 98119, USA",47.6298676,-122.3661227,ChIJ7-Nc2GgVkFQRkOdZuHdsV8k,establishment|park|point_of_interest|tourist_attraction,4.7,446
+Pike Place Urban Garden,Park,"81 Pike St, Seattle, WA 98101, USA",47.6083657,-122.3406027,ChIJX33iXrJqkFQRzV9leT7NfC0,establishment|point_of_interest,4.6,20
+Graham Visitors Center,Park,"2300 Arboretum Dr E, Seattle, WA 98112, USA",47.6397846,-122.294488,ChIJYfdYCxAVkFQRA_GL6N7Iu7Q,establishment|park|point_of_interest,4.4,17

@@ -8,7 +8,7 @@ const EMPTY_FORM = {
   address: '',
   description: '',
   stages: [],
-  accessibility: [],
+  child_friendly_features: [],
   tags: [],
   submitted_by: '',
   lat: null,
@@ -127,7 +127,7 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
                 <button
                   type="button"
                   onClick={() => selectVenue(v)}
-                  className="w-full text-left px-3 py-2.5 hover:bg-muted text-foreground truncate transition-colors"
+                  className="w-full text-left px-3 py-2.5 hover:bg-muted text-foreground truncate transition-colors duration-100 ease-out"
                 >
                   {v.display_name}
                 </button>
@@ -197,7 +197,7 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
               key={s.id}
               type="button"
               onClick={() => toggleArrayField('stages', s.id)}
-              className="px-3 py-1.5 rounded-full text-xs font-medium border transition-colors"
+              className="px-3 py-1.5 rounded-full text-xs font-medium border transition-colors duration-100 ease-out"
               style={
                 form.stages.includes(s.id)
                   ? { background: 'var(--btn-selected-bg)', borderColor: 'var(--btn-selected-border)', color: 'var(--btn-selected-text)' }
@@ -220,10 +220,10 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
             <button
               key={a.id}
               type="button"
-              onClick={() => toggleArrayField('accessibility', a.id)}
-              className="px-3 py-1.5 rounded-full text-xs font-medium border transition-colors"
+              onClick={() => toggleArrayField('child_friendly_features', a.id)}
+              className="px-3 py-1.5 rounded-full text-xs font-medium border transition-colors duration-100 ease-out"
               style={
-                form.accessibility.includes(a.id)
+                form.child_friendly_features.includes(a.id)
                   ? { background: 'var(--btn-secondary-bg)', borderColor: 'var(--btn-secondary-border)', color: 'var(--btn-secondary-text)' }
                   : { background: 'var(--card)', borderColor: 'var(--border)', color: 'var(--muted-foreground)' }
               }
@@ -245,7 +245,7 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
               key={tag}
               type="button"
               onClick={() => toggleArrayField('tags', tag)}
-              className="px-3 py-1.5 rounded-full text-xs font-medium border transition-colors"
+              className="px-3 py-1.5 rounded-full text-xs font-medium border transition-colors duration-100 ease-out"
               style={
                 form.tags.includes(tag)
                   ? { background: 'var(--foreground)', borderColor: 'var(--foreground)', color: 'var(--background)' }
@@ -281,7 +281,7 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted transition-colors"
+            className="flex-1 rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted transition-colors duration-100 ease-out"
           >
             Cancel
           </button>
@@ -289,7 +289,7 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
         <button
           type="submit"
           disabled={submitting}
-          className="flex-1 rounded-xl bg-coral px-4 py-2.5 text-sm font-bold text-white disabled:opacity-50 active:scale-[0.98] transition-all"
+          className="flex-1 rounded-xl bg-coral px-4 py-2.5 text-sm font-bold text-white disabled:opacity-50 active:scale-[0.98] transition-[color,background-color,transform,opacity,box-shadow] duration-100 ease-out"
           style={{ boxShadow: 'var(--shadow-coral)' }}
         >
           {submitting ? 'Submitting…' : 'Submit place'}

@@ -49,7 +49,7 @@ export function usePlaces() {
 
     if (selectedAccess.length > 0) {
       results = results.filter((p) =>
-        selectedAccess.every((a) => p.accessibility?.includes(a))
+        selectedAccess.every((a) => p.child_friendly_features?.includes(a))
       )
     }
 

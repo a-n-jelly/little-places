@@ -12,7 +12,7 @@ create table if not exists places (
   address           text not null,
   description       text not null,
   stages            text[] default '{}',
-  accessibility     text[] default '{}',
+  child_friendly_features text[] default '{}',
   tags              text[] default '{}',
   lat               float,
   lng               float,

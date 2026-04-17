@@ -1,9 +1,9 @@
 import { supabase } from './supabase'
 
 /**
- * Fetch all places, optionally filtered by stages and accessibility tags.
+ * Fetch all places, optionally filtered by stages and child_friendly_features tags.
  */
-export async function getPlaces({ stages = [], accessibility = [] } = {}) {
+export async function getPlaces({ stages = [], child_friendly_features = [] } = {}) {
   let query = supabase
     .from('places')
     .select('*')
@@ -13,8 +13,8 @@ export async function getPlaces({ stages = [], accessibility = [] } = {}) {
     query = query.overlaps('stages', stages)
   }
 
-  if (accessibility.length > 0) {
-    query = query.contains('accessibility', accessibility)
+  if (child_friendly_features.length > 0) {
+    query = query.contains('child_friendly_features', child_friendly_features)
   }
 
   const { data, error } = await query

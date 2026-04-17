@@ -9,7 +9,7 @@ const mockPlace = {
   address: '7201 E Green Lake Dr N, Seattle',
   description: 'Beautiful lake loop with wide paved paths and playgrounds.',
   stages: ['toddler', 'preschool'],
-  accessibility: ['wheelchair'],
+  child_friendly_features: ['wheelchair'],
   tags: ['Pram Accessible', 'Free Entry'],
   rating: 4.7,
   submitted_by: 'Sarah M.',
@@ -42,7 +42,7 @@ describe('PlaceCard', () => {
     expect(screen.getByText('🎨 Preschool')).toBeInTheDocument()
   })
 
-  it('renders accessibility tags', () => {
+  it('renders child_friendly_features tags', () => {
     render(<PlaceCard place={mockPlace} />)
     expect(screen.getByText('♿ Wheelchair Accessible')).toBeInTheDocument()
   })
