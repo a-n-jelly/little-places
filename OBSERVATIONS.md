@@ -1,3 +1,13 @@
+
+#Observations
+
+- remove duplicate navigation bar in side panel
+- have search at the top next to filters
+- have we defined breakpoints? if not should define breakpoints and what the design should look like at each breakpoint
+- the location pins need to look more like google location pins with the rounded point on non active pins and with the classic location pin.
+- need to remove the tooltip location that comes up when selecting a place
+- need to have a highlights/or why this place is child friendly section that is not generic
+
 DECIDE: Chat — single line input vs back-and-forth conversation flow
 DECIDE: Trust design — how do we establish data credibility for users
 DECIDE: User verification model — how can users confirm a place is accurate

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { Search, Plus, Star, X, ChevronRight, Sparkles, Map as MapIcon, Heart } from 'lucide-react'
+import { Search, Plus, Star, X, Sparkles, Map as MapIcon } from 'lucide-react'
 import MapView from './MapView'
 import { CATEGORY_CHIPS, CAT_CFG, TYPE_COLORS } from '../lib/constants'
 
@@ -31,9 +31,8 @@ function StarRow({ rating }) {
   )
 }
 
-function PlaceDetail({ place, likedIds, onToggleLike }) {
+function PlaceDetail({ place }) {
   const cfg = CAT_CFG[place.type] ?? { emoji: '📍', color: TYPE_COLORS.Other }
-  const isLiked = likedIds.includes(place.id)
 
   return (
     <div className="p-5">
@@ -48,13 +47,6 @@ function PlaceDetail({ place, likedIds, onToggleLike }) {
           <h3 className="font-black text-foreground leading-tight text-lg">{place.name}</h3>
           <p className="text-xs text-muted-foreground font-medium mt-0.5">{place.type} · {place.address}</p>
         </div>
-        <button
-          onClick={e => onToggleLike(place.id, e)}
-          className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 transition-colors duration-100 ease-out mt-0.5"
-          style={{ background: 'var(--bg-pressed)' }}
-        >
-          <Heart size={15} className={isLiked ? 'text-coral fill-current' : 'text-muted-foreground'} />
-        </button>
       </div>
 
       {place.rating > 0 && <div className="mb-3"><StarRow rating={place.rating} /></div>}
@@ -62,7 +54,7 @@ function PlaceDetail({ place, likedIds, onToggleLike }) {
       <p className="text-sm text-muted-foreground font-medium leading-relaxed mb-4">{place.description}</p>
 
       {place.stages?.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mb-4">
+        <div className="flex flex-wrap gap-1.5">
           {place.stages.map(stage => (
             <span
               key={stage}
@@ -74,14 +66,6 @@ function PlaceDetail({ place, likedIds, onToggleLike }) {
           ))}
         </div>
       )}
-
-      <button
-        className="w-full bg-coral text-white py-3.5 rounded-2xl font-black flex items-center justify-center gap-2 active:scale-[0.98] transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
-        style={{ boxShadow: 'var(--shadow-coral)' }}
-      >
-        View full details
-        <ChevronRight size={16} strokeWidth={2.5} />
-      </button>
     </div>
   )
 }
@@ -140,7 +124,6 @@ export default function BrowseLayout({
 }) {
   const [selectedPlace, setSelectedPlace] = useState(null)
   const [sheetState, setSheetState] = useState('peek')
-  const [likedIds, setLikedIds] = useState([])
   const [activeCat, setActiveCat] = useState('all')
 
   const filteredPlaces = activeCat === 'all'
@@ -155,11 +138,6 @@ export default function BrowseLayout({
   function handleBackToList() {
     setSelectedPlace(null)
     setSheetState('list')
-  }
-
-  function toggleLike(id, e) {
-    e.stopPropagation()
-    setLikedIds(prev => prev.includes(id) ? prev.filter(l => l !== id) : [...prev, id])
   }
 
   const categoryChips = (
@@ -242,7 +220,7 @@ export default function BrowseLayout({
                   >
                     ← Back to list
                   </button>
-                  <PlaceDetail place={selectedPlace} likedIds={likedIds} onToggleLike={toggleLike} />
+                  <PlaceDetail place={selectedPlace} />
                 </motion.div>
               ) : (
                 <motion.div
@@ -365,7 +343,7 @@ export default function BrowseLayout({
               >
                 <X size={13} strokeWidth={2.5} />
               </button>
-              <PlaceDetail place={selectedPlace} likedIds={likedIds} onToggleLike={toggleLike} />
+              <PlaceDetail place={selectedPlace} />
             </motion.div>
           )}
         </AnimatePresence>
