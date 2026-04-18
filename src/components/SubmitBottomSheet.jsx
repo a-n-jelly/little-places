@@ -12,7 +12,7 @@ export default function SubmitBottomSheet({ isOpen, onClose, onSuccess }) {
     <Drawer.Root open={isOpen} onOpenChange={(open) => { if (!open) onClose() }}>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-40" style={{ background: 'var(--overlay)' }} />
-        <Drawer.Content className="bg-card flex flex-col rounded-t-3xl h-[92%] fixed bottom-0 left-0 right-0 z-50 outline-none">
+        <Drawer.Content className="bg-card flex flex-col rounded-t-3xl fixed bottom-0 left-0 right-0 z-50 outline-none min-h-0 h-[min(85dvh,720px)] border-t border-border/60 shadow-lg md:bottom-6 md:left-1/2 md:right-auto md:w-[min(36rem,calc(100%-2rem))] md:-translate-x-1/2 md:rounded-3xl md:border md:border-border/60">
           <Drawer.Title className="sr-only">Add a place</Drawer.Title>
           <Drawer.Description className="sr-only">Submit a child-friendly spot to Little Places.</Drawer.Description>
 
@@ -33,9 +33,11 @@ export default function SubmitBottomSheet({ isOpen, onClose, onSuccess }) {
             </button>
           </div>
 
-          {/* Scrollable form */}
-          <div className="flex-1 overflow-y-auto px-5 py-5">
-            <SubmitPlaceForm onSuccess={handleSuccess} />
+          {/* Scrollable form — width constrained on wide viewports; full width on small screens */}
+          <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-5 py-5">
+            <div className="mx-auto w-full max-w-xl md:max-w-[min(36rem,70vw)]">
+              <SubmitPlaceForm onSuccess={handleSuccess} />
+            </div>
           </div>
         </Drawer.Content>
       </Drawer.Portal>

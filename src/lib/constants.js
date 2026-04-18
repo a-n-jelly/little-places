@@ -49,7 +49,6 @@ export const TYPE_COLORS = {
 }
 
 export const CATEGORY_CHIPS = [
-  { id: 'all',        label: 'All',         emoji: '🗺️' },
   { id: 'Park',       label: 'Parks',       emoji: '🌿' },
   { id: 'Café',       label: 'Cafes',       emoji: '☕' },
   { id: 'Museum',     label: 'Museums',     emoji: '🏛️' },

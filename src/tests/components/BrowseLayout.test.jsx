@@ -2,18 +2,6 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import BrowseLayout from '../../components/BrowseLayout'
 
-vi.mock('../components/MapView', () => ({
-  default: ({ places, onSelectPlace }) => (
-    <div data-testid="map-view">
-      {places.map((p) => (
-        <button key={p.id} onClick={() => onSelectPlace(p)} aria-label={`Select ${p.name}`}>
-          {p.name}
-        </button>
-      ))}
-    </div>
-  ),
-}))
-
 vi.mock('../../components/MapView', () => ({
   default: ({ places, onSelectPlace }) => (
     <div data-testid="map-view">
@@ -43,8 +31,9 @@ const defaultProps = {
   onStageToggle: vi.fn(),
   onAccessToggle: vi.fn(),
   onTypeToggle: vi.fn(),
-  onHome: vi.fn(),
   onSubmitPlace: vi.fn(),
+  panelMode: 'search',
+  setPanelMode: vi.fn(),
 }
 
 describe('BrowseLayout', () => {
@@ -80,10 +69,10 @@ describe('BrowseLayout', () => {
     expect(screen.queryByRole('button', { name: 'Select Seattle Aquarium' })).not.toBeInTheDocument()
   })
 
-  it('calls onHome when "← Home" is clicked', () => {
+  it('clicking Ask AI tab requests ask mode', () => {
     render(<BrowseLayout {...defaultProps} />)
-    fireEvent.click(screen.getAllByRole('button', { name: /home/i })[0])
-    expect(defaultProps.onHome).toHaveBeenCalledTimes(1)
+    fireEvent.click(screen.getAllByRole('tab', { name: /ask ai/i })[0])
+    expect(defaultProps.setPanelMode).toHaveBeenCalledWith('ask')
   })
 
   it('calls onSubmitPlace when FAB is clicked', () => {

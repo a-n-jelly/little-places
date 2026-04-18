@@ -52,10 +52,6 @@ const newPlace = {
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
-function navigateToBrowse() {
-  fireEvent.click(screen.getByRole('button', { name: /browse the map/i }))
-}
-
 function openSubmitSheet() {
   // Both desktop and mobile FABs are in the DOM simultaneously — grab the first
   fireEvent.click(screen.getAllByRole('button', { name: /add a place/i })[0])
@@ -77,10 +73,11 @@ describe('App — T09 submission flow', () => {
     mockGetPlaces.mockResolvedValue(seedPlaces)
   })
 
-  it('app opens on AgentPanel', () => {
+  it('app opens on Explore with map and place search', async () => {
     render(<App />)
-    expect(screen.getByRole('textbox')).toBeInTheDocument() // agent input
-    expect(screen.queryByTestId('map-view')).not.toBeInTheDocument()
+    await waitFor(() => expect(mockGetPlaces).toHaveBeenCalledTimes(1))
+    expect(screen.getAllByTestId('map-view').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByPlaceholderText(/filter by name or type/i).length).toBeGreaterThanOrEqual(1)
   })
 
   it('submitting a place adds it to the top of the list in browse view', async () => {
@@ -90,7 +87,6 @@ describe('App — T09 submission flow', () => {
     // Wait for initial places to load
     await waitFor(() => expect(mockGetPlaces).toHaveBeenCalledTimes(1))
 
-    navigateToBrowse()
     openSubmitSheet()
     fillAndSubmitForm('Woodland Park Zoo')
 
@@ -108,7 +104,6 @@ describe('App — T09 submission flow', () => {
 
     await waitFor(() => expect(mockGetPlaces).toHaveBeenCalledTimes(1))
 
-    navigateToBrowse()
     openSubmitSheet()
 
     expect(screen.getByPlaceholderText(/search for a venue/i)).toBeInTheDocument()
@@ -126,7 +121,6 @@ describe('App — T09 submission flow', () => {
 
     await waitFor(() => expect(mockGetPlaces).toHaveBeenCalledTimes(1))
 
-    navigateToBrowse()
     openSubmitSheet()
     fillAndSubmitForm()
 

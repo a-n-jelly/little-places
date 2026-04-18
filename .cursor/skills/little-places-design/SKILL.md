@@ -2,7 +2,7 @@
 name: little-places-design
 description: >-
   Little Places UI and layout work: follow theme.css tokens, CLAUDE.md product rules,
-  mobile-first responsive patterns, Browse map+list behaviour, and iteration checklists.
+  mobile-first responsive patterns, Explore map+list behaviour, and iteration checklists.
   Use when improving styling, spacing, typography, breakpoints, accessibility basics, or
   translating design inspiration into code without hardcoding colours.
 ---
@@ -17,15 +17,16 @@ description: >-
 
 ## Authority order (resolve conflicts top-down)
 
-1. **Product rules** in `CLAUDE.md` — Agent vs Browse, map usage, events via agent only, mobile first, no user accounts (v1).
+1. **Product rules** in `CLAUDE.md` — Explore as the primary page, Ask AI in the agent panel, map usage, events via agent only, mobile first, no user accounts (v1).
 2. **Tokens** in `src/styles/theme.css` — semantic colours, radii, shadows, stage chips, form chip states, `@theme inline` mappings.
 3. **This skill** — spacing rhythm, responsive habits, checklists below.
 4. **General craft** (Eric Kennedy–style principles, external articles) only when they **do not** contradict 1–2. Course-style guidance applies to hierarchy and judgment; **execution** still uses project tokens.
 
 ## Non-negotiables (from CLAUDE.md)
 
-- Home: **AgentPanel** by default — not the map.
-- **Browse**: map is **primary**; list on the side.
+- **Explore** is the **single primary page** (map + list); agent and map stay on one surface.
+- **Ask AI** lives in the **agent panel** on Explore — not a separate home route.
+- **Layout:** map is **primary**; list on the side.
 - **Events** only through the agent — never on the map or as browse list items.
 - **Palette**: no hardcoded colours — use CSS variables / Tailwind semantic tokens from `theme.css`.
 - **Protected files** (changes require tests): `PlaceCard.jsx`, `FilterBar.jsx`, `SearchBar.jsx`, `usePlaces.js`, `places.js`, `constants.js` — run `npm test` before commit.
@@ -50,12 +51,40 @@ If you change the palette, update **`theme.css` in one pass** (including stage c
 - Default rhythm: **4px base** — prefer Tailwind spacing that resolves to multiples of 4 (`p-2`, `gap-3`, `p-4`, etc.).
 - Sections: consistent **vertical rhythm** between major blocks; cards: consistent **internal padding** within a surface type.
 
-## Responsive (Tailwind defaults)
+## Breakpoint reference (Tailwind v4 defaults)
 
-- **`sm`**: 640px · **`md`**: 768px · **`lg`**: 1024px · **`xl`**: 1280px (verify in Tailwind config if customised).
-- Check **overflow** (horizontal scroll), **stacking** in Browse (map + list), and **Agent** panel on narrow viewports.
+The app imports Tailwind via `src/styles/tailwind.css` with **no custom `screens` override** — prefixes match [Tailwind defaults](https://tailwindcss.com/docs/screens) unless you extend the theme.
 
-## Browse: map + list
+| Token | Min width | Role in this app |
+|-------|-----------|------------------|
+| (default) | 0 | Mobile: bottom nav, full-width surfaces, single-column Explore |
+| `sm` | 640px | Rare in core UI; use for sub-`md` tweaks only |
+| **`md`** | **768px** | **Primary:** desktop header, map + list split, centered add-place sheet |
+| `lg` | 1024px | Optional tightening; tablet landscape spot-check |
+| `xl` | 1280px | Wide desktop; check max-width / odd gaps |
+
+**Priority viewports for manual QA:** **390×844** (small phone), **767 vs 769** (straddle `md` — layout flip), **1024**, **1280**.
+
+## Per-surface responsive QA
+
+| Surface | What to verify |
+|---------|----------------|
+| **App chrome** | Below `md`: bottom nav visible, header hidden. At `md+`: header visible, bottom nav hidden. No horizontal scroll. |
+| **Explore (`BrowseLayout`)** | Map usable; list scrolls; panel tabs (Search / Ask AI) work; no broken stack. |
+| **Agent panel** | Content scrolls; input reachable; no overflow at 390px width. |
+| **Add place (`SubmitBottomSheet`)** | Sheet opens; full-width on mobile; centered card at `md+`; form scrolls inside sheet. |
+| **Tokens** | No stray brand hex — semantic tokens from `theme.css` only. |
+
+## Automated viewport smoke
+
+- Run **`pnpm run test:e2e`** (Playwright) for a small matrix: load app, assert no document horizontal overflow, open Add place. Not a substitute for manual spot-checks at the `md` boundary.
+- **CI:** `.github/workflows/ci.yml` runs **`pnpm test`** then **`pnpm run test:e2e`** on pushes and pull requests (installs Chromium for Playwright on the runner).
+
+## Responsive habits (summary)
+
+- Check **overflow** (horizontal scroll), **stacking** on Explore (map + list), and the **agent panel** on narrow viewports.
+
+## Explore: map + list
 
 - Map is the **primary** focus; list supports selection and scanning — avoid layouts that shrink the map unusably on tablet/phone.
 - Consider **thumb reach** and **scroll** in the list; do not cover **map controls** or attribution unnecessarily.
@@ -72,8 +101,8 @@ If you change the palette, update **`theme.css` in one pass** (including stage c
 
 ## Definition of done (per UI ticket)
 
-- Spot-check at roughly **390px**, **768px**, and **1024px** (or the breakpoints most affected).
-- **Done** means: no unintended horizontal scroll, no broken stack in Browse, focus still usable, tokens only (no stray brand hex).
+- Use **Breakpoint reference** and **Per-surface responsive QA** above; spot-check at **390px**, **767↔769** (layout flip), **1024px**, and **1280px** when the change touches layout.
+- **Done** means: no unintended horizontal scroll, no broken stack on Explore, focus still usable, tokens only (no stray brand hex). Run **`npm test`**; if you touched app shell or sheets, run **`npm run test:e2e`** when feasible.
 
 ## Inspiration workflow
 
@@ -93,7 +122,7 @@ If you change the palette, update **`theme.css` in one pass** (including stage c
 - Contrast on muted and chips
 - Focus visible on new controls
 - Scroll behaviour and overflow at narrow width
-- Browse: map still usable, list scrollable
+- Explore: map still usable, list scrollable
 
 ## External craft (Eric Kennedy, courses)
 

@@ -26,7 +26,7 @@ Little Places uses an agent, not just a language model. When you ask it a questi
 
 ## Product decisions worth knowing
 
-**Agent-first, not map-first.** Most parents don't want to browse — they want to be told what to do. The default experience is a conversation. Browse mode is there for when they do want to explore.
+**Agent-first value, Explore as the app.** Most parents don't want a raw list — they want to be told what to do. The product still centres on answers from the agent. The **Explore** map is the **single primary page** so the map and agent stay connected; **Ask AI** lives in the **agent panel** on that page.
 
 **Function over polish for v1.** The design will be revisited, but the structural decisions were made with that in mind to avoid a full refactor when that time comes.
 
@@ -42,7 +42,7 @@ Little Places uses an agent, not just a language model. When you ask it a questi
 
 ## What's built
 
-- AI agent home screen with agentic tool loop (places, events, weather). *Currently seeded with dummy data. Plans to add community submission are in place*
+- Explore (map + list) with **Ask AI** in the agent panel and an agentic tool loop (places, events, weather). *Currently seeded with dummy data. Plans to add community submission are in place*
 - Mapbox map view with sidebar, desktop and mobile
 - Filters: developmental stage (Baby through Tweens), accessibility, place type
 - Crowdsourced submissions, live in Supabase *Built but no data currently added through live submissions*
@@ -51,7 +51,7 @@ Little Places uses an agent, not just a language model. When you ask it a questi
 ## What's next
 
 **V1 — Where can I go?** *(current)*
-Child and family-friendly places in Seattle, vetted by parents. Ask the agent or browse the map. Filter by age, accessibility, and type. Submit a spot you love so other parents can find it too.
+Child and family-friendly places in Seattle, vetted by parents. Explore the map, filter by age, accessibility, and type, and ask the agent in the panel. Submit a spot you love so other parents can find it too.
 
 **V2 — What can I do?**
 Events and activities surfaced through the agent, so you can ask what's actually on this week — not just where to go, but what's happening when you get there.

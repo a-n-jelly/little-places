@@ -10,7 +10,7 @@ Google Maps doesn't know what a Changing Places facility is. Recommendations are
 
 ## Vision
 
-Ask the agent "what should we do today?" and get one good answer — grounded in a live database, real weather, and what's happening this week. For parents who want to explore rather than ask, Browse mode is there.
+Ask the agent "what should we do today?" and get one good answer — grounded in a live database, real weather, and what's happening this week. The app centres on **Explore** (map + list) as the primary page, with **Ask AI** in the agent panel so exploration and conversation stay on one surface.
 
 ## Phases
 
@@ -31,8 +31,11 @@ Items considered but deferred. Revisit when V1 ships.
 
 ## Decisions log
 
-### Agent-first home screen, not list or map (2026-04)
-The app opens on an AI agent, not a place list or map. Parents don't want to browse — they want an answer. "What should we do today?" is the real question. Browse mode is still reachable for when you want to explore.
+### Explore map as the only page; Ask AI in the agent panel (2026-04)
+We still lead with agent-first *value*, but the shell is **Explore** (map + list) as the single primary page so the map and agent connect easily. **Ask AI** lives in the **agent panel** on Explore. See [DECISIONS.md](DECISIONS.md) for full rationale.
+
+### Agent-first home screen, not list or map (2026-04) — updated
+Originally: the app opened on an AI agent, not a place list or map. **Update:** shell direction refined — see the decision above; agent-first value unchanged.
 
 ### Agentic loop with tools, not a plain LLM call (2026-04)
 The agent calls tools (search_places, get_weather, get_events) and gets real data before responding. The LLM has no knowledge of our specific places — any answer without tools would be hallucinated. Live data also means places, events, and weather stay current.

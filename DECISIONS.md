@@ -4,12 +4,23 @@ Architectural and product decisions, with rationale. Most recent first.
 
 ---
 
-## Agent-first home screen, not a list or map
+## Explore map as the only page; Ask AI in the agent panel
 **Date:** 2026-04
+
+We still lead with **agent-first** product thinking — parents want answers, not raw lists — but the **app shell** is a single primary screen: **Explore** (map + list). That keeps the map and the agent on the same page so we can connect focus, recommendations, and follow-up naturally (one surface, not hand-off between unrelated routes).
+
+**Ask AI** (the conversational agent) lives in the **agent panel** on Explore, not as a separate home screen. The map is not competing with a different “home”; Explore *is* the app.
+
+---
+
+## Agent-first home screen, not a list or map
+**Date:** 2026-04 · **Update:** 2026-04
 
 The app opens on an AI agent, not a place list or map. Parents don't want to browse — they want an answer. "What should we do today?" is the real question, and a list of 20 places doesn't answer it. The agent does: it checks the weather, looks at the database, and gives one clear recommendation with context.
 
 Browse mode (list + eventually map) is still there, reachable from the agent. It's for when you want to explore rather than ask.
+
+**Update:** We refined the shell: the primary UI is now Explore (map) as the single page, with Ask AI in the agent panel on that page — see the decision above. The agent-first *value* stands; the *navigation model* changed so agent and map connect easily.
 
 ---
 
