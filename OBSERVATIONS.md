@@ -1,9 +1,9 @@
-
 #Observations
 
+Selected marker get hidden when zooming out - needs to be on top of all the other markers layer
 ## Design skill — deferred / later
 
-_From little-places-design rollout; pick up with `/triage` or a design ticket._
+*From little-places-design rollout; pick up with `/triage` or a design ticket.*
 
 - **Personal `design-foundations` skill** (`~/.cursor/skills/` and/or `~/.claude/skills/`) — cross-project craft: distilled Eric Kennedy–style bullets in your own words, spacing/type habits, critique style. Point `little-places-design` at it when ready.
 - **Eric Kennedy bullets** — add 8–15 actionable bullets (your phrasing) into `design-foundations`; keep course material out of the repo.
@@ -17,6 +17,18 @@ _From little-places-design rollout; pick up with `/triage` or a design ticket._
 
 ## UI — interaction timing (follow-up)
 
-_After 100ms transition pass (Apr 2026): hover-on feels better; **mouse-out / hover end** still feels sluggish on some controls._ Possible directions later: asymmetric durations (faster exit), `transition-behavior`, audit `transition-*` on components that chain box-shadow/transform, Framer Motion vs CSS overlap.
+*After 100ms transition pass (Apr 2026): hover-on feels better; **mouse-out / hover end** still feels sluggish on some controls.* Possible directions later: asymmetric durations (faster exit), `transition-behavior`, audit `transition-`* on components that chain box-shadow/transform, Framer Motion vs CSS overlap.
 
-_Fix later — not blocking. Captured in T08._
+*Fix later — not blocking. Captured in T08.*
+
+## Agent tool description missing feature tags (Apr 2026)
+
+`child_friendly_features` options in `useAgentChat.js` AGENT_TOOLS are incomplete — missing playground-specific tags like `baby-swings`, `climbing`, `swings`, `splash-pad`, `fenced` etc. that exist in the enrichment scripts. Model can't search for what it doesn't know exists.
+
+## Data quality — feature tags in Supabase (Apr 2026)
+
+Unknown whether places in Supabase actually have playground features (e.g. `baby-swings`) populated. Enrichment scripts define these tags but unclear if they've been run against the current database. Needs a data audit.
+
+## Agent error states — needs design (Apr 2026)
+
+Agent panel shows raw error messages when the AI model is unavailable (503 high demand, 429 quota). Needs a designed error state with a friendly message and retry prompt. Relates to copy/tone guidelines too.

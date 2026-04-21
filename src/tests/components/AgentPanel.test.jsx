@@ -2,12 +2,14 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import AgentPanel from '../../components/AgentPanel'
 
-const mockCreate = vi.hoisted(() => vi.fn())
+const mockSendMessage = vi.hoisted(() => vi.fn())
+const mockStartChat = vi.hoisted(() => vi.fn(() => ({ sendMessage: mockSendMessage })))
+const mockGetGenerativeModel = vi.hoisted(() => vi.fn(() => ({ startChat: mockStartChat })))
 const mockFrom = vi.hoisted(() => vi.fn())
 
-vi.mock('@anthropic-ai/sdk', () => ({
-  default: vi.fn(function () {
-    return { messages: { create: mockCreate } }
+vi.mock('@google/generative-ai', () => ({
+  GoogleGenerativeAI: vi.fn(function () {
+    return { getGenerativeModel: mockGetGenerativeModel }
   }),
 }))
 
@@ -15,7 +17,6 @@ vi.mock('../../lib/supabase', () => ({
   supabase: { from: mockFrom },
 }))
 
-// Returns a thenable chain — await query resolves to result
 const makeMockQuery = (result = { data: [], error: null }) => ({
   select: vi.fn().mockReturnThis(),
   limit: vi.fn().mockReturnThis(),
@@ -27,13 +28,17 @@ const makeMockQuery = (result = { data: [], error: null }) => ({
 })
 
 const endTurn = (text = 'Here is a recommendation.') => ({
-  stop_reason: 'end_turn',
-  content: [{ type: 'text', text }],
+  response: {
+    functionCalls: () => [],
+    text: () => text,
+  },
 })
 
-const toolUse = (name = 'search_places', input = {}) => ({
-  stop_reason: 'tool_use',
-  content: [{ type: 'tool_use', id: 'tool_1', name, input }],
+const toolUse = (name = 'search_places', args = {}) => ({
+  response: {
+    functionCalls: () => [{ name, args }],
+    text: () => '',
+  },
 })
 
 describe('AgentPanel', () => {
@@ -41,24 +46,22 @@ describe('AgentPanel', () => {
     vi.clearAllMocks()
   })
 
-  it('submitting a query calls messages.create with the user message', async () => {
-    mockCreate.mockResolvedValueOnce(endTurn())
+  it('submitting a query calls sendMessage with the user message', async () => {
+    mockSendMessage.mockResolvedValueOnce(endTurn())
 
     render(<AgentPanel onBrowse={vi.fn()} />)
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'indoor for a toddler' } })
     fireEvent.click(screen.getByRole('button', { name: /ask/i }))
 
-    await waitFor(() => expect(mockCreate).toHaveBeenCalledTimes(1))
-    const args = mockCreate.mock.calls[0][0]
-    expect(args.model).toBe('claude-haiku-4-5-20251001')
-    expect(args.messages[0]).toEqual({ role: 'user', content: 'indoor for a toddler' })
+    await waitFor(() => expect(mockSendMessage).toHaveBeenCalledTimes(1))
+    expect(mockSendMessage).toHaveBeenCalledWith('indoor for a toddler')
   })
 
-  it('tool_use stop reason triggers runTool and continues the agentic loop', async () => {
+  it('function call triggers runTool and continues the agentic loop', async () => {
     mockFrom.mockReturnValue(
       makeMockQuery({ data: [{ id: '1', name: 'Green Lake', type: 'park' }], error: null })
     )
-    mockCreate
+    mockSendMessage
       .mockResolvedValueOnce(toolUse('search_places', { keyword: 'toddler' }))
       .mockResolvedValueOnce(endTurn('Try Green Lake!'))
 
@@ -68,25 +71,25 @@ describe('AgentPanel', () => {
 
     await waitFor(() => screen.getByText('Try Green Lake!'))
     expect(mockFrom).toHaveBeenCalledWith('places')
-    expect(mockCreate).toHaveBeenCalledTimes(2)
+    expect(mockSendMessage).toHaveBeenCalledTimes(2)
   })
 
-  it('empty search results — loop continues and reaches end_turn without crashing', async () => {
+  it('empty search results — loop continues and reaches final response without crashing', async () => {
     mockFrom.mockReturnValue(makeMockQuery({ data: [], error: null }))
-    mockCreate
+    mockSendMessage
       .mockResolvedValueOnce(toolUse('search_places', { keyword: 'toddler' }))
-      .mockResolvedValueOnce(endTurn("Nothing matched, but here are some ideas."))
+      .mockResolvedValueOnce(endTurn('Nothing matched, but here are some ideas.'))
 
     render(<AgentPanel onBrowse={vi.fn()} />)
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'toddler' } })
     fireEvent.click(screen.getByRole('button', { name: /ask/i }))
 
     await waitFor(() => screen.getByText(/Nothing matched/))
-    expect(mockCreate).toHaveBeenCalledTimes(2)
+    expect(mockSendMessage).toHaveBeenCalledTimes(2)
   })
 
-  it('messages.create throwing sets the error state', async () => {
-    mockCreate.mockRejectedValueOnce(new Error('API key invalid'))
+  it('sendMessage throwing sets the error state', async () => {
+    mockSendMessage.mockRejectedValueOnce(new Error('API key invalid'))
 
     render(<AgentPanel onBrowse={vi.fn()} />)
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'parks' } })

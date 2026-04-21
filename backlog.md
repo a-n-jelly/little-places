@@ -6,7 +6,6 @@ Cap: 15 items max. Run /triage to add from observations.md.
 
 ---
 
-T01 | P1 | bug | Remove broken "View full details" dead link — "View full details button is a dead link"
 T02 | P1 | bug | Fix webpage shake at responsive breakpoints — **breakpoints are now documented** in `.claude/skills/little-places-design/SKILL.md` (viewport QA + `npm run test:e2e`). **Remaining:** investigate layout/reflow shake when resizing across `md` (`BrowseLayout` / map); not a docs-only fix.
 T03 | P1 | bug | Fix add-place search too strict (exact match only) — "search only returns if it's exact"
 T04 | P1 | bug | Design empty states — no results + error/retry in sidebar — "UI design needed for empty states" + "error/retry unstyled"

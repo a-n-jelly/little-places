@@ -1,11 +1,8 @@
 import { useState } from 'react'
-import Anthropic from '@anthropic-ai/sdk'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 import { supabase } from '../lib/supabase'
 
-const client = new Anthropic({
-  apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
-  dangerouslyAllowBrowser: true,
-})
+const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY)
 
 export const AGENT_TOOLS = [
   {
@@ -14,7 +11,7 @@ export const AGENT_TOOLS = [
       'Search the Little Places database for child-friendly spots in Seattle. ' +
       'Use this to find parks, cafes, museums, playgrounds, and other family-friendly venues. ' +
       'You can filter by keyword, age stages, and accessibility requirements.',
-    input_schema: {
+    parameters: {
       type: 'object',
       properties: {
         keyword: {
@@ -46,7 +43,7 @@ export const AGENT_TOOLS = [
     description:
       'Get upcoming events at Little Places venues in Seattle. ' +
       'Returns recurring weekly events and one-off events happening today or this week.',
-    input_schema: {
+    parameters: {
       type: 'object',
       properties: {
         day_of_week: {
@@ -67,7 +64,7 @@ export const AGENT_TOOLS = [
     description:
       "Get current weather and today's forecast for Seattle. " +
       'Use this to factor weather into recommendations (e.g. suggest indoor venues if raining).',
-    input_schema: {
+    parameters: {
       type: 'object',
       properties: {},
       required: [],
@@ -177,43 +174,33 @@ export function useAgentChat() {
     setResponse(null)
 
     try {
-      const messages = [{ role: 'user', content: trimmed }]
+      const model = genAI.getGenerativeModel({
+        model: import.meta.env.VITE_GEMINI_MODEL ?? 'gemini-2.0-flash',
+        systemInstruction: SYSTEM_PROMPT,
+        tools: [{ functionDeclarations: AGENT_TOOLS }],
+      })
+
+      const chat = model.startChat()
+      let result = await chat.sendMessage(trimmed)
 
       while (true) {
-        const res = await client.messages.create({
-          model: 'claude-haiku-4-5-20251001',
-          max_tokens: 1024,
-          system: SYSTEM_PROMPT,
-          tools: AGENT_TOOLS,
-          messages,
-        })
+        const functionCalls = result.response.functionCalls()
 
-        messages.push({ role: 'assistant', content: res.content })
-
-        if (res.stop_reason === 'end_turn') {
-          const text = res.content.find((b) => b.type === 'text')?.text ?? ''
-          setResponse(text)
+        if (!functionCalls || functionCalls.length === 0) {
+          setResponse(result.response.text())
           break
         }
 
-        if (res.stop_reason === 'tool_use') {
-          const toolResults = []
+        const toolResults = await Promise.all(
+          functionCalls.map(async (fc) => ({
+            functionResponse: {
+              name: fc.name,
+              response: await runAgentTool(fc.name, fc.args),
+            },
+          }))
+        )
 
-          for (const block of res.content) {
-            if (block.type !== 'tool_use') continue
-            const result = await runAgentTool(block.name, block.input)
-            toolResults.push({
-              type: 'tool_result',
-              tool_use_id: block.id,
-              content: JSON.stringify(result),
-            })
-          }
-
-          messages.push({ role: 'user', content: toolResults })
-          continue
-        }
-
-        break
+        result = await chat.sendMessage(toolResults)
       }
     } catch (err) {
       setError(err.message ?? 'Something went wrong')
