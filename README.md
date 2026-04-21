@@ -42,11 +42,12 @@ Little Places uses an agent, not just a language model. When you ask it a questi
 
 ## What's built
 
-- Explore (map + list) with **Ask AI** in the agent panel and an agentic tool loop (places, events, weather). *Currently seeded with dummy data. Plans to add community submission are in place*
+- Explore (map + list) with **Ask AI** in the agent panel and an agentic tool loop (places, events, weather)
 - Mapbox map view with sidebar, desktop and mobile
 - Filters: developmental stage (Baby through Tweens), accessibility, place type
-- Crowdsourced submissions, live in Supabase *Built but no data currently added through live submissions*
-- 39 unit tests
+- Crowdsourced submissions, live in Supabase
+- 320 real places in the database
+- 56 unit tests
 
 ## What's next
 
