@@ -2,21 +2,21 @@
 
 :root {
   --font-size: 16px;
-  --background: #FAFAF7;
-  --foreground: #2D3436;
+  --background: #FFFBF0;
+  --foreground: #1E293B;
   --card: #ffffff;
-  --card-foreground: #2D3436;
+  --card-foreground: #1E293B;
   --popover: #ffffff;
-  --popover-foreground: #2D3436;
-  --primary: #F28B6E; /* Original Coral */
+  --popover-foreground: #1E293B;
+  --primary: #0369A1;
   --primary-foreground: #ffffff;
-  --secondary: #A8C5A0; /* Original Sage Green */
+  --secondary: #C2410C;
   --secondary-foreground: #ffffff;
   --muted: #F3F3F5;
-  --muted-foreground: #636E72;
-  --accent: #F9E4A0; /* Original Yellow */
-  --accent-foreground: #2D3436;
-  --destructive: #D63031;
+  --muted-foreground: #64748B;
+  --accent: #F9E4A0;
+  --accent-foreground: #1E293B;
+  --destructive: #7F1D1D;
   --destructive-foreground: #ffffff;
   --border: rgba(0, 0, 0, 0.08);
   --input: transparent;
@@ -24,21 +24,38 @@
   --switch-background: #cbced4;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: #F28B6E;
+  --ring: #0369A1;
   --radius: 1.5rem;
 
-  /* Pastel palette */
-  --sage: #A8C5A0;
-  --coral: #F28B6E;
-  --yellow: #F9E4A0;
+  /* Brand */
+  --brand-primary:     #0369A1;
+  --brand-secondary:   #C2410C;
+  --brand-destructive: #7F1D1D;
+
+  /* Interface */
+  --app-bg:        #FFFBF0;
+  --app-surface:   #FFFFFF;
+  --text-main:     #1E293B;
+  --text-muted:    #64748B;
+  --border-subtle: #E2E8F0;
+
+  /* Map marker — selected state */
+  --marker-selected:        #EF4444;
+  --marker-selected-inner:  #FCA5A5;
+  --marker-selected-border: #FFFFFF;
+  --marker-selected-shadow: rgba(239, 68, 68, 0.4);
+
+  /* Pastel palette (accent use) */
+  --sage:      #A8C5A0;
+  --yellow:    #F9E4A0;
   --off-white: #FAFAF7;
-  --sky: #EAF4F8;
+  --sky:       #EAF4F8;
 
   /* Shadows */
   --shadow-sm:    0 2px 8px rgba(0,0,0,0.06);
   --shadow-md:    0 4px 16px rgba(0,0,0,0.10);
   --shadow-lg:    0 8px 32px rgba(0,0,0,0.14);
-  --shadow-coral: 0 6px 20px rgba(242,139,110,0.30);
+  --shadow-brand: 0 6px 20px rgba(3,105,161,0.30);
   /* Map filter chips (Google-style pills): resting vs hover lift */
   --shadow-chip:       0 1px 2px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
   --shadow-chip-hover: 0 2px 8px rgba(0, 0, 0, 0.14), 0 4px 14px rgba(0, 0, 0, 0.10);
@@ -47,26 +64,52 @@
   --overlay: rgba(0,0,0,0.40);
 
   /* Standardised opacity values */
-  --border-subtle: rgba(0,0,0,0.05);
-  --bg-hover:      rgba(0,0,0,0.02);
-  --bg-pressed:    rgba(0,0,0,0.05);
+  --bg-hover:   rgba(0,0,0,0.02);
+  --bg-pressed: rgba(0,0,0,0.05);
+
+  /* --- Categorical marker colours (5 groups × 3 shades) --- */
+
+  /* Blue — Libraries */
+  --cat-blue-dark:  #0C4A6E;
+  --cat-blue-mid:   #0284C7;
+  --cat-blue-light: #7DD3FC;
+
+  /* Orange — Play / Attractions */
+  --cat-orange-dark:  #7C2D12;
+  --cat-orange-mid:   #F97316;
+  --cat-orange-light: #FDBA74;
+
+  /* Teal — Cafes */
+  --cat-teal-dark:  #134E4A;
+  --cat-teal-mid:   #0D9488;
+  --cat-teal-light: #99F6E4;
+
+  /* Purple — Museums / Education */
+  --cat-purple-dark:  #581C87;
+  --cat-purple-mid:   #9333EA;
+  --cat-purple-light: #E9D5FF;
+
+  /* Sage — Parks / Nature */
+  --cat-sage-dark:  #14532D;
+  --cat-sage-mid:   #16A34A;
+  --cat-sage-light: #BBF7D0;
 
   /* Stage chip colours */
   --stage-baby-bg:       rgba(249,228,160,0.70);
   --stage-baby-text:     #92400e;
   --stage-toddler-bg:    rgba(168,197,160,0.20);
   --stage-toddler-text:  #166534;
-  --stage-preschool-bg:  rgba(242,139,110,0.15);
-  --stage-preschool-text:#b91c1c;
+  --stage-preschool-bg:  rgba(3,105,161,0.12);
+  --stage-preschool-text:#075985;
   --stage-bigkids-bg:    #ede9fe;
   --stage-bigkids-text:  #7c3aed;
   --stage-tweens-bg:     #dbeafe;
   --stage-tweens-text:   #1d4ed8;
 
-  /* Form button — selected states */
-  --btn-selected-bg:     rgba(242,139,110,0.12);
-  --btn-selected-border: #F28B6E;
-  --btn-selected-text:   #c2440a;
+  /* Form button — selected states (azure) */
+  --btn-selected-bg:     rgba(3,105,161,0.10);
+  --btn-selected-border: #0369A1;
+  --btn-selected-text:   #075985;
 
   /* Form button — secondary selected states (accessibility chips) */
   --btn-secondary-bg:     rgba(168,197,160,0.20);
@@ -106,10 +149,10 @@
   --radius-xl: calc(var(--radius) + 8px);
 
   --color-sage: var(--sage);
-  --color-coral: var(--coral);
   --color-yellow: var(--yellow);
   --color-off-white: var(--off-white);
   --color-sky: var(--sky);
+  --color-brand-secondary: var(--brand-secondary);
 }
 
 @layer base {

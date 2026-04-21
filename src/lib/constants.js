@@ -39,12 +39,12 @@ export const PLACE_TYPES = [
 ]
 
 export const TYPE_COLORS = {
-  Park:       '#4ade80',
-  Café:       '#fb923c',
-  Museum:     '#a78bfa',
-  Attraction: '#38bdf8',
-  Library:    '#f472b6',
-  Playground: '#facc15',
+  Park:       '#16A34A',
+  Café:       '#0D9488',
+  Museum:     '#9333EA',
+  Attraction: '#7C2D12',
+  Library:    '#0284C7',
+  Playground: '#F97316',
   Other:      '#94a3b8',
 }
 
@@ -58,11 +58,11 @@ export const CATEGORY_CHIPS = [
 ]
 
 export const CAT_CFG = {
-  Park:       { emoji: '🌿', color: '#4ade80' },
-  Café:       { emoji: '☕', color: '#fb923c' },
-  Museum:     { emoji: '🏛️', color: '#a78bfa' },
-  Attraction: { emoji: '⭐', color: '#38bdf8' },
-  Library:    { emoji: '📚', color: '#f472b6' },
-  Playground: { emoji: '🛝', color: '#facc15' },
-  Other:      { emoji: '📍', color: '#94a3b8' },
+  Park:       { emoji: '🌿', color: '#16A34A', lightColor: '#BBF7D0' },
+  Café:       { emoji: '☕', color: '#0D9488', lightColor: '#99F6E4' },
+  Museum:     { emoji: '🏛️', color: '#9333EA', lightColor: '#E9D5FF' },
+  Attraction: { emoji: '⭐', color: '#7C2D12', lightColor: '#FDBA74' },
+  Library:    { emoji: '📚', color: '#0284C7', lightColor: '#7DD3FC' },
+  Playground: { emoji: '🛝', color: '#F97316', lightColor: '#FDBA74' },
+  Other:      { emoji: '📍', color: '#94a3b8', lightColor: null },
 }

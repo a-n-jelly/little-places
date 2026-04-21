@@ -289,8 +289,8 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
         <button
           type="submit"
           disabled={submitting}
-          className="flex-1 rounded-xl bg-coral px-4 py-2.5 text-sm font-bold text-white disabled:opacity-50 active:scale-[0.98] transition-[color,background-color,transform,opacity,box-shadow] duration-100 ease-out"
-          style={{ boxShadow: 'var(--shadow-coral)' }}
+          className="flex-1 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-white disabled:opacity-50 active:scale-[0.98] transition-[color,background-color,transform,opacity,box-shadow] duration-100 ease-out"
+          style={{ boxShadow: 'var(--shadow-brand)' }}
         >
           {submitting ? 'Submitting…' : 'Submit place'}
         </button>

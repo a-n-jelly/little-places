@@ -83,7 +83,7 @@ function PlaceListRow({ place, isSelected, onClick }) {
       whileHover={{ x: 2, transition: { type: 'tween', duration: 0.08, ease: 'easeOut' } }}
       onClick={onClick}
       className={`flex items-center gap-3.5 px-5 py-4 w-full text-left border-b border-border/50 transition-colors duration-100 ease-out ${
-        isSelected ? 'bg-coral/[0.05] border-l-[3px] border-l-coral pl-[17px]' : 'hover:bg-muted/40'
+        isSelected ? 'bg-brand-secondary/[0.05] border-l-[3px] border-l-brand-secondary pl-[17px]' : 'hover:bg-muted/40'
       }`}
     >
       <div
@@ -243,7 +243,7 @@ export default function BrowseLayout({
           <button
             type="submit"
             disabled={!agentQuery.trim() || agentLoading}
-            className="flex-shrink-0 px-3 py-2 rounded-xl text-xs font-black bg-coral text-white shadow-sm disabled:opacity-40 disabled:cursor-not-allowed transition-opacity duration-100"
+            className="flex-shrink-0 px-3 py-2 rounded-xl text-xs font-black bg-primary text-white shadow-sm disabled:opacity-40 disabled:cursor-not-allowed transition-opacity duration-100"
           >
             {agentLoading ? '…' : 'Ask'}
           </button>
@@ -301,10 +301,10 @@ export default function BrowseLayout({
             }
             className={`flex-shrink-0 flex items-center gap-1.5 pl-2 pr-3 py-[7px] rounded-full text-xs font-semibold transition-[color,background-color,box-shadow,transform] duration-150 ease-out ${
               isActive
-                ? 'bg-coral text-white -translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+                ? 'bg-brand-secondary text-white -translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
                 : 'bg-white text-foreground/90 hover:text-foreground hover:-translate-y-0.5 active:translate-y-0 [box-shadow:var(--shadow-chip)] hover:[box-shadow:var(--shadow-chip-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
             }`}
-            style={isActive ? { boxShadow: 'var(--shadow-coral)' } : undefined}
+            style={isActive ? { boxShadow: 'var(--shadow-brand)' } : undefined}
           >
             <span style={{ fontSize: 13 }}>{cat.emoji}</span>
             {cat.label}
@@ -374,7 +374,7 @@ export default function BrowseLayout({
                             setActiveCat(null)
                             setSearch('')
                           }}
-                          className="mt-2 text-xs font-bold text-coral underline"
+                          className="mt-2 text-xs font-bold text-primary underline"
                         >
                           Clear filters
                         </button>
@@ -407,8 +407,8 @@ export default function BrowseLayout({
           <button
             onClick={onSubmitPlace}
             aria-label="Add a place"
-            className="absolute bottom-8 right-4 z-10 flex items-center justify-center rounded-full bg-coral text-white active:scale-90 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
-            style={{ width: 52, height: 52, boxShadow: 'var(--shadow-coral)' }}
+            className="absolute bottom-8 right-4 z-10 flex items-center justify-center rounded-full bg-primary text-white active:scale-90 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
+            style={{ width: 52, height: 52, boxShadow: 'var(--shadow-brand)' }}
           >
             <Plus size={24} strokeWidth={2.5} />
           </button>
@@ -464,7 +464,7 @@ export default function BrowseLayout({
                 <button
                   type="submit"
                   disabled={!agentQuery.trim() || agentLoading}
-                  className="flex-shrink-0 px-3 py-2 rounded-xl text-xs font-black bg-coral text-white shadow-sm disabled:opacity-40"
+                  className="flex-shrink-0 px-3 py-2 rounded-xl text-xs font-black bg-primary text-white shadow-sm disabled:opacity-40"
                 >
                   {agentLoading ? '…' : 'Ask'}
                 </button>
@@ -489,8 +489,8 @@ export default function BrowseLayout({
         <button
           onClick={onSubmitPlace}
           aria-label="Add a place"
-          className="absolute right-4 z-10 flex items-center justify-center rounded-full bg-coral text-white active:scale-90 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
-          style={{ width: 52, height: 52, boxShadow: 'var(--shadow-coral)', bottom: panelMode === 'ask' ? '5.75rem' : '5.5rem' }}
+          className="absolute right-4 z-10 flex items-center justify-center rounded-full bg-primary text-white active:scale-90 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
+          style={{ width: 52, height: 52, boxShadow: 'var(--shadow-brand)', bottom: panelMode === 'ask' ? '5.75rem' : '5.5rem' }}
         >
           <Plus size={24} strokeWidth={2.5} />
         </button>

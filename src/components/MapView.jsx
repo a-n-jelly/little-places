@@ -6,9 +6,9 @@ import { TYPE_COLORS, CAT_CFG } from '../lib/constants'
 
 const SEATTLE_CENTER = { longitude: -122.33, latitude: 47.60 }
 
-/** Drop shadows aligned with theme.css --shadow-md / --shadow-coral (shape-aware filter) */
+/** Drop shadows aligned with theme.css --shadow-md / --shadow-brand (shape-aware filter) */
 const SHADOW_DEFAULT = 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.10))'
-const SHADOW_SELECTED = 'drop-shadow(0 6px 18px rgba(242, 139, 110, 0.35))'
+const SHADOW_SELECTED = 'drop-shadow(0 6px 18px rgba(239, 68, 68, 0.35))'
 
 /** Bing-style: round disk + thin stem; anchor = bottom of stem (viewBox bottom). */
 const VB_W = 24
@@ -21,30 +21,20 @@ const INNER_R = 6.75
 const STEM_TOP = HEAD_CY + HEAD_R
 const STEM_BOTTOM = 23.25
 
-/** Fixed pin size; selection reads via coral ring + one-shot scale pop (anchored at stem tip). */
+/** Fixed pin size; selection reads via marker-selected ring + one-shot scale pop (anchored at stem tip). */
 const PIN_W = 34
 
 function DropPin({ typeColor, emoji, selected }) {
   const reducedMotion = useReducedMotion()
   const H = Math.round((PIN_W * VB_H) / VB_W)
   const bulbTopPct = (HEAD_CY / VB_H) * 100
-  const fillColor = selected ? 'var(--coral)' : typeColor
+  const fillColor = selected ? 'var(--marker-selected)' : typeColor
 
   return (
     <motion.div
-      key={selected ? 'selected' : 'idle'}
       className="relative"
-      initial={{ scale: 1 }}
-      animate={
-        selected && !reducedMotion
-          ? { scale: [1, 1.14, 1] }
-          : { scale: 1 }
-      }
-      transition={
-        selected && !reducedMotion
-          ? { duration: 0.5, times: [0, 0.38, 1], ease: ['easeOut', 'easeOut'] }
-          : { duration: 0.12 }
-      }
+      animate={{ scale: selected ? 1.3 : 1 }}
+      transition={reducedMotion ? { duration: 0 } : { duration: 0.15, ease: 'easeOut' }}
       whileHover={selected ? undefined : { scale: 1.05 }}
       whileTap={{ scale: 0.96 }}
       style={{
@@ -57,21 +47,10 @@ function DropPin({ typeColor, emoji, selected }) {
     >
       <svg width={PIN_W} height={H} viewBox={`0 0 ${VB_W} ${VB_H}`} fill="none" aria-hidden>
         <ellipse cx={HEAD_CX} cy={VB_H - 0.35} rx="2.2" ry="0.7" fill="var(--foreground)" opacity={0.12} />
-        {selected && (
-          <circle
-            cx={HEAD_CX}
-            cy={HEAD_CY}
-            r={HEAD_R + 2.25}
-            fill="none"
-            stroke="var(--coral)"
-            strokeWidth={2}
-            opacity={0.95}
-          />
-        )}
         {/* Colored disk (Bing-style solid head) */}
         <circle cx={HEAD_CX} cy={HEAD_CY} r={HEAD_R} fill={fillColor} />
-        {/* White inner for emoji */}
-        <circle cx={HEAD_CX} cy={HEAD_CY} r={INNER_R} fill="var(--card)" />
+        {/* Inner circle: light red when selected, white otherwise */}
+        <circle cx={HEAD_CX} cy={HEAD_CY} r={INNER_R} fill={selected ? 'var(--marker-selected-inner)' : 'var(--card)'} />
         {/* Thin stem — map anchor is bottom of SVG = stem end */}
         <line
           x1={HEAD_CX}
@@ -83,19 +62,21 @@ function DropPin({ typeColor, emoji, selected }) {
           strokeLinecap="round"
         />
       </svg>
-      <span
-        style={{
-          position: 'absolute',
-          top: `${bulbTopPct}%`,
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          fontSize: 13,
-          lineHeight: 1,
-          pointerEvents: 'none',
-        }}
-      >
-        {emoji}
-      </span>
+      {!selected && (
+        <span
+          style={{
+            position: 'absolute',
+            top: `${bulbTopPct}%`,
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            fontSize: 13,
+            lineHeight: 1,
+            pointerEvents: 'none',
+          }}
+        >
+          {emoji}
+        </span>
+      )}
     </motion.div>
   )
 }
