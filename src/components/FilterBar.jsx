@@ -19,7 +19,7 @@ export default function FilterBar({ selectedStages, selectedAccess, selectedType
                   : { background: 'var(--card)', borderColor: 'var(--border)', color: 'var(--muted-foreground)' }
               }
             >
-              {s.label}
+              {s.label} {s.range}
             </button>
           ))}
         </div>

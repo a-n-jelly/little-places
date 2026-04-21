@@ -87,7 +87,7 @@ const FEATURE_VOCAB = {
   ],
 }
 
-const STAGES_LIST = ['infant', 'toddler', 'preschool', 'school-age', 'all-ages']
+const STAGES_LIST = ['baby', 'toddler', 'preschool', 'bigkids', 'tweens']
 
 // ── CSV parse (minimal, handles quoted fields) ────────────────────────────────
 

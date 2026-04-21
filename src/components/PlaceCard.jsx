@@ -45,7 +45,7 @@ export default function PlaceCard({ place, onClick }) {
               className="text-xs px-2 py-0.5 rounded-full"
               style={{ background: 'var(--btn-secondary-bg)', color: 'var(--btn-secondary-text)' }}
             >
-              {stage?.label}
+              {stage ? `${stage.label} ${stage.range}` : s}
             </span>
           )
         })}

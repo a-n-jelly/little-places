@@ -60,7 +60,7 @@ const FEATURE_VOCAB = {
   Other:      ['stroller-accessible', 'family-friendly', 'kids-welcome', 'changing-table', 'free-entry'],
 }
 
-const STAGES_LIST = ['infant', 'toddler', 'preschool', 'school-age', 'all-ages']
+const STAGES_LIST = ['baby', 'toddler', 'preschool', 'bigkids', 'tweens']
 
 // ── Parse input file ──────────────────────────────────────────────────────────
 

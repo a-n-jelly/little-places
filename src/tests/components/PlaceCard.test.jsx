@@ -38,8 +38,8 @@ describe('PlaceCard', () => {
 
   it('renders stage tags', () => {
     render(<PlaceCard place={mockPlace} />)
-    expect(screen.getByText('🧒 Toddler')).toBeInTheDocument()
-    expect(screen.getByText('🎨 Preschool')).toBeInTheDocument()
+    expect(screen.getByText('🧒 Toddler 1–3y')).toBeInTheDocument()
+    expect(screen.getByText('🎨 Preschool 3–5y')).toBeInTheDocument()
   })
 
   it('renders child_friendly_features tags', () => {
