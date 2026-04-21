@@ -1,5 +1,6 @@
-import { useState, useCallback } from 'react'
-import Map, { Marker, Popup } from 'react-map-gl/mapbox'
+import { useCallback } from 'react'
+import { motion, useReducedMotion } from 'motion/react'
+import Map, { Marker } from 'react-map-gl/mapbox'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { TYPE_COLORS, CAT_CFG } from '../lib/constants'
 
@@ -20,27 +21,53 @@ const INNER_R = 6.75
 const STEM_TOP = HEAD_CY + HEAD_R
 const STEM_BOTTOM = 23.25
 
+/** Fixed pin size; selection reads via coral ring + one-shot scale pop (anchored at stem tip). */
+const PIN_W = 34
+
 function DropPin({ typeColor, emoji, selected }) {
-  const W = selected ? 40 : 34
-  const H = Math.round((W * VB_H) / VB_W)
-  const emojiSize = selected ? 16 : 13
+  const reducedMotion = useReducedMotion()
+  const H = Math.round((PIN_W * VB_H) / VB_W)
   const bulbTopPct = (HEAD_CY / VB_H) * 100
   const fillColor = selected ? 'var(--coral)' : typeColor
 
   return (
-    <div
-      className={`relative transition-transform duration-100 ease-out ${
-        selected ? 'scale-[1.08]' : 'hover:scale-105'
-      }`}
+    <motion.div
+      key={selected ? 'selected' : 'idle'}
+      className="relative"
+      initial={{ scale: 1 }}
+      animate={
+        selected && !reducedMotion
+          ? { scale: [1, 1.14, 1] }
+          : { scale: 1 }
+      }
+      transition={
+        selected && !reducedMotion
+          ? { duration: 0.5, times: [0, 0.38, 1], ease: ['easeOut', 'easeOut'] }
+          : { duration: 0.12 }
+      }
+      whileHover={selected ? undefined : { scale: 1.05 }}
+      whileTap={{ scale: 0.96 }}
       style={{
-        width: W,
+        width: PIN_W,
         height: H,
+        transformOrigin: '50% 100%',
         filter: selected ? SHADOW_SELECTED : SHADOW_DEFAULT,
         cursor: 'pointer',
       }}
     >
-      <svg width={W} height={H} viewBox={`0 0 ${VB_W} ${VB_H}`} fill="none" aria-hidden>
+      <svg width={PIN_W} height={H} viewBox={`0 0 ${VB_W} ${VB_H}`} fill="none" aria-hidden>
         <ellipse cx={HEAD_CX} cy={VB_H - 0.35} rx="2.2" ry="0.7" fill="var(--foreground)" opacity={0.12} />
+        {selected && (
+          <circle
+            cx={HEAD_CX}
+            cy={HEAD_CY}
+            r={HEAD_R + 2.25}
+            fill="none"
+            stroke="var(--coral)"
+            strokeWidth={2}
+            opacity={0.95}
+          />
+        )}
         {/* Colored disk (Bing-style solid head) */}
         <circle cx={HEAD_CX} cy={HEAD_CY} r={HEAD_R} fill={fillColor} />
         {/* White inner for emoji */}
@@ -62,23 +89,20 @@ function DropPin({ typeColor, emoji, selected }) {
           top: `${bulbTopPct}%`,
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          fontSize: emojiSize,
+          fontSize: 13,
           lineHeight: 1,
           pointerEvents: 'none',
         }}
       >
         {emoji}
       </span>
-    </div>
+    </motion.div>
   )
 }
 
 export default function MapView({ places = [], onSelectPlace, selectedPlace }) {
-  const [popupPlace, setPopupPlace] = useState(null)
-
   const handleMarkerClick = useCallback((e, place) => {
     e.originalEvent?.stopPropagation()
-    setPopupPlace(place)
     onSelectPlace?.(place)
   }, [onSelectPlace])
 
@@ -115,22 +139,6 @@ export default function MapView({ places = [], onSelectPlace, selectedPlace }) {
           </button>
         </Marker>
       ))}
-
-      {popupPlace && (
-        <Popup
-          longitude={popupPlace.lng}
-          latitude={popupPlace.lat}
-          anchor="top"
-          onClose={() => setPopupPlace(null)}
-          closeOnClick={false}
-        >
-          <div className="p-1 min-w-[160px]">
-            <p className="font-semibold text-foreground text-sm leading-tight">{popupPlace.name}</p>
-            <p className="text-xs text-muted-foreground mt-0.5">{popupPlace.type}</p>
-            <p className="text-xs text-muted-foreground/70 mt-0.5 leading-snug">{popupPlace.address}</p>
-          </div>
-        </Popup>
-      )}
     </Map>
   )
 }

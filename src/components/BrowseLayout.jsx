@@ -284,7 +284,12 @@ export default function BrowseLayout({
   )
 
   const categoryChips = (
-    <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
+    <div
+      className="flex gap-2 overflow-x-auto pb-1 max-w-[min(100%,42rem)]"
+      style={{ scrollbarWidth: 'none' }}
+      role="toolbar"
+      aria-label="Filter by place category"
+    >
       {CATEGORY_CHIPS.map((cat) => {
         const isActive = activeCat === cat.id
         return (
@@ -294,14 +299,12 @@ export default function BrowseLayout({
             onClick={() =>
               setActiveCat((prev) => (prev === cat.id ? null : cat.id))
             }
-            className={`flex-shrink-0 flex items-center gap-1.5 pl-2 pr-3 py-[7px] rounded-full text-xs font-bold transition-[color,background-color,box-shadow] duration-100 ease-out ${
+            className={`flex-shrink-0 flex items-center gap-1.5 pl-2 pr-3 py-[7px] rounded-full text-xs font-semibold transition-[color,background-color,box-shadow,transform] duration-150 ease-out ${
               isActive
-                ? 'bg-coral text-white'
-                : 'bg-white text-muted-foreground hover:text-foreground'
+                ? 'bg-coral text-white -translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+                : 'bg-white text-foreground/90 hover:text-foreground hover:-translate-y-0.5 active:translate-y-0 [box-shadow:var(--shadow-chip)] hover:[box-shadow:var(--shadow-chip-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
             }`}
-            style={{
-              boxShadow: isActive ? 'var(--shadow-coral)' : 'var(--shadow-sm)',
-            }}
+            style={isActive ? { boxShadow: 'var(--shadow-coral)' } : undefined}
           >
             <span style={{ fontSize: 13 }}>{cat.emoji}</span>
             {cat.label}
@@ -395,7 +398,7 @@ export default function BrowseLayout({
         <div className="flex-1 relative">
           <MapView places={filteredPlaces} onSelectPlace={handleSelectPlace} selectedPlace={selectedPlace} />
 
-          <div className="absolute top-4 left-0 right-0 z-10 flex justify-center pointer-events-none">
+          <div className="absolute top-4 left-0 right-0 z-20 flex justify-center pointer-events-none">
             <div className="pointer-events-auto px-4">
               {categoryChips}
             </div>
@@ -418,8 +421,8 @@ export default function BrowseLayout({
           <MapView places={filteredPlaces} onSelectPlace={handleSelectPlace} selectedPlace={selectedPlace} />
         </div>
 
-        <div className="absolute top-4 left-0 right-0 z-10 flex justify-center pointer-events-none">
-          <div className="pointer-events-auto px-4 overflow-x-auto" style={{ scrollbarWidth: 'none', maxWidth: '100%' }}>
+        <div className="absolute top-4 left-0 right-0 z-20 flex justify-center pointer-events-none">
+          <div className="pointer-events-auto px-4 w-full flex justify-center overflow-x-auto" style={{ scrollbarWidth: 'none', maxWidth: '100%' }}>
             {categoryChips}
           </div>
         </div>

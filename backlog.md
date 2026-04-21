@@ -22,7 +22,7 @@ T11 | P2 | feature | Evaluate agent model switch to free tier — "Look at evals
 T12 | P2 | feature | Add user feedback mechanism — "is there a way for users to send me feedback?"
 T13 | P2 | feature | Clean and consolidate place tags — "need to clean the tags and see if there is noise"
 T14 | P2 | feature | Improve place description quality + add child-friendly highlights section — "Some places have bad descriptions" + "need highlights/why child friendly section that is not generic"
-T15 | P3 | idea | Restaurants icon — "restaurants need their own icon"
+T15 | P3 | idea | **Deferred** — Per-type emoji/icon beyond our `PLACE_TYPES` (e.g. map all Google Place types): low priority; many types, not all useful; revisit when we persist `google_types` or need finer-grained UI — "restaurants need their own icon"
 
 ## Parked — needs decision before ticketing
 - Chat input: single-line vs conversation flow
