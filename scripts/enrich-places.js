@@ -6,8 +6,7 @@
  * Calls Claude (haiku) in batches to generate:
  *   - description (1-2 sentences, child-focused)
  *   - stages (array from: infant, toddler, preschool, school-age, all-ages)
- *   - child_friendly_features (type-specific feature tags)
- *   - tags (neighbourhood / vibe / occasion tags)
+ *   - child_friendly_features (type-specific feature tags from FEATURE_VOCAB)
  *
  * Usage:
  *   node scripts/enrich-places.js <input.csv>
@@ -27,6 +26,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import 'dotenv/config.js'
 import Anthropic from '@anthropic-ai/sdk'
+import { FEATURE_VOCAB } from '../src/lib/constants.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(__dirname, '..')
@@ -48,44 +48,6 @@ if (!INPUT_PATH) {
 const BATCH_SIZE = 10
 
 const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY })
-
-// ── Feature vocabulary per type ───────────────────────────────────────────────
-
-const FEATURE_VOCAB = {
-  Playground: [
-    'climbing', 'swings', 'splash-pad', 'baby-swings', 'fenced',
-    'accessible-equipment', 'sand-pit', 'nature-play', 'skate-park',
-  ],
-  Park: [
-    'paved-paths', 'shade', 'restrooms-nearby', 'stroller-friendly',
-    'beach-access', 'easy-grade', 'picnic-area', 'swimming',
-    'splash-pad', 'fenced', 'nature-play',
-  ],
-  'Café': [
-    'high-chairs', 'kids-menu', 'booster-seats', 'changing-table',
-    'stroller-accessible', 'outdoor-seating', 'crayons-activities',
-    'noise-tolerant', 'kids-eat-free',
-  ],
-  Museum: [
-    'hands-on-exhibits', 'kids-programs', 'stroller-friendly',
-    'nursing-room', 'interactive-displays', 'family-discount',
-    'free-entry', 'sensory-friendly',
-  ],
-  Library: [
-    'storytime', 'kids-section', 'quiet-room', 'family-events',
-    'free-entry', 'reading-programs', 'maker-space', 'multilingual',
-  ],
-  Attraction: [
-    'soft-play', 'age-sections', 'cafe-on-site', 'party-rooms',
-    'sensory-friendly', 'toddler-sessions', 'adult-seating',
-    'socks-required', 'hands-on-exhibits', 'stroller-friendly',
-    'family-discount', 'free-entry',
-  ],
-  Other: [
-    'stroller-accessible', 'family-friendly', 'kids-welcome',
-    'changing-table', 'free-entry',
-  ],
-}
 
 const STAGES_LIST = ['baby', 'toddler', 'preschool', 'bigkids', 'tweens']
 
@@ -156,7 +118,6 @@ For each place below, return a JSON array with one object per place. Each object
 - "description": 1-2 warm, specific sentences about why this place is great for families with kids. Write in second person ("You'll find…", "Kids love…"). Do not use generic phrases.
 - "stages": array of applicable age stages from: ${STAGES_LIST.join(', ')}. Use your knowledge of the place type and name.
 - "child_friendly_features": array of 2-5 tags chosen ONLY from the available features listed for each place's type.
-- "tags": array of 2-4 lowercase tags for neighbourhood/vibe/occasion (e.g. "ballard", "rainy-day", "free", "outdoor", "sensory-friendly", "toddler-favourite").
 
 Return ONLY the JSON array, no other text.
 
@@ -179,7 +140,7 @@ ${placeList}`
   } catch {
     console.warn('  ⚠️  Failed to parse Claude response — skipping batch')
     console.warn('  Raw:', text.slice(0, 200))
-    return places.map(() => ({ description: '', stages: [], child_friendly_features: [], tags: [] }))
+    return places.map(() => ({ description: '', stages: [], child_friendly_features: [] }))
   }
 }
 
@@ -223,7 +184,6 @@ async function main() {
         description:             enrichment.description ?? '',
         stages:                  JSON.stringify(enrichment.stages ?? []),
         child_friendly_features: JSON.stringify(enrichment.child_friendly_features ?? []),
-        tags:                    JSON.stringify(enrichment.tags ?? []),
         lat:                     original.lat ?? '',
         lng:                     original.lng ?? '',
         submitted_by:            'admin',
@@ -242,7 +202,7 @@ async function main() {
   const baseName = path.basename(inputAbs, path.extname(inputAbs))
   const outPath = path.join(ROOT, 'output', 'enriched', `${baseName}_enriched.csv`)
 
-  const headers = ['name', 'type', 'address', 'description', 'stages', 'child_friendly_features', 'tags', 'lat', 'lng', 'submitted_by', 'rating', 'is_seed']
+  const headers = ['name', 'type', 'address', 'description', 'stages', 'child_friendly_features', 'lat', 'lng', 'submitted_by', 'rating', 'is_seed']
   const header = headers.join(',')
   const lines = enriched.map((r) => headers.map((h) => escapeCsv(r[h])).join(','))
 

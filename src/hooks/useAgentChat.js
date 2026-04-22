@@ -10,7 +10,7 @@ export const AGENT_TOOLS = [
     description:
       'Search the Little Places database for child-friendly spots in Seattle. ' +
       'Use this to find parks, cafes, museums, playgrounds, and other family-friendly venues. ' +
-      'You can filter by keyword, age stages, and accessibility requirements.',
+      'You can filter by keyword, age stages, and specific child-friendly features.',
     parameters: {
       type: 'object',
       properties: {
@@ -28,7 +28,11 @@ export const AGENT_TOOLS = [
           type: 'array',
           items: { type: 'string' },
           description:
-            'Child-friendly features to filter by. Options: wheelchair, changing_places, sensory_friendly, autism_friendly, quiet_space, blue_badge',
+            'Child-friendly features to filter by. ' +
+            'Playground/Park: climbing, swings, splash-pad, baby-swings, enclosed-outdoor-space, sand-pit, nature-play, paved-paths, shade, restrooms-nearby, stroller-friendly, beach-access, picnic-area, swimming. ' +
+            'Café: high-chairs, kids-menu, booster-seats, changing-table, stroller-friendly, outdoor-seating, crayons-activities, noise-tolerant, kids-eat-free, nursing-room. ' +
+            'Museum/Attraction: hands-on-exhibits, kids-programs, interactive-displays, family-discount, free-entry, sensory-friendly, soft-play, toddler-sessions, age-sections, cafe-on-site, party-rooms, adult-seating, socks-required, nursing-room. ' +
+            'Library: storytime, kids-section, quiet-room, family-events, free-entry, reading-programs, maker-space, multilingual, cafe-on-site, sensory-sessions.',
         },
         limit: {
           type: 'number',

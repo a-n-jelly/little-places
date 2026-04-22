@@ -12,7 +12,7 @@
  *
  * Input:  output/google/raw_places_with_reviews.csv
  * Output: output/enriched/review_features.csv
- *         columns: place_id, name, additional_features (JSON), additional_tags (JSON)
+ *         columns: place_id, name, additional_features (JSON)
  *
  * Next step:
  *   node scripts/apply-review-features.js
@@ -23,6 +23,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import 'dotenv/config.js'
 import Anthropic from '@anthropic-ai/sdk'
+import { FEATURE_VOCAB } from '../src/lib/constants.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.join(__dirname, '..')
@@ -40,21 +41,6 @@ const OUTPUT_PATH = path.join(ROOT, 'output', 'enriched', 'review_features.csv')
 const BATCH_SIZE  = 10
 
 const client = new Anthropic({ apiKey: ANTHROPIC_API_KEY })
-
-// ── Feature vocabulary (mirrors enrich-places.js) ────────────────────────────
-
-const FEATURE_VOCAB = {
-  Playground: ['climbing', 'swings', 'splash-pad', 'baby-swings', 'fenced', 'accessible-equipment', 'sand-pit', 'nature-play', 'skate-park'],
-  Park:       ['paved-paths', 'shade', 'restrooms-nearby', 'stroller-friendly', 'beach-access', 'easy-grade', 'picnic-area', 'swimming', 'splash-pad', 'fenced', 'nature-play'],
-  'Café':     ['high-chairs', 'kids-menu', 'booster-seats', 'changing-table', 'stroller-accessible', 'outdoor-seating', 'crayons-activities', 'noise-tolerant', 'kids-eat-free'],
-  Museum:     ['hands-on-exhibits', 'kids-programs', 'stroller-friendly', 'nursing-room', 'interactive-displays', 'family-discount', 'free-entry', 'sensory-friendly'],
-  Library:    ['storytime', 'kids-section', 'quiet-room', 'family-events', 'free-entry', 'reading-programs', 'maker-space', 'multilingual'],
-  Attraction: ['soft-play', 'age-sections', 'cafe-on-site', 'party-rooms', 'sensory-friendly', 'toddler-sessions', 'adult-seating', 'socks-required', 'hands-on-exhibits', 'stroller-friendly', 'family-discount', 'free-entry'],
-  Other:      ['stroller-accessible', 'family-friendly', 'kids-welcome', 'changing-table', 'free-entry'],
-}
-
-// Tags are open-ended (neighbourhood, vibe, occasion) — Claude can add any that are clearly reviewer-confirmed
-const TAG_EXAMPLES = ['free', 'outdoor', 'rainy-day', 'sensory-friendly', 'toddler-favourite', 'quiet', 'busy', 'fenced']
 
 // ── CSV helpers ───────────────────────────────────────────────────────────────
 
@@ -114,12 +100,11 @@ async function extractBatch(places) {
 ${reviews.map((r, j) => `     [${j + 1}] ${r}`).join('\n')}`
   })
 
-  // Filter out places with no reviews — return empty results for them
   const withReviews = placeList.map((text, i) => ({ text, index: i, place: places[i] }))
     .filter(({ text }) => text !== null)
 
   if (withReviews.length === 0) {
-    return places.map(() => ({ additional_features: [], additional_tags: [] }))
+    return places.map(() => ({ additional_features: [] }))
   }
 
   const prompt = `You are extracting child-friendly features from real user reviews of Seattle family-friendly places.
@@ -128,12 +113,10 @@ For each place below, identify features that reviewers explicitly confirm are pr
 - Only include a feature if a reviewer clearly states or strongly implies it exists
 - Do not infer features that aren't mentioned (e.g. if no one mentions high chairs, don't add high-chairs)
 - Choose features ONLY from the allowed vocabulary listed for each place
-- For tags, add 1-3 lowercase vibe/occasion tags (e.g. "free", "toddler-favourite", "rainy-day", "quiet", "busy", "fenced") only if clearly supported by reviews
 
 Return a JSON array with one object per place in the order given. Each object:
 {
-  "additional_features": [],   // subset of the allowed features list, confirmed by reviews
-  "additional_tags": []        // vibe/occasion tags clearly supported by reviews
+  "additional_features": []   // subset of the allowed features list, confirmed by reviews
 }
 
 If reviews don't confirm any features, return empty arrays — do NOT make things up.
@@ -157,13 +140,12 @@ ${withReviews.map(({ text }) => text).join('\n\n')}`
     parsed = JSON.parse(cleaned)
   } catch {
     console.warn('  ⚠️  Failed to parse Claude response — returning empty results for batch')
-    parsed = withReviews.map(() => ({ additional_features: [], additional_tags: [] }))
+    parsed = withReviews.map(() => ({ additional_features: [] }))
   }
 
-  // Reconstruct full results array (including empty slots for places with no reviews)
-  const results = places.map(() => ({ additional_features: [], additional_tags: [] }))
+  const results = places.map(() => ({ additional_features: [] }))
   withReviews.forEach(({ index }, j) => {
-    results[index] = parsed[j] ?? { additional_features: [], additional_tags: [] }
+    results[index] = parsed[j] ?? { additional_features: [] }
   })
   return results
 }
@@ -188,9 +170,9 @@ async function main() {
   const results = []
 
   for (let i = 0; i < rows.length; i += BATCH_SIZE) {
-    const batch     = rows.slice(i, i + BATCH_SIZE)
-    const batchNum  = Math.floor(i / BATCH_SIZE) + 1
-    const total     = Math.ceil(rows.length / BATCH_SIZE)
+    const batch    = rows.slice(i, i + BATCH_SIZE)
+    const batchNum = Math.floor(i / BATCH_SIZE) + 1
+    const total    = Math.ceil(rows.length / BATCH_SIZE)
     console.log(`🤖  Batch ${batchNum}/${total} (${batch.length} places)…`)
 
     let extracted
@@ -198,23 +180,21 @@ async function main() {
       extracted = await extractBatch(batch)
     } catch (err) {
       console.warn(`  ⚠️  Batch failed — ${err.message}. Using empty results.`)
-      extracted = batch.map(() => ({ additional_features: [], additional_tags: [] }))
+      extracted = batch.map(() => ({ additional_features: [] }))
     }
 
     for (let j = 0; j < batch.length; j++) {
       const row = batch[j]
-      const ext = extracted[j] ?? { additional_features: [], additional_tags: [] }
+      const ext = extracted[j] ?? { additional_features: [] }
       const featCount = ext.additional_features.length
-      const tagCount  = ext.additional_tags.length
-      if (featCount > 0 || tagCount > 0) {
-        console.log(`  ✓ "${row.name}" — +${featCount} features, +${tagCount} tags`)
+      if (featCount > 0) {
+        console.log(`  ✓ "${row.name}" — +${featCount} features`)
       }
       results.push({
         place_id:            row.place_id ?? '',
         name:                row.name,
         type:                row.type,
         additional_features: JSON.stringify(ext.additional_features ?? []),
-        additional_tags:     JSON.stringify(ext.additional_tags ?? []),
       })
     }
 
@@ -223,21 +203,16 @@ async function main() {
     }
   }
 
-  // Write CSV
-  const headers = ['place_id', 'name', 'type', 'additional_features', 'additional_tags']
+  const headers = ['place_id', 'name', 'type', 'additional_features']
   const lines   = results.map((r) => headers.map((h) => escapeCsv(r[h])).join(','))
 
   fs.writeFileSync(OUTPUT_PATH, [headers.join(','), ...lines].join('\n') + '\n', 'utf8')
 
   const enrichedCount = results.filter((r) => {
-    try {
-      const f = JSON.parse(r.additional_features)
-      const t = JSON.parse(r.additional_tags)
-      return f.length > 0 || t.length > 0
-    } catch { return false }
+    try { return JSON.parse(r.additional_features).length > 0 } catch { return false }
   }).length
 
-  console.log(`\n✅  ${results.length} places processed, ${enrichedCount} gained new features/tags`)
+  console.log(`\n✅  ${results.length} places processed, ${enrichedCount} gained new features`)
   console.log(`   Output: output/enriched/review_features.csv`)
   console.log(`   Next: node scripts/apply-review-features.js`)
 }

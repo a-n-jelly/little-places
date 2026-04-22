@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { submitPlace } from '../lib/places'
-import { STAGES, ACCESSIBILITY_TAGS, PLACE_TAGS, PLACE_TYPES } from '../lib/constants'
+import { STAGES, FEATURE_VOCAB, PLACE_TYPES } from '../lib/constants'
 
 const EMPTY_FORM = {
   name: '',
@@ -9,7 +9,6 @@ const EMPTY_FORM = {
   description: '',
   stages: [],
   child_friendly_features: [],
-  tags: [],
   submitted_by: '',
   lat: null,
   lng: null,
@@ -210,53 +209,31 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
         </div>
       </div>
 
-      {/* Accessibility */}
-      <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
-          Accessibility features
-        </label>
-        <div className="flex flex-wrap gap-2">
-          {ACCESSIBILITY_TAGS.map((a) => (
-            <button
-              key={a.id}
-              type="button"
-              onClick={() => toggleArrayField('child_friendly_features', a.id)}
-              className="px-3 py-1.5 rounded-full text-xs font-medium border transition-colors duration-100 ease-out"
-              style={
-                form.child_friendly_features.includes(a.id)
-                  ? { background: 'var(--btn-secondary-bg)', borderColor: 'var(--btn-secondary-border)', color: 'var(--btn-secondary-text)' }
-                  : { background: 'var(--card)', borderColor: 'var(--border)', color: 'var(--muted-foreground)' }
-              }
-            >
-              {a.label}
-            </button>
-          ))}
+      {/* Features */}
+      {form.type && FEATURE_VOCAB[form.type] && (
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-2">
+            Features
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {FEATURE_VOCAB[form.type].map((feature) => (
+              <button
+                key={feature}
+                type="button"
+                onClick={() => toggleArrayField('child_friendly_features', feature)}
+                className="px-3 py-1.5 rounded-full text-xs font-medium border transition-colors duration-100 ease-out"
+                style={
+                  form.child_friendly_features.includes(feature)
+                    ? { background: 'var(--foreground)', borderColor: 'var(--foreground)', color: 'var(--background)' }
+                    : { background: 'var(--card)', borderColor: 'var(--border)', color: 'var(--muted-foreground)' }
+                }
+              >
+                {feature}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
-
-      {/* General tags */}
-      <div>
-        <label className="block text-sm font-medium text-foreground mb-2">
-          Facilities &amp; features
-        </label>
-        <div className="flex flex-wrap gap-2">
-          {PLACE_TAGS.map((tag) => (
-            <button
-              key={tag}
-              type="button"
-              onClick={() => toggleArrayField('tags', tag)}
-              className="px-3 py-1.5 rounded-full text-xs font-medium border transition-colors duration-100 ease-out"
-              style={
-                form.tags.includes(tag)
-                  ? { background: 'var(--foreground)', borderColor: 'var(--foreground)', color: 'var(--background)' }
-                  : { background: 'var(--card)', borderColor: 'var(--border)', color: 'var(--muted-foreground)' }
-              }
-            >
-              {tag}
-            </button>
-          ))}
-        </div>
-      </div>
+      )}
 
       {/* Submitted by */}
       <div>

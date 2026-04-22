@@ -13,7 +13,7 @@ create table if not exists places (
   description       text not null,
   stages            text[] default '{}',
   child_friendly_features text[] default '{}',
-  tags              text[] default '{}',
+  tags              text[] default '{}',       -- unused, kept for schema compatibility
   lat               float,
   lng               float,
   submitted_by      text,

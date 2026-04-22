@@ -2,7 +2,7 @@
 /**
  * apply-review-features.js
  *
- * Reads review_features.csv and unions the extracted features/tags into
+ * Reads review_features.csv and unions the extracted features into
  * existing Supabase records. Matches by normalised name.
  *
  * Usage:
@@ -123,24 +123,21 @@ async function main() {
   // Filter to rows that actually have something to add
   const toApply = reviewRows.filter((r) => {
     try {
-      const f = JSON.parse(r.additional_features ?? '[]')
-      const t = JSON.parse(r.additional_tags ?? '[]')
-      return f.length > 0 || t.length > 0
+      return JSON.parse(r.additional_features ?? '[]').length > 0
     } catch { return false }
   })
 
-  console.log(`   ${toApply.length} rows have features/tags to apply`)
+  console.log(`   ${toApply.length} rows have features to apply`)
 
   if (toApply.length === 0) {
     console.log('   Nothing to do.')
     return
   }
 
-  // Load existing Supabase records (just id, name, child_friendly_features, tags)
   console.log('📡  Loading existing records from Supabase…')
   const { data: existing, error } = await supabase
     .from('places')
-    .select('id, name, child_friendly_features, tags')
+    .select('id, name, child_friendly_features')
 
   if (error) {
     console.error(`❌  Failed to load places: ${error.message}`)
@@ -167,32 +164,25 @@ async function main() {
       continue
     }
 
-    let additionalFeatures, additionalTags
+    let additionalFeatures
     try {
       additionalFeatures = JSON.parse(row.additional_features ?? '[]')
-      additionalTags     = JSON.parse(row.additional_tags ?? '[]')
     } catch {
       if (verbose) console.log(`  ⚠️  Bad JSON for "${row.name}" — skipping`)
       continue
     }
 
-    const mergedFeatures = unionArrays(record.child_friendly_features ?? [], additionalFeatures)
-    const mergedTags     = unionArrays(record.tags ?? [], additionalTags)
-
+    const mergedFeatures  = unionArrays(record.child_friendly_features ?? [], additionalFeatures)
     const newFeatureCount = mergedFeatures.length - (record.child_friendly_features ?? []).length
-    const newTagCount     = mergedTags.length - (record.tags ?? []).length
 
-    if (newFeatureCount === 0 && newTagCount === 0) {
+    if (newFeatureCount === 0) {
       if (verbose) console.log(`  ✓  "${record.name}" — already has all features`)
       matched++
       continue
     }
 
     if (verbose || dryRun) {
-      const additions = []
-      if (newFeatureCount > 0) additions.push(`+${newFeatureCount} features: ${additionalFeatures.join(', ')}`)
-      if (newTagCount > 0)     additions.push(`+${newTagCount} tags: ${additionalTags.join(', ')}`)
-      console.log(`  ${dryRun ? '[DRY RUN] ' : ''}UPDATE "${record.name}" — ${additions.join('; ')}`)
+      console.log(`  ${dryRun ? '[DRY RUN] ' : ''}UPDATE "${record.name}" — +${newFeatureCount} features: ${additionalFeatures.join(', ')}`)
     }
 
     matched++
@@ -202,7 +192,6 @@ async function main() {
         .from('places')
         .update({
           child_friendly_features: mergedFeatures,
-          tags:                    mergedTags,
           embedding_status:        'pending',
         })
         .eq('id', record.id)
@@ -222,6 +211,7 @@ async function main() {
   } else {
     console.log(`\n✅  Done: ${updated} updated, ${unmatched} unmatched, ${failed} failed`)
   }
+
 
   if (unmatched > 0 && !verbose) {
     console.log(`   Run with --verbose to see which names didn't match`)

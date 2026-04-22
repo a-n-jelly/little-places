@@ -6,27 +6,52 @@ export const STAGES = [
   { id: 'tweens',    label: '🎮 Tweens+',   range: '8–12y' },
 ]
 
+// Dormant — no data yet, not wired to UI or agent
 export const ACCESSIBILITY_TAGS = [
-  { id: 'wheelchair',      label: '♿ Wheelchair Accessible' },
-  { id: 'changing_places', label: '🚿 Changing Places'       },
-  { id: 'sensory_friendly',label: '🌿 Sensory Friendly'      },
-  { id: 'autism_friendly', label: '💙 Autism Friendly'       },
-  { id: 'quiet_space',     label: '🤫 Quiet Space'           },
-  { id: 'blue_badge',      label: '🅿️ Blue Badge Parking'   },
+  { id: 'wheelchair',       label: '♿ Wheelchair Accessible' },
+  { id: 'changing_places',  label: '🚿 Changing Places'       },
+  { id: 'sensory_friendly', label: '🌿 Sensory Friendly'      },
+  { id: 'autism_friendly',  label: '💙 Autism Friendly'       },
+  { id: 'quiet_space',      label: '🤫 Quiet Space'           },
+  { id: 'blue_badge',       label: '🅿️ Blue Badge Parking'   },
 ]
 
-export const PLACE_TAGS = [
-  'High Chairs',
-  'Pram Accessible',
-  'Enclosed Outdoor Space',
-  'Soft Play',
-  'Nursing Area',
-  'Changing Facilities',
-  'Free Entry',
-  'Café On Site',
-  'Fenced Area',
-  'Sensory Sessions',
-]
+export const FEATURE_VOCAB = {
+  Playground: [
+    'climbing', 'swings', 'splash-pad', 'baby-swings', 'enclosed-outdoor-space',
+    'accessible-equipment', 'sand-pit', 'nature-play', 'skate-park',
+  ],
+  Park: [
+    'paved-paths', 'shade', 'restrooms-nearby', 'stroller-friendly',
+    'beach-access', 'easy-grade', 'picnic-area', 'swimming',
+    'splash-pad', 'enclosed-outdoor-space', 'nature-play',
+  ],
+  'Café': [
+    'high-chairs', 'kids-menu', 'booster-seats', 'changing-table',
+    'stroller-friendly', 'outdoor-seating', 'crayons-activities',
+    'noise-tolerant', 'kids-eat-free', 'nursing-room',
+  ],
+  Museum: [
+    'hands-on-exhibits', 'kids-programs', 'stroller-friendly',
+    'nursing-room', 'interactive-displays', 'family-discount',
+    'free-entry', 'sensory-friendly', 'cafe-on-site',
+  ],
+  Library: [
+    'storytime', 'kids-section', 'quiet-room', 'family-events',
+    'free-entry', 'reading-programs', 'maker-space', 'multilingual',
+    'cafe-on-site', 'sensory-sessions',
+  ],
+  Attraction: [
+    'soft-play', 'age-sections', 'cafe-on-site', 'party-rooms',
+    'sensory-friendly', 'toddler-sessions', 'adult-seating',
+    'socks-required', 'hands-on-exhibits', 'stroller-friendly',
+    'family-discount', 'free-entry', 'nursing-room', 'sensory-sessions',
+  ],
+  Other: [
+    'stroller-friendly', 'family-friendly', 'kids-welcome',
+    'changing-table', 'free-entry', 'high-chairs', 'soft-play', 'nursing-room',
+  ],
+}
 
 export const PLACE_TYPES = [
   'Park',

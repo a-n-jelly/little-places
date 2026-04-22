@@ -37,10 +37,22 @@ T18 | P1 | bug | Selected map marker hidden when zooming out
 - Visible: select a place, zoom out — marker disappears behind others
 - Done: selected marker always renders above all other markers at any zoom level
 
-T19 | P1 | bug | Agent tool description missing feature tags
-- Visible: agent can't filter by baby-swings, climbing, swings, splash-pad, fenced etc.
-- Done: `AGENT_TOOLS` child_friendly_features list includes all tags from `FEATURE_VOCAB` in enrichment scripts
-- Constraint: keep list in sync with `FEATURE_VOCAB`; check `src/lib/agent.js` or similar
+T24 | P1 | feature | Replace category chips with feature filter chips
+- Visible: filter bar shows place type chips (Park, Café etc.) — same as Google, not a differentiator
+- Done: filter bar shows 5 feature chips (stroller-friendly, high-chairs, hands-on-exhibits, storytime, free-entry); selecting a chip filters places by that child_friendly_feature; existing filtering logic in usePlaces.js reused
+- Constraint: FilterBar.jsx and usePlaces.js are protected — run tests after changes; mobile layout must still work
+
+T23 | P2 | data | Expand PLACE_TYPES — give all types distinct map pins
+- Visible: Restaurant, Bar, Bakery, Beach, Farm, Aquarium, Zoo, Gym all show as grey "Other" pins
+- Done: all types below added to PLACE_TYPES, TYPE_COLORS, CAT_CFG, FEATURE_VOCAB; existing records re-typed via migration script; icons confirmed available in lucide-react
+- Constraint: types share colours within groups to avoid rainbow map; FEATURE_VOCAB needs entries for new types
+
+Types and icons:
+  Eating (shared colour):  Café (Coffee), Restaurant (Utensils), Bar (Beer), Bakery (Croissant)
+  Outdoors (shared colour): Park (Trees), Playground (🛝 emoji), Beach (Waves), Farm (Tractor)
+  Activities (shared colour): Attraction (Star), Aquarium (Fish), Zoo (PawPrint), Gym (Dumbbell)
+  Museum: Landmark
+  Library: BookOpen
 
 ---
 
@@ -49,9 +61,6 @@ T09 | P2 | feature | Fix filter/search persistence when navigating via map pin c
 T10 | P2 | feature | Design agent response UI — spec needed before ticketing
 T07 | P2 | feature | Clarify and implement favourites — what does it do? Needs decision first
 T12 | P2 | feature | Add user feedback mechanism — what kind? Needs decision first
-T14 | P2 | data | Improve place descriptions — richer, specific text is the primary asset for agent reasoning; bad descriptions degrade agent quality
-T20 | P2 | data | Audit feature tags in Supabase — verify places have playground features populated; sufficient for filter bar, don't need to be exhaustive
-T13 | P3 | feature | Clean and consolidate place tags — low priority; tags are derived scaffolding, not the long-term data model
 
 T05 | P3 | bug | Remove out-of-Seattle data — understand why it's there first
 T15 | P3 | idea | Per-type emoji/icon beyond PLACE_TYPES — revisit when google_types is persisted
