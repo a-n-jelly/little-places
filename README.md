@@ -1,68 +1,79 @@
 # Little Places 🌿
 
-When I lived in London, there was a Google Maps list doing the rounds with hundreds of baby-friendly spots, crowdsourced by parents. Nobody could agree on what "baby-friendly" meant, the notes were inconsistent, and there was no way to filter for the thing you actually needed. A changing table. A quiet room. Somewhere that wouldn't judge you for a meltdown. Seattle has the same problem, and a Google Maps list with the same vibes.
+Seattle has no shortage of things to do with kids. Finding the right one, for the right age, on a rainy Tuesday morning when your toddler has energy to burn — that's a different problem.
 
-Little Places is what that list should have been.
-
-**Stack:** React + Vite + Tailwind + Supabase + Anthropic API + Mapbox
+Little Places is a curated, AI-powered guide to child-friendly venues in Seattle, built for parents who need an answer now, not a list to research later.
 
 ---
 
 ## The problem
 
-Google Maps doesn't know what a Changing Places facility is. Facebook groups and subreddits are full of recommendations but not in a single place. Blogs go stale. And a tired parent doesn't have bandwidth to cross-reference all of it, check the weather, and figure out whether today is an indoor or outdoor situation.
+Parents are already solving this problem in Facebook and Reddit groups, asking the same questions over and over. Every ask starts from zero. Someone has to respond, the seeker scrolls through comments hoping something fits their situation. There's no memory, no structure, no way to query what the community already knows. It's exhausting to maintain, and the knowledge doesn't compound.
 
 ---
 
-## Why can't I just ask ChatGPT?
+## Why not Google Maps?
 
-You can. It'll give you a confident list of places that may or may not still exist, with no idea what the weather is doing today, no knowledge of your kid's age, and no connection to what other Seattle parents actually recommend.
+Google Maps Ask exists. But it pulls from Google reviews, which are customer feedback, not parent intelligence. "Great pizza, a bit noisy" tells you nothing about whether there's space for a stroller, changing facilities in the men's toilets, or whether a 3-year-old will survive the wait.
 
-If you're tech savvy, you could build an LLM project, feed it your list, and get reasonable answers — but you'd be maintaining that data yourself, it would go stale the moment a place closes, and it still wouldn't know what the weather is doing or what's actually on this week.
+Little Places is built around a specific community with a specific question. When the context is that intentional, the information people contribute reflects it.
 
-Little Places uses an agent, not just a language model. When you ask it a question, it queries a live database of parent-vetted spots, checks current Seattle weather, and pulls real events happening this week. The answer is grounded in data that updates, not a document you last edited three months ago.
+---
+
+## What I built
+
+A map-first interface with an AI agent powering search and recommendations. The agent connects to live data — venues, events, weather — so responses draw from real information, not model training data.
+
+The original design was agent-first. I pivoted to map-first after realising that agent reliability depends on data quality: the map gives users something they can trust while the data layer matures. That was the right call.
+
+**Stack:** React, Vite, Tailwind, Supabase, Anthropic SDK, Gemini, Mapbox  
+**Built with:** Claude Code and Cursor
 
 ---
 
 ## Product decisions worth knowing
 
-**Agent-first value, Explore as the app.** Most parents don't want a raw list — they want to be told what to do. The product still centres on answers from the agent. The **Explore** map is the **single primary page** so the map and agent stay connected; **Ask AI** lives in the **agent panel** on that page.
-
-**Function over polish for v1.** The design will be revisited, but the structural decisions were made with that in mind to avoid a full refactor when that time comes.
+**Agent answers, map browses.** Most parents don't want a raw list — they want to be told what to do. The agent handles recommendations and questions; the Explore map handles discovery. They live on the same page so the context stays connected.
 
 **No accounts for v1.** Anyone can submit a place. Reducing friction on contribution matters more than attribution right now.
 
 **Mobile-first.** Designed for a parent with one hand and a buggy.
 
-**Events only in the agent, never on the map.** Browsing a map and asking "what's on today" are different jobs. Keeping them separate avoids cluttering the browse experience with time-sensitive data that needs context to be useful.
+**Events only through the agent, never on the map.** Browsing and asking "what's on today" are different jobs. Keeping them separate avoids cluttering the browse experience with time-sensitive data that needs context to be useful.
 
 **Client-side filtering.** Filters respond instantly without a round-trip to Supabase.
+
+**Type filtering belongs to the agent, not the UI.** The filter bar surfaces child-friendly features (stroller access, high chairs, free entry) — things a parent actually filters on. Place type is a search-time concern, handled by the agent. A parent asking "where can I take a rainy-day toddler" shouldn't have to know whether they want a Museum or an Attraction first.
+
+**Data quality over feature velocity.** The 320 places in the database came from a Google Places pipeline, enriched with reviews and structured features. That work happened before most of the UI was built. A good agent is only as useful as the data it queries.
+
+---
 
 ---
 
 ## What's built
 
-- Explore (map + list) with **Ask AI** in the agent panel and an agentic tool loop (places, events, weather)
-- Mapbox map view with sidebar, desktop and mobile
-- Filters: developmental stage (Baby through Tweens), accessibility, place type
+- Explore (map + list) with Ask AI in the agent panel and an agentic tool loop (places, events, weather)
+- Filters: developmental stage (Baby through Tweens), child-friendly features (stroller-friendly, high-chairs, and more)
+- 15 place types with categorical map pins
 - Crowdsourced submissions, live in Supabase
 - 320 real places in the database
-- 56 unit tests
+- 337 unit tests
 
 ## What's next
 
-**V1 — Where can I go?** *(current)*
-Child and family-friendly places in Seattle, vetted by parents. Explore the map, filter by age, accessibility, and type, and ask the agent in the panel. Submit a spot you love so other parents can find it too.
+**Currently working on**
+- Design iteration based on early feedback
+- Editing and updating existing place submissions
+- Information verification — surfacing how current and reliable a listing is
+- Agent evals — a simple framework for measuring whether the agent is actually giving good answers
 
-**V2 — What can I do?**
+**Phase 2 — What can I do?**  
 Events and activities surfaced through the agent, so you can ask what's actually on this week — not just where to go, but what's happening when you get there.
 
-**V3 — Plan my day**
+**Phase 3 — Plan my day**  
 Itinerary planning — the agent combines places, events, and weather into a full day recommendation.
 
 ---
 
-See [DECISIONS.md](DECISIONS.md) for product,design and architectural decisions and their rationale. 
-See [EVAL.md](EVAL.md) for how we measure whether the agent is actually giving good answers. (Draft 1)
-
-*Built in Seattle, by a parent who doesn't have the bandwith to plan. 🌿*
+*Built in Seattle, by a parent who doesn't have the bandwidth to plan. 🌿*
