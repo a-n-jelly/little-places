@@ -1,4 +1,4 @@
-import { STAGES, ACCESSIBILITY_TAGS, PLACE_TYPES, TYPE_COLORS } from '../lib/constants'
+import { STAGES, ACCESSIBILITY_TAGS, FEATURE_FILTER_CHIPS } from '../lib/constants'
 
 export default function FilterBar({ selectedStages, selectedAccess, selectedTypes, onStageToggle, onAccessToggle, onTypeToggle }) {
   return (
@@ -26,26 +26,24 @@ export default function FilterBar({ selectedStages, selectedAccess, selectedType
       </div>
 
       <div className="flex items-start gap-3">
-        <span className="text-xs font-bold text-muted-foreground uppercase tracking-wide pt-1.5 shrink-0">Type</span>
+        <span className="text-xs font-bold text-muted-foreground uppercase tracking-wide pt-1.5 shrink-0">Features</span>
         <div className="flex flex-wrap gap-2">
-          {PLACE_TYPES.map((type) => {
-            const color = TYPE_COLORS[type]
-            const active = selectedTypes.includes(type)
-            return (
-              <button
-                key={type}
-                onClick={() => onTypeToggle(type)}
-                className="text-xs px-3 py-1.5 rounded-full border font-semibold transition-colors duration-100 ease-out"
-                style={active
-                  ? { background: color + '33', borderColor: color, color }
+          {FEATURE_FILTER_CHIPS.map((chip) => (
+            <button
+              key={chip.id}
+              onClick={() => onAccessToggle(chip.id)}
+              data-testid={`feature-filter-${chip.id}`}
+              className="text-xs px-3 py-1.5 rounded-full border font-semibold transition-colors duration-100 ease-out"
+              data-active={selectedAccess.includes(chip.id)}
+              style={
+                selectedAccess.includes(chip.id)
+                  ? { background: 'var(--btn-secondary-bg)', borderColor: 'var(--btn-secondary-border)', color: 'var(--btn-secondary-text)' }
                   : { background: 'var(--card)', borderColor: 'var(--border)', color: 'var(--muted-foreground)' }
-                }
-                data-active={active}
-              >
-                {type}
-              </button>
-            )
-          })}
+              }
+            >
+              {chip.label}
+            </button>
+          ))}
         </div>
       </div>
 

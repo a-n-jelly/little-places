@@ -26,10 +26,29 @@ export const FEATURE_VOCAB = {
     'beach-access', 'easy-grade', 'picnic-area', 'swimming',
     'splash-pad', 'enclosed-outdoor-space', 'nature-play',
   ],
+  Beach: [
+    'stroller-friendly', 'restrooms-nearby', 'shade', 'picnic-area',
+    'swimming', 'enclosed-outdoor-space', 'paved-paths', 'free-entry',
+  ],
+  Farm: [
+    'stroller-friendly', 'restrooms-nearby', 'picnic-area', 'paved-paths',
+    'enclosed-outdoor-space', 'free-entry', 'nature-play',
+  ],
   'Café': [
     'high-chairs', 'kids-menu', 'booster-seats', 'changing-table',
     'stroller-friendly', 'outdoor-seating', 'crayons-activities',
     'noise-tolerant', 'kids-eat-free', 'nursing-room',
+  ],
+  Restaurant: [
+    'high-chairs', 'kids-menu', 'booster-seats', 'changing-table',
+    'stroller-friendly', 'outdoor-seating', 'crayons-activities',
+    'noise-tolerant', 'kids-eat-free', 'nursing-room',
+  ],
+  Bar: [
+    'high-chairs', 'kids-menu', 'outdoor-seating', 'stroller-friendly', 'noise-tolerant',
+  ],
+  Bakery: [
+    'high-chairs', 'kids-menu', 'outdoor-seating', 'stroller-friendly', 'changing-table',
   ],
   Museum: [
     'hands-on-exhibits', 'kids-programs', 'stroller-friendly',
@@ -47,6 +66,18 @@ export const FEATURE_VOCAB = {
     'socks-required', 'hands-on-exhibits', 'stroller-friendly',
     'family-discount', 'free-entry', 'nursing-room', 'sensory-sessions',
   ],
+  Aquarium: [
+    'hands-on-exhibits', 'stroller-friendly', 'family-discount', 'free-entry',
+    'nursing-room', 'kids-programs', 'interactive-displays', 'cafe-on-site', 'changing-table',
+  ],
+  Zoo: [
+    'stroller-friendly', 'family-discount', 'free-entry', 'nursing-room',
+    'kids-programs', 'paved-paths', 'picnic-area', 'cafe-on-site', 'changing-table',
+  ],
+  Gym: [
+    'stroller-friendly', 'kids-programs', 'family-discount', 'nursing-room',
+    'age-sections', 'changing-table', 'adult-seating',
+  ],
   Other: [
     'stroller-friendly', 'family-friendly', 'kids-welcome',
     'changing-table', 'free-entry', 'high-chairs', 'soft-play', 'nursing-room',
@@ -55,23 +86,52 @@ export const FEATURE_VOCAB = {
 
 export const PLACE_TYPES = [
   'Park',
-  'Café',
-  'Museum',
-  'Attraction',
-  'Library',
   'Playground',
+  'Beach',
+  'Farm',
+  'Café',
+  'Restaurant',
+  'Bar',
+  'Bakery',
+  'Museum',
+  'Library',
+  'Attraction',
+  'Aquarium',
+  'Zoo',
+  'Gym',
   'Other',
 ]
 
 export const TYPE_COLORS = {
+  // Outdoors
   Park:       '#16A34A',
-  Café:       '#0D9488',
-  Museum:     '#9333EA',
-  Attraction: '#7C2D12',
-  Library:    '#0284C7',
   Playground: '#F97316',
+  Beach:      '#16A34A',
+  Farm:       '#16A34A',
+  // Eating
+  Café:       '#0D9488',
+  Restaurant: '#0D9488',
+  Bar:        '#0D9488',
+  Bakery:     '#0D9488',
+  // Culture
+  Museum:     '#9333EA',
+  Library:    '#0284C7',
+  // Activities
+  Attraction: '#7C2D12',
+  Aquarium:   '#7C2D12',
+  Zoo:        '#7C2D12',
+  Gym:        '#7C2D12',
+  // Fallback
   Other:      '#94a3b8',
 }
+
+export const FEATURE_FILTER_CHIPS = [
+  { id: 'stroller-friendly',  label: 'Stroller Friendly' },
+  { id: 'high-chairs',        label: 'High Chairs'       },
+  { id: 'hands-on-exhibits',  label: 'Hands-On Exhibits' },
+  { id: 'storytime',          label: 'Storytime'         },
+  { id: 'free-entry',         label: 'Free Entry'        },
+]
 
 export const CATEGORY_CHIPS = [
   { id: 'Park',       label: 'Parks',       emoji: '🌿' },
@@ -83,11 +143,24 @@ export const CATEGORY_CHIPS = [
 ]
 
 export const CAT_CFG = {
+  // Outdoors
   Park:       { emoji: '🌿', color: '#16A34A', lightColor: '#BBF7D0' },
-  Café:       { emoji: '☕', color: '#0D9488', lightColor: '#99F6E4' },
-  Museum:     { emoji: '🏛️', color: '#9333EA', lightColor: '#E9D5FF' },
-  Attraction: { emoji: '⭐', color: '#7C2D12', lightColor: '#FDBA74' },
-  Library:    { emoji: '📚', color: '#0284C7', lightColor: '#7DD3FC' },
   Playground: { emoji: '🛝', color: '#F97316', lightColor: '#FDBA74' },
+  Beach:      { emoji: '🏖️', color: '#16A34A', lightColor: '#BBF7D0' },
+  Farm:       { emoji: '🚜', color: '#16A34A', lightColor: '#BBF7D0' },
+  // Eating
+  Café:       { emoji: '☕', color: '#0D9488', lightColor: '#99F6E4' },
+  Restaurant: { emoji: '🍽️', color: '#0D9488', lightColor: '#99F6E4' },
+  Bar:        { emoji: '🍺', color: '#0D9488', lightColor: '#99F6E4' },
+  Bakery:     { emoji: '🥐', color: '#0D9488', lightColor: '#99F6E4' },
+  // Culture
+  Museum:     { emoji: '🏛️', color: '#9333EA', lightColor: '#E9D5FF' },
+  Library:    { emoji: '📚', color: '#0284C7', lightColor: '#7DD3FC' },
+  // Activities
+  Attraction: { emoji: '⭐', color: '#7C2D12', lightColor: '#FDBA74' },
+  Aquarium:   { emoji: '🐟', color: '#7C2D12', lightColor: '#FDBA74' },
+  Zoo:        { emoji: '🦁', color: '#7C2D12', lightColor: '#FDBA74' },
+  Gym:        { emoji: '🏋️', color: '#7C2D12', lightColor: '#FDBA74' },
+  // Fallback
   Other:      { emoji: '📍', color: '#94a3b8', lightColor: null },
 }

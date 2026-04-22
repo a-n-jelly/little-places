@@ -21,12 +21,13 @@ describe('FilterBar', () => {
     expect(screen.getByTestId('stage-filter-tweens')).toBeInTheDocument()
   })
 
-  it('renders all accessibility filters', () => {
+  it('renders all feature filter chips', () => {
     render(<FilterBar {...defaultProps} />)
-    expect(screen.getByTestId('access-filter-wheelchair')).toBeInTheDocument()
-    expect(screen.getByTestId('access-filter-changing_places')).toBeInTheDocument()
-    expect(screen.getByTestId('access-filter-sensory_friendly')).toBeInTheDocument()
-    expect(screen.getByTestId('access-filter-autism_friendly')).toBeInTheDocument()
+    expect(screen.getByTestId('feature-filter-stroller-friendly')).toBeInTheDocument()
+    expect(screen.getByTestId('feature-filter-high-chairs')).toBeInTheDocument()
+    expect(screen.getByTestId('feature-filter-hands-on-exhibits')).toBeInTheDocument()
+    expect(screen.getByTestId('feature-filter-storytime')).toBeInTheDocument()
+    expect(screen.getByTestId('feature-filter-free-entry')).toBeInTheDocument()
   })
 
   it('calls onStageToggle when a stage is clicked', () => {
@@ -36,22 +37,26 @@ describe('FilterBar', () => {
     expect(onStageToggle).toHaveBeenCalledWith('toddler')
   })
 
-  it('calls onAccessToggle when an access filter is clicked', () => {
+  it('calls onAccessToggle when a feature chip is clicked', () => {
     const onAccessToggle = vi.fn()
     render(<FilterBar {...defaultProps} onAccessToggle={onAccessToggle} />)
-    fireEvent.click(screen.getByTestId('access-filter-wheelchair'))
-    expect(onAccessToggle).toHaveBeenCalledWith('wheelchair')
+    fireEvent.click(screen.getByTestId('feature-filter-stroller-friendly'))
+    expect(onAccessToggle).toHaveBeenCalledWith('stroller-friendly')
   })
 
   it('shows active state for selected stages', () => {
     render(<FilterBar {...defaultProps} selectedStages={['toddler']} />)
-    const btn = screen.getByTestId('stage-filter-toddler')
-    expect(btn.dataset.active).toBe('true')
+    expect(screen.getByTestId('stage-filter-toddler').dataset.active).toBe('true')
   })
 
-  it('shows active state for selected access filters', () => {
-    render(<FilterBar {...defaultProps} selectedAccess={['wheelchair']} />)
-    const btn = screen.getByTestId('access-filter-wheelchair')
-    expect(btn.dataset.active).toBe('true')
+  it('shows active state for selected feature chips', () => {
+    render(<FilterBar {...defaultProps} selectedAccess={['free-entry']} />)
+    expect(screen.getByTestId('feature-filter-free-entry').dataset.active).toBe('true')
+  })
+
+  it('does not render type chips', () => {
+    render(<FilterBar {...defaultProps} />)
+    expect(screen.queryByText('Park')).not.toBeInTheDocument()
+    expect(screen.queryByText('Café')).not.toBeInTheDocument()
   })
 })
