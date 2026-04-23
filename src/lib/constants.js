@@ -140,14 +140,6 @@ export const FEATURE_FILTER_CHIPS = [
   { id: 'free-entry',         label: 'Free Entry'        },
 ]
 
-export const CATEGORY_CHIPS = [
-  { id: 'Park',       label: 'Parks',       emoji: '🌿' },
-  { id: 'Café',       label: 'Cafes',       emoji: '☕' },
-  { id: 'Museum',     label: 'Museums',     emoji: '🏛️' },
-  { id: 'Playground', label: 'Playgrounds', emoji: '🛝' },
-  { id: 'Attraction', label: 'Attractions', emoji: '⭐' },
-  { id: 'Library',    label: 'Libraries',   emoji: '📚' },
-]
 
 export const CAT_CFG = {
   // Outdoors

@@ -53,10 +53,8 @@ function Checkbox({ id, label, checked, onChange, color }) {
 export default function FilterPanel({
   selectedStages,
   selectedAccess,
-  selectedTypes,
   onStageToggle,
   onAccessToggle,
-  onTypeToggle,
 }) {
   return (
     <div className="border-y border-border bg-card">
