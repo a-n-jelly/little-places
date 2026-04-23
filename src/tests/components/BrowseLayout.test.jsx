@@ -27,10 +27,8 @@ const defaultProps = {
   setSearch: vi.fn(),
   selectedStages: [],
   selectedAccess: [],
-  selectedTypes: [],
   onStageToggle: vi.fn(),
   onAccessToggle: vi.fn(),
-  onTypeToggle: vi.fn(),
   onSubmitPlace: vi.fn(),
   panelMode: 'search',
   setPanelMode: vi.fn(),
@@ -79,5 +77,24 @@ describe('BrowseLayout', () => {
     render(<BrowseLayout {...defaultProps} />)
     fireEvent.click(screen.getAllByRole('button', { name: /add a place/i })[0])
     expect(defaultProps.onSubmitPlace).toHaveBeenCalledTimes(1)
+  })
+
+  it('renders feature chips on the map, not category chips', () => {
+    render(<BrowseLayout {...defaultProps} />)
+    expect(screen.queryByRole('button', { name: /parks/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /cafes/i })).not.toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: /stroller friendly/i }).length).toBeGreaterThan(0)
+    expect(screen.getAllByRole('button', { name: /free entry/i }).length).toBeGreaterThan(0)
+  })
+
+  it('selecting a feature chip filters the place list', () => {
+    const placesWithFeatures = [
+      { ...places[0], child_friendly_features: ['stroller-friendly'] },
+      { ...places[1], child_friendly_features: [] },
+    ]
+    render(<BrowseLayout {...defaultProps} places={placesWithFeatures} />)
+    fireEvent.click(screen.getAllByRole('button', { name: /stroller friendly/i })[0])
+    expect(screen.getAllByText('Green Lake Park').length).toBeGreaterThan(0)
+    expect(screen.queryByText('Seattle Aquarium')).not.toBeInTheDocument()
   })
 })

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { STAGES, ACCESSIBILITY_TAGS, PLACE_TYPES, TYPE_COLORS } from '../lib/constants'
+import { STAGES, ACCESSIBILITY_TAGS } from '../lib/constants'
 
 function FilterGroup({ title, activeCount, children }) {
   const [open, setOpen] = useState(false)
@@ -53,10 +53,8 @@ function Checkbox({ id, label, checked, onChange, color }) {
 export default function FilterPanel({
   selectedStages,
   selectedAccess,
-  selectedTypes,
   onStageToggle,
   onAccessToggle,
-  onTypeToggle,
 }) {
   return (
     <div className="border-y border-border bg-card">
@@ -68,19 +66,6 @@ export default function FilterPanel({
             label={s.label}
             checked={selectedStages.includes(s.id)}
             onChange={onStageToggle}
-          />
-        ))}
-      </FilterGroup>
-
-      <FilterGroup title="Type" activeCount={selectedTypes.length}>
-        {PLACE_TYPES.map((type) => (
-          <Checkbox
-            key={type}
-            id={type}
-            label={type}
-            checked={selectedTypes.includes(type)}
-            onChange={onTypeToggle}
-            color={TYPE_COLORS[type]}
           />
         ))}
       </FilterGroup>

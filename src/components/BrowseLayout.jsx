@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { Search, Plus, Star, X, Sparkles, Map as MapIcon } from 'lucide-react'
 import MapView from './MapView'
-import { CATEGORY_CHIPS, CAT_CFG, TYPE_COLORS } from '../lib/constants'
+import { FEATURE_FILTER_CHIPS, CAT_CFG, TYPE_COLORS } from '../lib/constants'
 import { useAgentChat } from '../hooks/useAgentChat'
 import { AGENT_SUGGESTIONS } from '../lib/agentSuggestions'
 
@@ -117,17 +117,15 @@ export default function BrowseLayout({
   setSearch,
   selectedStages,
   selectedAccess,
-  selectedTypes,
   onStageToggle,
   onAccessToggle,
-  onTypeToggle,
   onSubmitPlace,
   panelMode,
   setPanelMode,
 }) {
   const [selectedPlace, setSelectedPlace] = useState(null)
-  /** null = no category chip (show all places from search pipeline) */
-  const [activeCat, setActiveCat] = useState(null)
+  /** null = no feature chip selected (show all places) */
+  const [activeFeature, setActiveFeature] = useState(null)
   const searchInputDesktopRef = useRef(null)
   const searchInputMobileRef = useRef(null)
   const askInputDesktopRef = useRef(null)
@@ -144,7 +142,7 @@ export default function BrowseLayout({
   } = useAgentChat()
 
   const filteredPlaces =
-    activeCat == null ? places : places.filter((p) => p.type === activeCat)
+    activeFeature == null ? places : places.filter((p) => p.child_friendly_features?.includes(activeFeature))
 
   function setMode(next) {
     setPanelMode(next)
@@ -283,31 +281,28 @@ export default function BrowseLayout({
     </div>
   )
 
-  const categoryChips = (
+  const featureChips = (
     <div
       className="flex gap-2 overflow-x-auto pb-1 max-w-[min(100%,42rem)]"
       style={{ scrollbarWidth: 'none' }}
       role="toolbar"
-      aria-label="Filter by place category"
+      aria-label="Filter by feature"
     >
-      {CATEGORY_CHIPS.map((cat) => {
-        const isActive = activeCat === cat.id
+      {FEATURE_FILTER_CHIPS.map((chip) => {
+        const isActive = activeFeature === chip.id
         return (
           <button
-            key={cat.id}
+            key={chip.id}
             type="button"
-            onClick={() =>
-              setActiveCat((prev) => (prev === cat.id ? null : cat.id))
-            }
-            className={`flex-shrink-0 flex items-center gap-1.5 pl-2 pr-3 py-[7px] rounded-full text-xs font-semibold transition-[color,background-color,box-shadow,transform] duration-150 ease-out ${
+            onClick={() => setActiveFeature((prev) => (prev === chip.id ? null : chip.id))}
+            className={`flex-shrink-0 px-3 py-[7px] rounded-full text-xs font-semibold transition-[color,background-color,box-shadow,transform] duration-150 ease-out ${
               isActive
                 ? 'bg-brand-secondary text-white -translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
                 : 'bg-white text-foreground/90 hover:text-foreground hover:-translate-y-0.5 active:translate-y-0 [box-shadow:var(--shadow-chip)] hover:[box-shadow:var(--shadow-chip-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
             }`}
             style={isActive ? { boxShadow: 'var(--shadow-brand)' } : undefined}
           >
-            <span style={{ fontSize: 13 }}>{cat.emoji}</span>
-            {cat.label}
+            {chip.label}
           </button>
         )
       })}
@@ -371,7 +366,7 @@ export default function BrowseLayout({
                         <button
                           type="button"
                           onClick={() => {
-                            setActiveCat(null)
+                            setActiveFeature(null)
                             setSearch('')
                           }}
                           className="mt-2 text-xs font-bold text-primary underline"
@@ -400,7 +395,7 @@ export default function BrowseLayout({
 
           <div className="absolute top-4 left-0 right-0 z-20 flex justify-center pointer-events-none">
             <div className="pointer-events-auto px-4">
-              {categoryChips}
+              {featureChips}
             </div>
           </div>
 
@@ -423,7 +418,7 @@ export default function BrowseLayout({
 
         <div className="absolute top-4 left-0 right-0 z-20 flex justify-center pointer-events-none">
           <div className="pointer-events-auto px-4 w-full flex justify-center overflow-x-auto" style={{ scrollbarWidth: 'none', maxWidth: '100%' }}>
-            {categoryChips}
+            {featureChips}
           </div>
         </div>
 
