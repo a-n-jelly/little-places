@@ -2,14 +2,11 @@
 /**
  * migrate-place-types.js
  *
- * Re-types specific seed records to use the expanded PLACE_TYPES vocabulary
- * introduced in T23. Targets known records by name.
+ * Rule-based reclassification of all places to the expanded PLACE_TYPES
+ * vocabulary introduced in T23. Matches against place name (case-insensitive).
  *
- * Re-typings:
- *   "Woodland Park Zoo"              Attraction → Zoo
- *   "Seattle Aquarium"               Attraction → Aquarium
- *   "Alki Beach Park"                Park       → Beach
- *   "Oxbow Farm & Conservation Center" Attraction → Farm
+ * Rules are evaluated in order; first match wins.
+ * Only places whose current type differs from the matched type are updated.
  *
  * Usage:
  *   node scripts/migrate-place-types.js [--dry-run] [--verbose]
@@ -20,12 +17,23 @@
 import 'dotenv/config.js'
 import { createClient } from '@supabase/supabase-js'
 
-const RETYPES = [
-  { name: 'Woodland Park Zoo',               newType: 'Zoo'      },
-  { name: 'Seattle Aquarium',                newType: 'Aquarium' },
-  { name: 'Alki Beach Park',                 newType: 'Beach'    },
-  { name: 'Oxbow Farm & Conservation Center', newType: 'Farm'    },
+const RULES = [
+  { pattern: /\bzoo\b/i,                                        newType: 'Zoo'        },
+  { pattern: /\baquarium\b/i,                                   newType: 'Aquarium'   },
+  { pattern: /\bbeach\b/i,                                      newType: 'Beach'      },
+  { pattern: /\bfarm\b/i,                                       newType: 'Farm'       },
+  { pattern: /\bbakery\b|bakehouse|patisserie/i,                newType: 'Bakery'     },
+  { pattern: /\bbrewery\b|\btaproom\b|\btavern\b|\bpub\b/i,    newType: 'Bar'        },
+  { pattern: /\brestaurant\b/i,                                 newType: 'Restaurant' },
+  { pattern: /\bkids?\s+gym\b|\bchildren'?s?\s+gym\b|\bjump\b|\btrampoline\b|\bgymnastics\b|\bsoft\s+play\b|\bindoor\s+play\b/i, newType: 'Indoor Play' },
 ]
+
+function classify(name) {
+  for (const { pattern, newType } of RULES) {
+    if (pattern.test(name)) return newType
+  }
+  return null
+}
 
 function parseCLI(argv) {
   const args = argv.slice(2)
@@ -42,11 +50,11 @@ async function main() {
   if (!dryRun) required.push('SUPABASE_SERVICE_ROLE_KEY')
   const missing = required.filter((k) => !process.env[k])
   if (missing.length) {
-    console.error(`❌  Missing env vars: ${missing.join(', ')}`)
+    console.error(`Missing env vars: ${missing.join(', ')}`)
     process.exit(1)
   }
 
-  if (dryRun) console.log('🔍  DRY RUN — nothing will be written\n')
+  if (dryRun) console.log('DRY RUN — nothing will be written\n')
 
   const supabaseKey = dryRun
     ? (process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.VITE_SUPABASE_ANON_KEY)
@@ -54,60 +62,55 @@ async function main() {
 
   const supabase = createClient(process.env.VITE_SUPABASE_URL, supabaseKey)
 
-  let changed = 0, notFound = 0, failed = 0
+  const { data: places, error } = await supabase
+    .from('places')
+    .select('id, name, type')
+    .order('name')
 
-  for (const { name, newType } of RETYPES) {
-    const { data, error } = await supabase
-      .from('places')
-      .select('id, name, type')
-      .eq('name', name)
-      .maybeSingle()
+  if (error) {
+    console.error(`Failed to fetch places: ${error.message}`)
+    process.exit(1)
+  }
 
-    if (error) {
-      console.error(`❌  Query failed for "${name}": ${error.message}`)
-      failed++
-      continue
-    }
+  console.log(`Fetched ${places.length} places\n`)
 
-    if (!data) {
-      if (verbose || dryRun) console.log(`  ⚠️  Not found: "${name}"`)
-      notFound++
-      continue
-    }
+  let changed = 0, skipped = 0, failed = 0
 
-    if (data.type === newType) {
-      if (verbose) console.log(`  ✓  Already "${newType}": "${name}"`)
+  for (const place of places) {
+    const newType = classify(place.name)
+    if (!newType || newType === place.type) {
+      skipped++
       continue
     }
 
     if (dryRun || verbose) {
-      console.log(`  ${dryRun ? '[DRY RUN] ' : ''}UPDATE "${name}": ${data.type} → ${newType}`)
+      console.log(`  ${dryRun ? '[DRY RUN] ' : ''}UPDATE "${place.name}": ${place.type} → ${newType}`)
     }
-
-    changed++
 
     if (!dryRun) {
       const { error: updateErr } = await supabase
         .from('places')
         .update({ type: newType })
-        .eq('id', data.id)
+        .eq('id', place.id)
 
       if (updateErr) {
-        console.error(`  ❌  Failed to update "${name}": ${updateErr.message}`)
+        console.error(`  Failed to update "${place.name}": ${updateErr.message}`)
         failed++
-        changed--
+        continue
       }
     }
+
+    changed++
   }
 
   if (dryRun) {
-    console.log(`\n✅  Dry run: ${changed} would be updated, ${notFound} not found`)
+    console.log(`\nDry run complete: ${changed} would be updated, ${skipped} unchanged`)
   } else {
-    console.log(`\n✅  Done: ${changed - failed} updated, ${notFound} not found, ${failed} failed`)
+    console.log(`\nDone: ${changed} updated, ${skipped} unchanged, ${failed} failed`)
   }
 }
 
 main().catch((err) => {
-  console.error('❌ ', err.message)
+  console.error(err.message)
   process.exit(1)
 })

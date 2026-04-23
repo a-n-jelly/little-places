@@ -74,9 +74,9 @@ export const FEATURE_VOCAB = {
     'stroller-friendly', 'family-discount', 'free-entry', 'nursing-room',
     'kids-programs', 'paved-paths', 'picnic-area', 'cafe-on-site', 'changing-table',
   ],
-  Gym: [
+  'Indoor Play': [
     'stroller-friendly', 'kids-programs', 'family-discount', 'nursing-room',
-    'age-sections', 'changing-table', 'adult-seating',
+    'age-sections', 'changing-table', 'adult-seating', 'soft-play',
   ],
   Other: [
     'stroller-friendly', 'family-friendly', 'kids-welcome',
@@ -98,9 +98,16 @@ export const PLACE_TYPES = [
   'Attraction',
   'Aquarium',
   'Zoo',
-  'Gym',
+  'Indoor Play',
   'Other',
 ]
+
+export const TYPE_GROUPS = {
+  Outdoors:   ['Park', 'Playground', 'Beach', 'Farm'],
+  Eating:     ['Café', 'Restaurant', 'Bar', 'Bakery'],
+  Culture:    ['Museum', 'Library'],
+  Activities: ['Attraction', 'Aquarium', 'Zoo', 'Indoor Play'],
+}
 
 export const TYPE_COLORS = {
   // Outdoors
@@ -120,7 +127,7 @@ export const TYPE_COLORS = {
   Attraction: '#7C2D12',
   Aquarium:   '#7C2D12',
   Zoo:        '#7C2D12',
-  Gym:        '#7C2D12',
+  'Indoor Play': '#7C2D12',
   // Fallback
   Other:      '#94a3b8',
 }
@@ -160,7 +167,7 @@ export const CAT_CFG = {
   Attraction: { emoji: '⭐', color: '#7C2D12', lightColor: '#FDBA74' },
   Aquarium:   { emoji: '🐟', color: '#7C2D12', lightColor: '#FDBA74' },
   Zoo:        { emoji: '🦁', color: '#7C2D12', lightColor: '#FDBA74' },
-  Gym:        { emoji: '🏋️', color: '#7C2D12', lightColor: '#FDBA74' },
+  'Indoor Play': { emoji: '🤸', color: '#7C2D12', lightColor: '#FDBA74' },
   // Fallback
   Other:      { emoji: '📍', color: '#94a3b8', lightColor: null },
 }
