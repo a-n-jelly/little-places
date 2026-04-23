@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import SubmitPlaceForm from '../../components/SubmitPlaceForm'
 
@@ -10,17 +10,30 @@ vi.mock('../../lib/places', () => ({
 
 const newPlace = { id: 'abc', name: 'Woodland Park Zoo', type: 'Park', address: '5500 Phinney Ave N' }
 
-const nominatimResult = [{
-  place_id: 1,
-  display_name: 'Woodland Park Zoo, Phinney Ave N, Seattle, WA, USA',
-  lat: '47.6685',
-  lon: '-122.3503',
-}]
+const mapboxSuggestResult = {
+  suggestions: [{
+    mapbox_id: 'poi.abc123',
+    name: 'Woodland Park Zoo',
+    place_formatted: '5500 Phinney Ave N, Seattle, WA',
+    full_address: 'Woodland Park Zoo, 5500 Phinney Ave N, Seattle, WA',
+  }]
+}
 
-function mockFetch(response) {
-  vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
-    json: async () => response,
-  }))
+const mapboxRetrieveResult = {
+  features: [{
+    geometry: { coordinates: [-122.3503, 47.6685] },
+    properties: {
+      name: 'Woodland Park Zoo',
+      full_address: 'Woodland Park Zoo, 5500 Phinney Ave N, Seattle, WA',
+      place_formatted: '5500 Phinney Ave N, Seattle, WA',
+    }
+  }]
+}
+
+function mockFetch(...responses) {
+  const fetchMock = vi.fn()
+  responses.forEach(r => fetchMock.mockResolvedValueOnce({ json: async () => r }))
+  vi.stubGlobal('fetch', fetchMock)
 }
 
 function mockFetchFailing() {
@@ -34,11 +47,22 @@ function fillRequired(nameValue = 'Test Place') {
   fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Park' } })
 }
 
+// Fires a venue search query and advances past the 400ms debounce inside act,
+// then restores real timers so subsequent waitFor calls work normally.
+async function fireVenueSearch(query) {
+  vi.useFakeTimers()
+  fireEvent.change(screen.getByPlaceholderText(/search for a venue/i), {
+    target: { value: query },
+  })
+  await act(async () => { vi.advanceTimersByTime(450) })
+  vi.useRealTimers()
+}
+
 describe('SubmitPlaceForm', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    // Default: Nominatim returns nothing
-    mockFetch([])
+    // Default: Mapbox returns no suggestions
+    mockFetch({ suggestions: [] })
   })
 
   // ── T09: submit behaviour ────────────────────────────────────────────────
@@ -91,24 +115,18 @@ describe('SubmitPlaceForm', () => {
 
   // ── T10: geocoding ───────────────────────────────────────────────────────
 
-  it('selecting a venue from Nominatim populates lat and lng on submit', async () => {
-    mockFetch(nominatimResult)
+  it('selecting a venue from Mapbox Search Box populates lat and lng on submit', async () => {
+    mockFetch(mapboxSuggestResult, mapboxRetrieveResult)
     mockSubmitPlace.mockResolvedValueOnce(newPlace)
 
     render(<SubmitPlaceForm onSuccess={vi.fn()} />)
-
-    // Type enough to trigger the debounced search
-    fireEvent.change(screen.getByPlaceholderText(/search for a venue/i), {
-      target: { value: 'Woodland Park Zoo' },
-    })
+    await fireVenueSearch('Woodland Park Zoo')
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Park' } })
 
-    // Wait for Nominatim results to appear and select one
-    await waitFor(() => screen.getByText(/Woodland Park Zoo, Phinney Ave N/))
-    fireEvent.click(screen.getByText(/Woodland Park Zoo, Phinney Ave N/))
+    fireEvent.click(screen.getByRole('button', { name: /Woodland Park Zoo/ }))
+    await waitFor(() => screen.getByText(/✓ Location found/))
 
     fireEvent.click(screen.getByRole('button', { name: /submit place/i }))
-
     await waitFor(() => expect(mockSubmitPlace).toHaveBeenCalledTimes(1))
 
     const submitted = mockSubmitPlace.mock.calls[0][0]
@@ -116,7 +134,7 @@ describe('SubmitPlaceForm', () => {
     expect(submitted.lng).toBeCloseTo(-122.3503, 3)
   })
 
-  it('submits without coordinates when Nominatim fetch fails', async () => {
+  it('submits without coordinates when Mapbox fetch fails', async () => {
     mockFetchFailing()
     mockSubmitPlace.mockResolvedValueOnce(newPlace)
 
@@ -131,8 +149,37 @@ describe('SubmitPlaceForm', () => {
     expect(submitted.lng).toBeNull()
   })
 
+  it('selecting a venue populates the address field', async () => {
+    mockFetch(mapboxSuggestResult, mapboxRetrieveResult)
+    render(<SubmitPlaceForm onSuccess={vi.fn()} />)
+
+    await fireVenueSearch('Woodland Park Zoo')
+    fireEvent.click(screen.getByRole('button', { name: /Woodland Park Zoo/ }))
+    await waitFor(() => screen.getByText(/✓ Location found/))
+
+    expect(screen.getByPlaceholderText(/auto-filled when you select a venue/i).value)
+      .toBe('5500 Phinney Ave N, Seattle, WA')
+  })
+
+  it('selecting a venue pre-selects type when Mapbox category maps to a known type', async () => {
+    const retrieveWithPark = {
+      features: [{ geometry: { coordinates: [-122.3503, 47.6685] },
+        properties: { name: 'Woodland Park Zoo',
+          place_formatted: '5500 Phinney Ave N, Seattle, WA',
+          poi_category_ids: ['park'] } }]
+    }
+    mockFetch(mapboxSuggestResult, retrieveWithPark)
+    render(<SubmitPlaceForm onSuccess={vi.fn()} />)
+
+    await fireVenueSearch('Woodland Park Zoo')
+    fireEvent.click(screen.getByRole('button', { name: /Woodland Park Zoo/ }))
+    await waitFor(() => screen.getByText(/✓ Location found/))
+
+    expect(screen.getByRole('combobox').value).toBe('Park')
+  })
+
   it('submits without coordinates when user types a name but selects no result', async () => {
-    mockFetch(nominatimResult)
+    mockFetch(mapboxSuggestResult)
     mockSubmitPlace.mockResolvedValueOnce(newPlace)
 
     render(<SubmitPlaceForm onSuccess={vi.fn()} />)
