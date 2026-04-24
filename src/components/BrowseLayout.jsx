@@ -5,7 +5,7 @@ import MapView from './MapView'
 import { FEATURE_FILTER_CHIPS, CAT_CFG, placeTypeIconSurface } from '../lib/constants'
 import { useAgentChat } from '../hooks/useAgentChat'
 import { AGENT_SUGGESTIONS } from '../lib/agentSuggestions'
-import { getTipsForPlace } from '../lib/places'
+import { getTipsForPlace, submitTip } from '../lib/places'
 
 const STAGE_LABELS = {
   baby:      'Baby',
@@ -34,8 +34,63 @@ function StarRow({ rating }) {
   )
 }
 
-function PlaceDetail({ place, tips = [] }) {
+function AddTipForm({ placeId, onSubmitted }) {
+  const [tipText, setTipText] = useState('')
+  const [displayName, setDisplayName] = useState(() => {
+    try { return localStorage.getItem('little-places-display-name') ?? '' } catch { return '' }
+  })
+  const [submitting, setSubmitting] = useState(false)
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    if (!tipText.trim()) return
+    setSubmitting(true)
+    try {
+      await submitTip(placeId, tipText.trim(), displayName)
+      if (displayName.trim()) {
+        try { localStorage.setItem('little-places-display-name', displayName.trim()) } catch {}
+      }
+      onSubmitted()
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="mt-3 space-y-2">
+      <textarea
+        rows={2}
+        value={tipText}
+        onChange={e => setTipText(e.target.value)}
+        placeholder="What makes it great for kids here?"
+        className="w-full rounded-xl border border-border bg-card px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring/30 resize-none placeholder:text-muted-foreground/50"
+      />
+      <input
+        type="text"
+        value={displayName}
+        onChange={e => setDisplayName(e.target.value)}
+        placeholder="e.g. Mama Bear or Dad of 2 (optional)"
+        className="w-full rounded-xl border border-border bg-card px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring/30 placeholder:text-muted-foreground/50"
+      />
+      <button
+        type="submit"
+        disabled={submitting || !tipText.trim()}
+        className="w-full rounded-xl bg-primary px-4 py-2 text-sm font-bold text-white disabled:opacity-40 transition-opacity"
+      >
+        {submitting ? 'Submitting…' : 'Submit tip'}
+      </button>
+    </form>
+  )
+}
+
+function PlaceDetail({ place, tips = [], onTipAdded }) {
   const cfg = CAT_CFG[place.type] ?? CAT_CFG.Other
+  const [showTipForm, setShowTipForm] = useState(false)
+
+  function handleTipSubmitted() {
+    setShowTipForm(false)
+    onTipAdded?.()
+  }
 
   return (
     <div className="p-5">
@@ -73,7 +128,7 @@ function PlaceDetail({ place, tips = [] }) {
       )}
 
       {tips.length > 0 && (
-        <div className="mt-2">
+        <div className="mt-2 mb-4">
           <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
             Community tips
           </h4>
@@ -88,6 +143,18 @@ function PlaceDetail({ place, tips = [] }) {
             ))}
           </ul>
         </div>
+      )}
+
+      {showTipForm ? (
+        <AddTipForm placeId={place.id} onSubmitted={handleTipSubmitted} />
+      ) : (
+        <button
+          type="button"
+          onClick={() => setShowTipForm(true)}
+          className="mt-2 w-full rounded-xl border border-border px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-muted transition-colors duration-100"
+        >
+          + Add a tip
+        </button>
       )}
     </div>
   )
@@ -379,7 +446,7 @@ export default function BrowseLayout({
                     >
                       ← Back to list
                     </button>
-                    <PlaceDetail place={selectedPlace} tips={tips} />
+                    <PlaceDetail place={selectedPlace} tips={tips} onTipAdded={() => getTipsForPlace(selectedPlace.id).then(setTips).catch(() => {})} />
                   </motion.div>
                 ) : (
                   <motion.div
@@ -547,7 +614,7 @@ export default function BrowseLayout({
               >
                 <X size={13} strokeWidth={2.5} />
               </button>
-              <PlaceDetail place={selectedPlace} tips={tips} />
+              <PlaceDetail place={selectedPlace} tips={tips} onTipAdded={() => getTipsForPlace(selectedPlace.id).then(setTips).catch(() => {})} />
             </motion.div>
           )}
         </AnimatePresence>

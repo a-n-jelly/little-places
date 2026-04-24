@@ -1,6 +1,13 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import BrowseLayout from '../../components/BrowseLayout'
+
+const mockGetTips = vi.hoisted(() => vi.fn())
+const mockSubmitTip = vi.hoisted(() => vi.fn())
+vi.mock('../../lib/places', () => ({
+  getTipsForPlace: mockGetTips,
+  submitTip: mockSubmitTip,
+}))
 
 vi.mock('../../components/MapView', () => ({
   default: ({ places, onSelectPlace }) => (
@@ -35,7 +42,10 @@ const defaultProps = {
 }
 
 describe('BrowseLayout', () => {
-  beforeEach(() => vi.clearAllMocks())
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockGetTips.mockResolvedValue([])
+  })
 
   it('renders the place list by default', () => {
     render(<BrowseLayout {...defaultProps} />)
@@ -96,5 +106,57 @@ describe('BrowseLayout', () => {
     fireEvent.click(screen.getAllByRole('button', { name: /stroller friendly/i })[0])
     expect(screen.getAllByText('Green Lake Park').length).toBeGreaterThan(0)
     expect(screen.queryByText('Seattle Aquarium')).not.toBeInTheDocument()
+  })
+
+  // ── Add a tip from PlaceDetail ────────────────────────────────────────────
+
+  it('shows an "Add a tip" button in detail view', async () => {
+    render(<BrowseLayout {...defaultProps} />)
+    fireEvent.click(screen.getAllByRole('button', { name: 'Select Green Lake Park' })[0])
+    await waitFor(() => expect(screen.getAllByRole('button', { name: /add a tip/i }).length).toBeGreaterThan(0))
+  })
+
+  it('clicking "Add a tip" reveals the tip form', async () => {
+    render(<BrowseLayout {...defaultProps} />)
+    fireEvent.click(screen.getAllByRole('button', { name: 'Select Green Lake Park' })[0])
+    await waitFor(() => screen.getAllByRole('button', { name: /add a tip/i })[0])
+    fireEvent.click(screen.getAllByRole('button', { name: /add a tip/i })[0])
+    expect(screen.getByPlaceholderText(/what makes it great/i)).toBeTruthy()
+  })
+
+  it('submitting the tip form calls submitTip with place id and text', async () => {
+    mockSubmitTip.mockResolvedValueOnce({})
+    mockGetTips.mockResolvedValue([])
+
+    render(<BrowseLayout {...defaultProps} />)
+    fireEvent.click(screen.getAllByRole('button', { name: 'Select Green Lake Park' })[0])
+    await waitFor(() => screen.getAllByRole('button', { name: /add a tip/i })[0])
+    fireEvent.click(screen.getAllByRole('button', { name: /add a tip/i })[0])
+
+    fireEvent.change(screen.getByPlaceholderText(/what makes it great/i), {
+      target: { value: 'Great swings for toddlers' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /submit tip/i }))
+
+    await waitFor(() => expect(mockSubmitTip).toHaveBeenCalledWith(
+      '1', 'Great swings for toddlers', expect.any(String)
+    ))
+  })
+
+  it('tip form collapses after successful submit', async () => {
+    mockSubmitTip.mockResolvedValueOnce({})
+    mockGetTips.mockResolvedValue([])
+
+    render(<BrowseLayout {...defaultProps} />)
+    fireEvent.click(screen.getAllByRole('button', { name: 'Select Green Lake Park' })[0])
+    await waitFor(() => screen.getAllByRole('button', { name: /add a tip/i })[0])
+    fireEvent.click(screen.getAllByRole('button', { name: /add a tip/i })[0])
+
+    fireEvent.change(screen.getByPlaceholderText(/what makes it great/i), {
+      target: { value: 'Nice spot' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /submit tip/i }))
+
+    await waitFor(() => expect(screen.queryByPlaceholderText(/what makes it great/i)).toBeNull())
   })
 })

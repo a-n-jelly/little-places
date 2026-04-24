@@ -47,11 +47,11 @@ T34 | P1 | feature | Auto-generate description + derive features when a place is
 - Constraint: tips table must exist (T33); description nullable; `FEATURE_VOCAB` from `constants.js` must be passed to the edge function prompt; Supabase service-role key required
 - Model: Sonnet · Plan: yes
 
-T35 | P1 | chore | Remove feature chips from Add Place form
-- Visible: form shows feature chip selectors that will now be AI-derived (T34), creating false expectation that user selection matters
-- Done: feature chip section removed from `SubmitPlaceForm.jsx`; `child_friendly_features` removed from form state and not sent on submit; `SubmitPlaceForm.test.jsx` updated; all tests pass
-- Constraint: `places.js` `submitPlace` spreads form data — ensure `child_friendly_features` is not included; `FilterBar` and `PlaceCard` feature display unchanged (still read from DB)
-- Model: Haiku · Plan: no
+T35 | P1 | feature | Add a community tip from PlaceDetail
+- Visible: users can only add tips when submitting a new place; no way to contribute to an existing place
+- Done: PlaceDetail shows an "Add a tip" inline form (tip textarea + display_name pre-filled from localStorage); on submit calls `submitTip` and refreshes the tips list; display_name saved to localStorage; form collapses after successful submit
+- Constraint: `BrowseLayout.jsx` PlaceDetail is the target component; `submitTip` and `getTipsForPlace` already exist in `places.js`; no new DB changes needed
+- Model: Sonnet · Plan: no
 
 ~~T03~~ | Superseded by: T32 (Mapbox Search Box API replaces current search; partial match resolved as side effect)
 
