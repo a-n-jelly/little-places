@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { Search, Plus, Star, X, Sparkles, Map as MapIcon } from 'lucide-react'
+import { Search, Plus, Star, X, Sparkles } from 'lucide-react'
 import MapView from './MapView'
 import { FEATURE_FILTER_CHIPS, CAT_CFG, placeTypeIconSurface } from '../lib/constants'
 import { useAgentChat } from '../hooks/useAgentChat'
@@ -587,8 +587,8 @@ export default function BrowseLayout({
         <button
           onClick={onSubmitPlace}
           aria-label="Add a place"
-          className="absolute right-4 z-10 flex items-center justify-center rounded-full bg-primary text-white active:scale-90 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
-          style={{ width: 52, height: 52, boxShadow: 'var(--shadow-brand)', bottom: panelMode === 'ask' ? '5.75rem' : '5.5rem' }}
+          className="absolute bottom-8 right-4 z-10 flex items-center justify-center rounded-full bg-primary text-white active:scale-90 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
+          style={{ width: 52, height: 52, boxShadow: 'var(--shadow-brand)' }}
         >
           <Plus size={24} strokeWidth={2.5} />
         </button>
@@ -602,7 +602,7 @@ export default function BrowseLayout({
               exit={{ y: '108%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 280, mass: 0.9 }}
               className="absolute bottom-0 left-0 right-0 z-20 bg-white overflow-hidden"
-              style={{ borderRadius: '28px 28px 0 0', boxShadow: '0 -8px 32px rgba(0,0,0,0.12)', paddingBottom: '5rem' }}
+              style={{ borderRadius: '28px 28px 0 0', boxShadow: '0 -8px 32px rgba(0,0,0,0.12)' }}
             >
               <div className="flex justify-center pt-3 pb-1">
                 <div className="w-9 h-1 rounded-full bg-border" />

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { Sparkles, Map, PlusCircle, Home as HomeIcon } from 'lucide-react'
+import { PlusCircle, Home as HomeIcon } from 'lucide-react'
 import { usePlaces } from './hooks/usePlaces'
 import BrowseLayout from './components/BrowseLayout'
 import SubmitBottomSheet from './components/SubmitBottomSheet'
@@ -59,7 +59,7 @@ function App() {
         </nav>
       </header>
 
-      <main className="flex-1 overflow-auto pb-24 md:pb-0">
+      <main className="flex-1 overflow-auto">
         <BrowseLayout
           places={places}
           loading={loading}
@@ -77,35 +77,6 @@ function App() {
           setPanelMode={setPanelMode}
         />
       </main>
-
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-md border-t border-border px-10 pb-8 pt-4 flex justify-between items-center z-50 shadow-lg">
-        <button
-          type="button"
-          onClick={() => setPanelMode('ask')}
-          className={cn('flex flex-col items-center gap-1 transition-[color,transform] duration-100 ease-out', panelMode === 'ask' ? 'text-primary scale-110' : 'text-muted-foreground')}
-        >
-          <Sparkles size={24} strokeWidth={panelMode === 'ask' ? 2.5 : 2} />
-          <span className="text-[10px] font-bold uppercase tracking-wide">Ask</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setShowSubmitForm(true)}
-          className="relative -top-10 bg-primary text-primary-foreground p-4 rounded-full shadow-xl shadow-primary/30 flex items-center justify-center active:scale-90 transition-[color,background-color,transform,box-shadow] duration-100 ease-out ring-4 ring-background"
-          aria-label="Add a place"
-        >
-          <PlusCircle size={28} />
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setPanelMode('search')}
-          className={cn('flex flex-col items-center gap-1 transition-[color,transform] duration-100 ease-out', panelMode === 'search' ? 'text-secondary scale-110' : 'text-muted-foreground')}
-        >
-          <Map size={24} strokeWidth={panelMode === 'search' ? 2.5 : 2} />
-          <span className="text-[10px] font-bold uppercase tracking-wide">Explore</span>
-        </button>
-      </nav>
 
       <SubmitBottomSheet
         isOpen={showSubmitForm}
