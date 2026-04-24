@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'motion/react'
-import Map, { Marker } from 'react-map-gl/mapbox'
+import Map, { Marker, NavigationControl, GeolocateControl } from 'react-map-gl/mapbox'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { CAT_CFG, placeTypeColorVar } from '../lib/constants'
 
@@ -146,8 +146,15 @@ export default function MapView({ places = [], onSelectPlace, selectedPlace }) {
       style={{ width: '100%', height: '100%' }}
       mapStyle={MAP_STYLE}
       config={{ basemap: { theme: 'faded', lightPreset: 'day' } }}
-
+      logoPosition="bottom-left"
+      attributionControl={false}
     >
+      <NavigationControl position="top-right" showCompass={false} />
+      <GeolocateControl
+        position="top-right"
+        trackUserLocation={false}
+        showUserHeading={false}
+      />
       {sortedPlaces.map((place) => (
         <Marker
           key={place.id}
