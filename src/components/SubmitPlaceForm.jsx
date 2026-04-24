@@ -109,7 +109,18 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
       setForm((f) => ({
         ...f,
         name: suggestion.name,
-        address: props.place_formatted ?? suggestion.place_formatted ?? '',
+        address: (() => {
+          const full = props.full_address ?? ''
+          const withoutName = full.startsWith(suggestion.name)
+            ? full.slice(suggestion.name.length).replace(/^,\s*/, '')
+            : full
+          const raw = withoutName || props.place_formatted || suggestion.place_formatted || ''
+          return raw
+            .replace(/\s*\d{5}(-\d{4})?/g, '')   // strip zip code
+            .replace(/,?\s*United States\s*/g, '') // strip country
+            .replace(/,\s*$/, '')                  // clean trailing comma
+            .trim()
+        })(),
         lat: lat ?? null,
         lng: lng ?? null,
         ...(matchedType ? { type: matchedType } : {}),

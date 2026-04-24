@@ -41,11 +41,17 @@ T33 | P1 | feature | Replace description input with tips; derive description via
 - Constraint: `PlaceCard.jsx` and `places.js` are protected; DB schema change needed (`tips` column); enrichment model choice TBD
 - Model: Opus · Plan: yes
 
-T34 | P1 | feature | Auto-generate description when a place is added
-- Visible: new places have no description until background job runs; currently that job only generates embeddings
-- Done: `process-embeddings` edge function fetches the place's tips, calls Claude Sonnet to derive a warm 1–2 sentence description from name + type + tips, writes result to `places.description`
-- Constraint: tips table must exist (T33); description is now nullable so places without one are valid; Supabase service-role key required in edge function env
+T34 | P1 | feature | Auto-generate description + derive features when a place is added
+- Visible: new places have no description or structured features until background job runs
+- Done: `process-embeddings` edge function fetches the place's tips, calls Claude Sonnet to (1) derive a warm 1–2 sentence description from name + type + tips, (2) extract `child_friendly_features` from tip text mapped to `FEATURE_VOCAB` for that place type; writes both back to `places`
+- Constraint: tips table must exist (T33); description nullable; `FEATURE_VOCAB` from `constants.js` must be passed to the edge function prompt; Supabase service-role key required
 - Model: Sonnet · Plan: yes
+
+T35 | P1 | chore | Remove feature chips from Add Place form
+- Visible: form shows feature chip selectors that will now be AI-derived (T34), creating false expectation that user selection matters
+- Done: feature chip section removed from `SubmitPlaceForm.jsx`; `child_friendly_features` removed from form state and not sent on submit; `SubmitPlaceForm.test.jsx` updated; all tests pass
+- Constraint: `places.js` `submitPlace` spreads form data — ensure `child_friendly_features` is not included; `FilterBar` and `PlaceCard` feature display unchanged (still read from DB)
+- Model: Haiku · Plan: no
 
 ~~T03~~ | Superseded by: T32 (Mapbox Search Box API replaces current search; partial match resolved as side effect)
 
