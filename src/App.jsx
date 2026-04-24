@@ -51,7 +51,7 @@ function App() {
           <button
             type="button"
             onClick={() => setShowSubmitForm(true)}
-            className="bg-secondary text-secondary-foreground px-5 py-2.5 rounded-full font-bold shadow-sm hover:shadow-md transition-[color,background-color,box-shadow,transform] duration-100 ease-out active:scale-95 flex items-center gap-2"
+            className="bg-primary text-primary-foreground px-5 py-2.5 rounded-full font-bold shadow-sm hover:shadow-md transition-[color,background-color,box-shadow,transform] duration-100 ease-out active:scale-95 flex items-center gap-2"
           >
             <PlusCircle size={20} />
             Add Place
