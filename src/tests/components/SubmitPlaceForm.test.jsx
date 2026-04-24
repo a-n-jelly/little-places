@@ -2,13 +2,23 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import SubmitPlaceForm from '../../components/SubmitPlaceForm'
 
+// happy-dom's localStorage stub is incomplete — replace it with a working in-memory mock
+const _lsData = {}
+vi.stubGlobal('localStorage', {
+  getItem: (key) => _lsData[key] ?? null,
+  setItem: (key, val) => { _lsData[key] = String(val) },
+  removeItem: (key) => { delete _lsData[key] },
+})
+
 /** Must stay in sync with `setTimeout(..., ms)` in `SubmitPlaceForm.jsx` venue search debounce. */
 const VENUE_SEARCH_DEBOUNCE_MS = 400
 
 const mockSubmitPlace = vi.hoisted(() => vi.fn())
+const mockSubmitTip = vi.hoisted(() => vi.fn())
 
 vi.mock('../../lib/places', () => ({
   submitPlace: mockSubmitPlace,
+  submitTip: mockSubmitTip,
 }))
 
 const newPlace = { id: 'abc', name: 'Woodland Park Zoo', type: 'Park', address: '5500 Phinney Ave N' }
@@ -67,6 +77,7 @@ describe('SubmitPlaceForm', () => {
     vi.clearAllMocks()
     vi.useRealTimers()
     mockFetch({ suggestions: [] })
+    Object.keys(_lsData).forEach(k => delete _lsData[k])
   })
 
   afterEach(() => {
@@ -203,5 +214,69 @@ describe('SubmitPlaceForm', () => {
     const submitted = mockSubmitPlace.mock.calls[0][0]
     expect(submitted.lat).toBeNull()
     expect(submitted.lng).toBeNull()
+  })
+
+  // ── Tips + display name ──────────────────────────────────────────────────
+
+  it('does not render a description field', () => {
+    render(<SubmitPlaceForm onSuccess={vi.fn()} />)
+    expect(screen.queryByLabelText(/description/i)).toBeNull()
+  })
+
+  it('renders a tips textarea', () => {
+    render(<SubmitPlaceForm onSuccess={vi.fn()} />)
+    expect(screen.getByPlaceholderText(/dedicated baby swing/i)).toBeTruthy()
+  })
+
+  it('pre-fills display name from localStorage', () => {
+    localStorage.setItem('little-places-display-name', 'Mama Bear')
+    render(<SubmitPlaceForm onSuccess={vi.fn()} />)
+    expect(screen.getByPlaceholderText(/mama bear/i).value).toBe('Mama Bear')
+  })
+
+  it('calls submitTip after submitPlace when tip_text is provided', async () => {
+    mockSubmitPlace.mockResolvedValueOnce(newPlace)
+    mockSubmitTip.mockResolvedValueOnce({})
+
+    render(<SubmitPlaceForm onSuccess={vi.fn()} />)
+    fillRequired()
+    fireEvent.change(screen.getByPlaceholderText(/dedicated baby swing/i), {
+      target: { value: 'Great swings for toddlers' },
+    })
+    fireEvent.change(screen.getByPlaceholderText(/mama bear/i), {
+      target: { value: 'Dad of 2' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /submit place/i }))
+
+    await waitFor(() => expect(mockSubmitTip).toHaveBeenCalledWith(
+      newPlace.id,
+      'Great swings for toddlers',
+      'Dad of 2',
+    ))
+  })
+
+  it('does not call submitTip when tip_text is empty', async () => {
+    mockSubmitPlace.mockResolvedValueOnce(newPlace)
+
+    render(<SubmitPlaceForm onSuccess={vi.fn()} />)
+    fillRequired()
+    fireEvent.click(screen.getByRole('button', { name: /submit place/i }))
+
+    await waitFor(() => expect(mockSubmitPlace).toHaveBeenCalledTimes(1))
+    expect(mockSubmitTip).not.toHaveBeenCalled()
+  })
+
+  it('saves display_name to localStorage on submit', async () => {
+    mockSubmitPlace.mockResolvedValueOnce(newPlace)
+
+    render(<SubmitPlaceForm onSuccess={vi.fn()} />)
+    fillRequired()
+    fireEvent.change(screen.getByPlaceholderText(/mama bear/i), {
+      target: { value: 'Park Dad' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /submit place/i }))
+
+    await waitFor(() => expect(mockSubmitPlace).toHaveBeenCalledTimes(1))
+    expect(localStorage.getItem('little-places-display-name')).toBe('Park Dad')
   })
 })

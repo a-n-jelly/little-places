@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { submitPlace } from '../lib/places'
+import { submitPlace, submitTip } from '../lib/places'
 import { STAGES, FEATURE_VOCAB, PLACE_TYPES } from '../lib/constants'
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
@@ -28,16 +28,21 @@ const EMPTY_FORM = {
   name: '',
   type: '',
   address: '',
-  description: '',
   stages: [],
   child_friendly_features: [],
   submitted_by: '',
+  tip_text: '',
+  display_name: '',
   lat: null,
   lng: null,
 }
 
 export default function SubmitPlaceForm({ onSuccess, onCancel }) {
-  const [form, setForm] = useState(EMPTY_FORM)
+  const [form, setForm] = useState(() => {
+    let storedName = ''
+    try { storedName = localStorage.getItem('little-places-display-name') ?? '' } catch {}
+    return { ...EMPTY_FORM, display_name: storedName }
+  })
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(null)
 
@@ -124,8 +129,15 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
     setError(null)
     setSubmitting(true)
     try {
-      const place = await submitPlace(form)
-      setForm(EMPTY_FORM)
+      const { tip_text, display_name, ...placeData } = form
+      const place = await submitPlace(placeData)
+      if (tip_text.trim()) {
+        await submitTip(place.id, tip_text.trim(), display_name)
+      }
+      if (display_name.trim()) {
+        try { localStorage.setItem('little-places-display-name', display_name.trim()) } catch {}
+      }
+      setForm({ ...EMPTY_FORM, display_name: display_name.trim() })
       setVenueQuery('')
       setVenueSelected(false)
       onSuccess?.(place)
@@ -208,16 +220,16 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
         </select>
       </div>
 
-      {/* Description */}
+      {/* Tips */}
       <div>
         <label className="block text-sm font-medium text-foreground mb-1">
-          Description <span className="text-muted-foreground font-normal">(optional)</span>
+          Your tip <span className="text-muted-foreground font-normal">(optional)</span>
         </label>
         <textarea
           rows={3}
-          value={form.description}
-          onChange={(e) => setField('description', e.target.value)}
-          placeholder="What makes this place great for kids?"
+          value={form.tip_text}
+          onChange={(e) => setField('tip_text', e.target.value)}
+          placeholder="e.g. There's a dedicated baby swing and the café has high chairs inside."
           className="w-full rounded-xl border border-border bg-card px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring/30 resize-none placeholder:text-muted-foreground/50"
         />
       </div>
@@ -272,16 +284,16 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
         </div>
       )}
 
-      {/* Submitted by */}
+      {/* Display name (persisted in localStorage, used for tip attribution) */}
       <div>
         <label className="block text-sm font-medium text-foreground mb-1">
           Your name <span className="text-muted-foreground font-normal">(optional)</span>
         </label>
         <input
           type="text"
-          value={form.submitted_by}
-          onChange={(e) => setField('submitted_by', e.target.value)}
-          placeholder="First name or nickname"
+          value={form.display_name}
+          onChange={(e) => setField('display_name', e.target.value)}
+          placeholder="e.g. Mama Bear or Dad of 2"
           className="w-full rounded-xl border border-border bg-card px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring/30 placeholder:text-muted-foreground/50 text-foreground"
         />
       </div>

@@ -5,6 +5,7 @@ import MapView from './MapView'
 import { FEATURE_FILTER_CHIPS, CAT_CFG, placeTypeIconSurface } from '../lib/constants'
 import { useAgentChat } from '../hooks/useAgentChat'
 import { AGENT_SUGGESTIONS } from '../lib/agentSuggestions'
+import { getTipsForPlace } from '../lib/places'
 
 const STAGE_LABELS = {
   baby:      'Baby',
@@ -33,7 +34,7 @@ function StarRow({ rating }) {
   )
 }
 
-function PlaceDetail({ place }) {
+function PlaceDetail({ place, tips = [] }) {
   const cfg = CAT_CFG[place.type] ?? CAT_CFG.Other
 
   return (
@@ -53,10 +54,12 @@ function PlaceDetail({ place }) {
 
       {place.rating > 0 && <div className="mb-3"><StarRow rating={place.rating} /></div>}
 
-      <p className="text-sm text-muted-foreground font-medium leading-relaxed mb-4">{place.description}</p>
+      {place.description && (
+        <p className="text-sm text-muted-foreground font-medium leading-relaxed mb-4">{place.description}</p>
+      )}
 
       {place.stages?.length > 0 && (
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-1.5 mb-4">
           {place.stages.map(stage => (
             <span
               key={stage}
@@ -66,6 +69,24 @@ function PlaceDetail({ place }) {
               {STAGE_LABELS[stage] ?? stage}
             </span>
           ))}
+        </div>
+      )}
+
+      {tips.length > 0 && (
+        <div className="mt-2">
+          <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
+            Community tips
+          </h4>
+          <ul className="space-y-2">
+            {tips.map(t => (
+              <li key={t.id} className="text-sm text-foreground leading-relaxed">
+                &ldquo;{t.tip_text}&rdquo;
+                {t.display_name && (
+                  <span className="ml-1 text-xs text-muted-foreground">— {t.display_name}</span>
+                )}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
@@ -126,6 +147,7 @@ export default function BrowseLayout({
   setPanelMode,
 }) {
   const [selectedPlace, setSelectedPlace] = useState(null)
+  const [tips, setTips] = useState([])
   const [activeChips, setActiveChips] = useState([])
   const searchInputDesktopRef = useRef(null)
   const searchInputMobileRef = useRef(null)
@@ -161,6 +183,11 @@ export default function BrowseLayout({
     }
     prevPanelMode.current = panelMode
   }, [panelMode])
+
+  useEffect(() => {
+    if (!selectedPlace) { setTips([]); return }
+    getTipsForPlace(selectedPlace.id).then(setTips).catch(() => setTips([]))
+  }, [selectedPlace])
 
   function handleSelectPlace(place) {
     setSelectedPlace(place)
@@ -352,7 +379,7 @@ export default function BrowseLayout({
                     >
                       ← Back to list
                     </button>
-                    <PlaceDetail place={selectedPlace} />
+                    <PlaceDetail place={selectedPlace} tips={tips} />
                   </motion.div>
                 ) : (
                   <motion.div
@@ -520,7 +547,7 @@ export default function BrowseLayout({
               >
                 <X size={13} strokeWidth={2.5} />
               </button>
-              <PlaceDetail place={selectedPlace} />
+              <PlaceDetail place={selectedPlace} tips={tips} />
             </motion.div>
           )}
         </AnimatePresence>

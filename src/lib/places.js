@@ -61,6 +61,32 @@ export async function submitPlace(place) {
 }
 
 /**
+ * Submit a community tip for a place.
+ */
+export async function submitTip(placeId, tipText, displayName) {
+  const { data, error } = await supabase
+    .from('tips')
+    .insert([{ place_id: placeId, tip_text: tipText, display_name: displayName || null }])
+    .select()
+    .single()
+  if (error) throw error
+  return data
+}
+
+/**
+ * Fetch all tips for a place, newest first.
+ */
+export async function getTipsForPlace(placeId) {
+  const { data, error } = await supabase
+    .from('tips')
+    .select('id, tip_text, display_name, created_at')
+    .eq('place_id', placeId)
+    .order('created_at', { ascending: false })
+  if (error) throw error
+  return data ?? []
+}
+
+/**
  * Fetch a single place by ID.
  */
 export async function getPlaceById(id) {

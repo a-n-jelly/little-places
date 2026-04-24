@@ -1,6 +1,8 @@
 #Observations
 
 Selected marker get hidden when zooming out - needs to be on top of all the other markers layer
+I need to account for if a place is already available in the database. You can't add it. We need to show the user where it is the likely behaviour is that they'll search for it though so I think we'd prioritise this for now. 
+Section for all when it comes to the add place form for ages and then in the backend we can just make sure that it's linked to all, that all translates to each of the age filters or age stages 
 ## Design skill — deferred / later
 
 *From little-places-design rollout; pick up with `/triage` or a design ticket.*

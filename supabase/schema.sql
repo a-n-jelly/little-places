@@ -10,7 +10,7 @@ create table if not exists places (
   name              text not null,
   type              text not null,
   address           text not null,
-  description       text not null,
+  description       text,                -- nullable; populated by AI background job (T34)
   stages            text[] default '{}',
   child_friendly_features text[] default '{}',
   tags              text[] default '{}',       -- unused, kept for schema compatibility
@@ -33,9 +33,9 @@ create index if not exists idx_places_embedding_status
   on places (embedding_status)
   where embedding_status = 'pending';
 
--- Index for full text search fallback
+-- Index for full text search fallback (coalesce handles nullable description)
 create index if not exists idx_places_name_description
-  on places using gin(to_tsvector('english', name || ' ' || description));
+  on places using gin(to_tsvector('english', name || ' ' || coalesce(description, '')));
 
 -- Row Level Security — public read, anyone can insert
 alter table places enable row level security;
@@ -98,3 +98,22 @@ drop policy if exists "Anyone can submit an event" on events;
 create policy "Anyone can submit an event"
   on events for insert
   with check (true);
+
+-- Tips table — community child-friendly insights per place (T33)
+create table if not exists tips (
+  id           uuid primary key default gen_random_uuid(),
+  place_id     uuid references places(id) on delete cascade not null,
+  tip_text     text not null,
+  display_name text,           -- optional; persisted in user's localStorage
+  created_at   timestamptz default now()
+);
+
+create index if not exists idx_tips_place_id on tips (place_id);
+
+alter table tips enable row level security;
+
+drop policy if exists "tips_read" on tips;
+create policy "tips_read" on tips for select using (true);
+
+drop policy if exists "tips_insert" on tips;
+create policy "tips_insert" on tips for insert with check (true);
