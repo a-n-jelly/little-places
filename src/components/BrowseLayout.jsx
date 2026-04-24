@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { Search, Plus, Star, X, Sparkles, Map as MapIcon } from 'lucide-react'
 import MapView from './MapView'
-import { FEATURE_FILTER_CHIPS, CAT_CFG, TYPE_COLORS } from '../lib/constants'
+import { FEATURE_FILTER_CHIPS, CAT_CFG, placeTypeIconSurface } from '../lib/constants'
 import { useAgentChat } from '../hooks/useAgentChat'
 import { AGENT_SUGGESTIONS } from '../lib/agentSuggestions'
 
@@ -34,14 +34,14 @@ function StarRow({ rating }) {
 }
 
 function PlaceDetail({ place }) {
-  const cfg = CAT_CFG[place.type] ?? { emoji: '📍', color: TYPE_COLORS.Other }
+  const cfg = CAT_CFG[place.type] ?? CAT_CFG.Other
 
   return (
     <div className="p-5">
       <div className="flex items-start gap-3 mb-3">
         <div
           className="flex items-center justify-center rounded-2xl flex-shrink-0"
-          style={{ width: 50, height: 50, background: `${cfg.color}33` }}
+          style={{ width: 50, height: 50, background: placeTypeIconSurface(place.type, '24%') }}
         >
           <span style={{ fontSize: 22 }}>{cfg.emoji}</span>
         </div>
@@ -73,7 +73,7 @@ function PlaceDetail({ place }) {
 }
 
 function PlaceListRow({ place, isSelected, onClick }) {
-  const cfg = CAT_CFG[place.type] ?? { emoji: '📍', color: TYPE_COLORS.Other }
+  const cfg = CAT_CFG[place.type] ?? CAT_CFG.Other
   const accessTags = (place.tags ?? []).filter(tag =>
     ['accessible', 'stroller', 'sensory', 'elevator', 'wheelchair'].some(k => tag.toLowerCase().includes(k))
   )
@@ -88,7 +88,7 @@ function PlaceListRow({ place, isSelected, onClick }) {
     >
       <div
         className="flex items-center justify-center rounded-xl flex-shrink-0"
-        style={{ width: 40, height: 40, background: `${cfg.color}33` }}
+        style={{ width: 40, height: 40, background: placeTypeIconSurface(place.type, '22%') }}
       >
         <span style={{ fontSize: 18 }}>{cfg.emoji}</span>
       </div>

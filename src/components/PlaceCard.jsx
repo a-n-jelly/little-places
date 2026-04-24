@@ -1,7 +1,7 @@
-import { STAGES, ACCESSIBILITY_TAGS, TYPE_COLORS } from '../lib/constants'
+import { STAGES, ACCESSIBILITY_TAGS, placeTypeColorVar } from '../lib/constants'
 
 export default function PlaceCard({ place, onClick }) {
-  const color = TYPE_COLORS[place.type] || TYPE_COLORS.Other
+  const colorVar = placeTypeColorVar(place.type)
 
   return (
     <div
@@ -11,13 +11,16 @@ export default function PlaceCard({ place, onClick }) {
       onKeyDown={(e) => e.key === 'Enter' && onClick?.(place)}
       data-testid="place-card"
       className="bg-card rounded-2xl p-5 border border-border shadow-sm hover:shadow-md transition-shadow duration-100 ease-out cursor-pointer border-l-4"
-      style={{ borderLeftColor: color }}
+      style={{ borderLeftColor: colorVar }}
     >
       <div className="flex justify-between items-start mb-2">
         <div>
           <span
             className="text-xs font-bold px-2 py-1 rounded-full"
-            style={{ background: color + '33', color }}
+            style={{
+              background: `color-mix(in srgb, ${colorVar} 24%, transparent)`,
+              color: colorVar,
+            }}
           >
             {place.type?.toUpperCase()}
           </span>
