@@ -1,6 +1,9 @@
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import SubmitPlaceForm from '../../components/SubmitPlaceForm'
+
+/** Must stay in sync with `setTimeout(..., ms)` in `SubmitPlaceForm.jsx` venue search debounce. */
+const VENUE_SEARCH_DEBOUNCE_MS = 400
 
 const mockSubmitPlace = vi.hoisted(() => vi.fn())
 
@@ -47,25 +50,30 @@ function fillRequired(nameValue = 'Test Place') {
   fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Park' } })
 }
 
-// Fires a venue search query and advances past the 400ms debounce inside act,
-// then restores real timers so subsequent waitFor calls work normally.
+/** Flush venue-search debounce under fake timers, then restore real timers for `waitFor`. */
 async function fireVenueSearch(query) {
   vi.useFakeTimers()
   fireEvent.change(screen.getByPlaceholderText(/search for a venue/i), {
     target: { value: query },
   })
-  await act(async () => { vi.advanceTimersByTime(450) })
+  await act(async () => {
+    vi.advanceTimersByTime(VENUE_SEARCH_DEBOUNCE_MS + 50)
+  })
   vi.useRealTimers()
 }
 
 describe('SubmitPlaceForm', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    // Default: Mapbox returns no suggestions
+    vi.useRealTimers()
     mockFetch({ suggestions: [] })
   })
 
-  // ── T09: submit behaviour ────────────────────────────────────────────────
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  // ── Submit (no venue selection) ─────────────────────────────────────────
 
   it('calls onSuccess with the returned place on successful submit', async () => {
     mockSubmitPlace.mockResolvedValueOnce(newPlace)
@@ -113,7 +121,7 @@ describe('SubmitPlaceForm', () => {
     expect(onSuccess).not.toHaveBeenCalled()
   })
 
-  // ── T10: geocoding ───────────────────────────────────────────────────────
+  // ── Mapbox venue search + retrieve ───────────────────────────────────────
 
   it('selecting a venue from Mapbox Search Box populates lat and lng on submit', async () => {
     mockFetch(mapboxSuggestResult, mapboxRetrieveResult)

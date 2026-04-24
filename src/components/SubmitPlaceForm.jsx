@@ -2,6 +2,28 @@ import { useState, useRef } from 'react'
 import { submitPlace } from '../lib/places'
 import { STAGES, FEATURE_VOCAB, PLACE_TYPES } from '../lib/constants'
 
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
+const SEATTLE_PROXIMITY = '-122.3321,47.6062'
+
+const MAPBOX_TYPE_MAP = {
+  park: 'Park',
+  playground: 'Playground',
+  beach: 'Beach',
+  farm: 'Farm',
+  cafe: 'Café',
+  coffee_shop: 'Café',
+  restaurant: 'Restaurant',
+  bar: 'Bar',
+  bakery: 'Bakery',
+  museum: 'Museum',
+  library: 'Library',
+  aquarium: 'Aquarium',
+  zoo: 'Zoo',
+  amusement_park: 'Indoor Play',
+  tourist_attraction: 'Attraction',
+  attraction: 'Attraction',
+}
+
 const EMPTY_FORM = {
   name: '',
   type: '',
@@ -19,12 +41,12 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState(null)
 
-  // Venue search state
   const [venueQuery, setVenueQuery] = useState('')
   const [venueResults, setVenueResults] = useState([])
   const [venueSearching, setVenueSearching] = useState(false)
   const [venueSelected, setVenueSelected] = useState(false)
   const debounceRef = useRef(null)
+  const sessionTokenRef = useRef(crypto.randomUUID())
 
   function setField(field, value) {
     setForm((f) => ({ ...f, [field]: value }))
@@ -55,11 +77,10 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
       setVenueSearching(true)
       try {
         const res = await fetch(
-          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q + ' Seattle')}&format=json&limit=5&countrycodes=us`,
-          { headers: { 'Accept-Language': 'en' } }
+          `https://api.mapbox.com/search/searchbox/v1/suggest?q=${encodeURIComponent(q)}&access_token=${MAPBOX_TOKEN}&session_token=${sessionTokenRef.current}&country=us&proximity=${SEATTLE_PROXIMITY}&limit=5&language=en`
         )
         const data = await res.json()
-        setVenueResults(data)
+        setVenueResults(data.suggestions ?? [])
       } catch {
         setVenueResults([])
       } finally {
@@ -68,18 +89,34 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
     }, 400)
   }
 
-  function selectVenue(venue) {
-    const displayName = venue.display_name.split(',').slice(0, 3).join(',')
-    setVenueQuery(venue.display_name.split(',')[0])
-    setForm((f) => ({
-      ...f,
-      name: venue.display_name.split(',')[0],
-      address: displayName,
-      lat: parseFloat(venue.lat),
-      lng: parseFloat(venue.lon),
-    }))
-    setVenueResults([])
-    setVenueSelected(true)
+  async function selectVenue(suggestion) {
+    setVenueSearching(true)
+    try {
+      const res = await fetch(
+        `https://api.mapbox.com/search/searchbox/v1/retrieve/${suggestion.mapbox_id}?access_token=${MAPBOX_TOKEN}&session_token=${sessionTokenRef.current}`
+      )
+      const data = await res.json()
+      const feature = data.features?.[0]
+      const props = feature?.properties ?? {}
+      const [lng, lat] = feature?.geometry?.coordinates ?? [null, null]
+      const matchedType = (props.poi_category_ids ?? []).map(c => MAPBOX_TYPE_MAP[c]).find(Boolean) ?? null
+      setVenueQuery(suggestion.name)
+      setForm((f) => ({
+        ...f,
+        name: suggestion.name,
+        address: props.place_formatted ?? suggestion.place_formatted ?? '',
+        lat: lat ?? null,
+        lng: lng ?? null,
+        ...(matchedType ? { type: matchedType } : {}),
+      }))
+      setVenueResults([])
+      setVenueSelected(true)
+      sessionTokenRef.current = crypto.randomUUID()
+    } catch {
+      setVenueResults([])
+    } finally {
+      setVenueSearching(false)
+    }
   }
 
   async function handleSubmit(e) {
@@ -121,14 +158,14 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
         )}
         {venueResults.length > 0 && (
           <ul className="absolute z-10 w-full mt-1 bg-card border border-border rounded-xl shadow-sm text-sm overflow-hidden">
-            {venueResults.map((v) => (
-              <li key={v.place_id}>
+            {venueResults.map((s) => (
+              <li key={s.mapbox_id}>
                 <button
                   type="button"
-                  onClick={() => selectVenue(v)}
+                  onClick={() => selectVenue(s)}
                   className="w-full text-left px-3 py-2.5 hover:bg-muted text-foreground truncate transition-colors duration-100 ease-out"
                 >
-                  {v.display_name}
+                  {s.name}{s.place_formatted ? `, ${s.place_formatted}` : ''}
                 </button>
               </li>
             ))}
