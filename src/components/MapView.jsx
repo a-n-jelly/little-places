@@ -1,4 +1,3 @@
-import { useCallback } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 import Map, { Marker } from 'react-map-gl/mapbox'
 import 'mapbox-gl/dist/mapbox-gl.css'
@@ -7,7 +6,7 @@ import { CAT_CFG, placeTypeColorVar } from '../lib/constants'
 const SEATTLE_CENTER = { longitude: -122.33, latitude: 47.60 }
 
 /** Default Mapbox streets; basemap tuning deferred. */
-const MAP_STYLE = 'mapbox://styles/mapbox/outdoors-v12'
+const MAP_STYLE = 'mapbox://styles/mapbox/standard'
 
 /** viewBox — ring + stem layout (matches product reference: idle = coloured ring + white disc + emoji). */
 const VB_W = 32
@@ -134,15 +133,11 @@ function DropPin({ typeColorVar, emoji, selected, gradientId }) {
 }
 
 export default function MapView({ places = [], onSelectPlace, selectedPlace }) {
-  const handleMarkerClick = useCallback(
-    (e, place) => {
-      e.originalEvent?.stopPropagation()
-      onSelectPlace?.(place)
-    },
-    [onSelectPlace]
-  )
-
   const placesWithCoords = places.filter((p) => p.lat != null && p.lng != null)
+  const sortedPlaces = [
+    ...placesWithCoords.filter(p => p.id !== selectedPlace?.id),
+    ...placesWithCoords.filter(p => p.id === selectedPlace?.id),
+  ]
 
   return (
     <Map
@@ -150,8 +145,10 @@ export default function MapView({ places = [], onSelectPlace, selectedPlace }) {
       initialViewState={{ ...SEATTLE_CENTER, zoom: 12 }}
       style={{ width: '100%', height: '100%' }}
       mapStyle={MAP_STYLE}
+      config={{ basemap: { theme: 'faded', lightPreset: 'day' } }}
+
     >
-      {placesWithCoords.map((place) => (
+      {sortedPlaces.map((place) => (
         <Marker
           key={place.id}
           longitude={place.lng}
@@ -165,11 +162,11 @@ export default function MapView({ places = [], onSelectPlace, selectedPlace }) {
             boxShadow: 'none',
             lineHeight: 0,
           }}
-          onClick={(e) => handleMarkerClick(e, place)}
         >
           <button
             type="button"
             aria-label={place.name}
+            onClick={(e) => { e.stopPropagation(); onSelectPlace?.(place) }}
             className="m-0 inline-flex cursor-pointer appearance-none items-end justify-center border-0 bg-transparent p-0 leading-none shadow-none transition-transform duration-100 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 active:scale-95"
           >
             <DropPin

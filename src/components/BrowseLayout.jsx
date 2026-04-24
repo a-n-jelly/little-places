@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { Search, Plus, Star, X, Sparkles } from 'lucide-react'
+import { Search, Plus, Star, X, Sparkles, Home as HomeIcon } from 'lucide-react'
 import MapView from './MapView'
 import { FEATURE_FILTER_CHIPS, CAT_CFG, placeTypeIconSurface } from '../lib/constants'
 import { useAgentChat } from '../hooks/useAgentChat'
@@ -421,7 +421,13 @@ export default function BrowseLayout({
           className="w-[360px] flex-shrink-0 flex flex-col h-full bg-white relative z-20"
           style={{ boxShadow: 'var(--shadow-md)', borderRight: '1px solid var(--border-subtle)' }}
         >
-          <div className="px-5 pt-5 pb-4 flex-shrink-0 border-b" style={{ borderColor: 'var(--border-subtle)' }}>
+          <div className="px-5 pt-4 pb-4 flex-shrink-0 border-b" style={{ borderColor: 'var(--border-subtle)' }}>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="flex items-center justify-center rounded-xl bg-primary shadow-sm shadow-primary/20" style={{ width: 28, height: 28 }}>
+                <HomeIcon size={14} className="text-primary-foreground" strokeWidth={2.5} />
+              </div>
+              <span className="font-serif font-bold text-base tracking-tight text-foreground">Little Places</span>
+            </div>
             {segmentBar}
             {unifiedInputDesktop}
           </div>
