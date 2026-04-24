@@ -22,6 +22,8 @@ React + Vite + Tailwind + Supabase + Anthropic SDK + Mapbox
 
 Run `npm test` before every commit. Never push failing tests.
 
+For any new ticket: state expected behaviour explicitly before writing any code, get confirmation, write tests encoding that behaviour, confirm tests fail, then implement.
+
 ## Files
 
 - `project.md` — PRD, phases, parking lot, decisions log (open on demand only)
@@ -29,3 +31,7 @@ Run `npm test` before every commit. Never push failing tests.
 - `plan.md` — active ticket: goal, acceptance criteria, open questions (read every session); local only — not committed (see `.gitignore`)
 - `backlog.md` — prioritised queue, max 15 items (open when picking next ticket)
 - `observations.md` — raw notes; process with /triage
+
+## Session conventions
+
+When recording a decision in `state.md`, scan `backlog.md` and annotate any affected items with `Superseded by: T##` or `May conflict with: T##`.

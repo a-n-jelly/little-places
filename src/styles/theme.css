@@ -1,126 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --font-size: 16px;
-  --background: #FFFBF0;
-  --foreground: #1E293B;
-  --card: #ffffff;
-  --card-foreground: #1E293B;
-  --popover: #ffffff;
-  --popover-foreground: #1E293B;
-  --primary: #0369A1;
-  --primary-foreground: #ffffff;
-  --secondary: #C2410C;
-  --secondary-foreground: #ffffff;
-  --muted: #F3F3F5;
-  --muted-foreground: #64748B;
-  --accent: #F9E4A0;
-  --accent-foreground: #1E293B;
-  --destructive: #7F1D1D;
-  --destructive-foreground: #ffffff;
-  --border: rgba(0, 0, 0, 0.08);
+  --font-size: 14px;
+
+  /* Core UI tokens */
+  --background: #FDFCFB;
+  --foreground: #1F1F1F;
+  --card: #FFFFFF;
+  --card-foreground: #1F1F1F;
+  --popover: #FFFFFF;
+  --popover-foreground: #1F1F1F;
+  --primary: #3730A3;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F8F7F6;
+  --secondary-foreground: #1F1F1F;
+  --muted: #F8F7F6;
+  --muted-foreground: #6B6B6B;
+  --accent: #FEF3C7;
+  --accent-foreground: #1F1F1F;
+  --destructive: #DC2626;
+  --destructive-foreground: #FFFFFF;
+  --border: #E8E8E8;
   --input: transparent;
-  --input-background: #ffffff;
-  --switch-background: #cbced4;
+  --input-background: #FFFFFF;
+  --switch-background: #D1D1D1;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: #0369A1;
-  --radius: 1.5rem;
+  --ring: #3730A3;
+  --radius: 1rem;
 
   /* Brand */
-  --brand-primary:     #0369A1;
-  --brand-secondary:   #C2410C;
-  --brand-destructive: #7F1D1D;
+  --brand-primary:        #3730A3;
+  --brand-primary-hover:  #2D2685;
+  --brand-primary-active: #241D6B;
+  --brand-destructive:    #DC2626;
 
   /* Interface */
-  --app-bg:        #FFFBF0;
+  --app-bg:        #FDFCFB;
   --app-surface:   #FFFFFF;
-  --text-main:     #1E293B;
-  --text-muted:    #64748B;
-  --border-subtle: #E2E8F0;
+  --text-main:     #1F1F1F;
+  --text-muted:    #6B6B6B;
+  --text-tertiary: #9CA3AF;
+  --border-subtle: #F3F3F3;
 
-  /* Map marker — selected state */
-  --marker-selected:        #EF4444;
-  --marker-selected-inner:  #FCA5A5;
+  /* Map marker states */
+  --marker-selected:        #FF4444;
+  --marker-selected-inner:  rgba(255, 68, 68, 0.20);
   --marker-selected-border: #FFFFFF;
-  --marker-selected-shadow: rgba(239, 68, 68, 0.4);
-
-  /* Pastel palette (accent use) */
-  --sage:      #A8C5A0;
-  --yellow:    #F9E4A0;
-  --off-white: #FAFAF7;
-  --sky:       #EAF4F8;
+  --marker-selected-shadow: rgba(255, 68, 68, 0.30);
 
   /* Shadows */
-  --shadow-sm:    0 2px 8px rgba(0,0,0,0.06);
-  --shadow-md:    0 4px 16px rgba(0,0,0,0.10);
-  --shadow-lg:    0 8px 32px rgba(0,0,0,0.14);
-  --shadow-brand: 0 6px 20px rgba(3,105,161,0.30);
-  /* Map filter chips (Google-style pills): resting vs hover lift */
-  --shadow-chip:       0 1px 2px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
-  --shadow-chip-hover: 0 2px 8px rgba(0, 0, 0, 0.14), 0 4px 14px rgba(0, 0, 0, 0.10);
+  --shadow-xs:   0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm:   0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-md:   0 4px 8px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.03);
+  --shadow-lg:   0 8px 16px rgba(0, 0, 0, 0.08), 0 4px 8px rgba(0, 0, 0, 0.04);
+  --shadow-xl:   0 12px 24px rgba(0, 0, 0, 0.10), 0 6px 12px rgba(0, 0, 0, 0.05);
+  --shadow-brand: 0 0 20px rgba(55, 48, 163, 0.15);
+  --shadow-focus: 0 0 0 3px rgba(55, 48, 163, 0.10);
+  --shadow-chip:       0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-chip-hover: 0 4px 8px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.03);
+  --shadow-marker:          0 2px 8px rgba(0, 0, 0, 0.20);
+  --shadow-marker-selected: 0 4px 16px rgba(255, 68, 68, 0.30);
 
   /* Overlay */
-  --overlay: rgba(0,0,0,0.40);
+  --overlay: rgba(0, 0, 0, 0.40);
 
-  /* Standardised opacity values */
-  --bg-hover:   rgba(0,0,0,0.02);
-  --bg-pressed: rgba(0,0,0,0.05);
+  /* Interactive state backgrounds */
+  --bg-hover:   #F0EFED;
+  --bg-pressed: #E8E6E4;
 
-  /* --- Categorical marker colours (5 groups × 3 shades) --- */
-
-  /* Blue — Libraries */
-  --cat-blue-dark:  #0C4A6E;
-  --cat-blue-mid:   #0284C7;
-  --cat-blue-light: #7DD3FC;
-
-  /* Orange — Play / Attractions */
-  --cat-orange-dark:  #7C2D12;
-  --cat-orange-mid:   #F97316;
-  --cat-orange-light: #FDBA74;
-
-  /* Teal — Cafes */
-  --cat-teal-dark:  #134E4A;
-  --cat-teal-mid:   #0D9488;
-  --cat-teal-light: #99F6E4;
-
-  /* Purple — Museums / Education */
-  --cat-purple-dark:  #581C87;
-  --cat-purple-mid:   #9333EA;
-  --cat-purple-light: #E9D5FF;
-
-  /* Sage — Parks / Nature */
-  --cat-sage-dark:  #14532D;
-  --cat-sage-mid:   #16A34A;
-  --cat-sage-light: #BBF7D0;
+  /* Category marker colours — 8 distinct humanist vibrants */
+  --cat-parks:       #16A34A;  /* Fresh green     */
+  --cat-cafes:       #0891B2;  /* Cyan            */
+  --cat-libraries:   #2563EB;  /* Vibrant blue    */
+  --cat-playgrounds: #EA580C;  /* Red-orange      */
+  --cat-museums:     #7C3AED;  /* Purple          */
+  --cat-attractions: #DB2777;  /* Pink            */
+  --cat-indoor-play: #059669;  /* Emerald — indoor / soft-play */
+  --cat-nature:      #CA8A04;  /* Amber           */
+  /* Uncategorized / legacy type — not one of the eight buckets */
+  --cat-other:       #78716C;  /* Stone           */
 
   /* Stage chip colours */
-  --stage-baby-bg:       rgba(249,228,160,0.70);
-  --stage-baby-text:     #92400e;
-  --stage-toddler-bg:    rgba(168,197,160,0.20);
-  --stage-toddler-text:  #166534;
-  --stage-preschool-bg:  rgba(3,105,161,0.12);
-  --stage-preschool-text:#075985;
-  --stage-bigkids-bg:    #ede9fe;
-  --stage-bigkids-text:  #7c3aed;
-  --stage-tweens-bg:     #dbeafe;
-  --stage-tweens-text:   #1d4ed8;
+  --stage-baby-bg:        rgba(254, 243, 199, 0.80);
+  --stage-baby-text:      #92400E;
+  --stage-toddler-bg:     rgba(22, 163, 74, 0.12);
+  --stage-toddler-text:   #166534;
+  --stage-preschool-bg:   rgba(55, 48, 163, 0.10);
+  --stage-preschool-text: #312E81;
+  --stage-bigkids-bg:     #EDE9FE;
+  --stage-bigkids-text:   #5B21B6;
+  --stage-tweens-bg:      #DBEAFE;
+  --stage-tweens-text:    #1D4ED8;
 
-  /* Form button — selected states (azure) */
-  --btn-selected-bg:     rgba(3,105,161,0.10);
-  --btn-selected-border: #0369A1;
-  --btn-selected-text:   #075985;
+  /* Form button — selected states */
+  --btn-selected-bg:     rgba(55, 48, 163, 0.08);
+  --btn-selected-border: #3730A3;
+  --btn-selected-text:   #312E81;
 
-  /* Form button — secondary selected states (accessibility chips) */
-  --btn-secondary-bg:     rgba(168,197,160,0.20);
-  --btn-secondary-border: #A8C5A0;
+  /* Form button — secondary selected states */
+  --btn-secondary-bg:     rgba(22, 163, 74, 0.10);
+  --btn-secondary-border: #16A34A;
   --btn-secondary-text:   #166534;
+
+  /* Special purpose */
+  --highlight: #FEF3C7;
+  --rating:    #FBBF24;
 }
 
 @theme inline {
-  /* Snappy interactive feedback (buttons, hovers) — explicit durations still win */
-  --default-transition-duration: 100ms;
-  --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  --default-transition-duration: 150ms;
+  --default-transition-timing-function: ease-out;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -146,13 +138,21 @@
   --radius-sm: calc(var(--radius) - 8px);
   --radius-md: calc(var(--radius) - 4px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 8px);
+  --radius-xl: calc(var(--radius) + 4px);
 
-  --color-sage: var(--sage);
-  --color-yellow: var(--yellow);
-  --color-off-white: var(--off-white);
-  --color-sky: var(--sky);
-  --color-brand-secondary: var(--brand-secondary);
+  /* Category colours exposed as Tailwind tokens */
+  --color-cat-parks:       var(--cat-parks);
+  --color-cat-cafes:       var(--cat-cafes);
+  --color-cat-libraries:   var(--cat-libraries);
+  --color-cat-playgrounds: var(--cat-playgrounds);
+  --color-cat-museums:     var(--cat-museums);
+  --color-cat-attractions: var(--cat-attractions);
+  --color-cat-indoor-play: var(--cat-indoor-play);
+  --color-cat-nature:      var(--cat-nature);
+  --color-cat-other:       var(--cat-other);
+
+  --color-highlight: var(--highlight);
+  --color-rating:    var(--rating);
 }
 
 @layer base {
@@ -161,33 +161,45 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground;
+    font-family: 'DM Sans', sans-serif;
   }
 
   html {
     font-size: var(--font-size);
   }
 
+  h1, h2, h3 {
+    font-family: 'Playfair Display', serif;
+  }
+
   h1 {
-    font-size: var(--text-2xl);
+    font-size: 2rem;
     font-weight: 700;
     line-height: 1.2;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
   }
 
   h2 {
-    font-size: var(--text-xl);
+    font-size: 1.571rem; /* ~22px at 14px base */
     font-weight: 600;
     line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  h3 {
+    font-size: 1.286rem; /* ~18px */
+    font-weight: 600;
+    line-height: 1.4;
   }
 
   button {
-    font-size: var(--text-base);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
     font-weight: 600;
     line-height: 1.5;
   }
 
-  /* Remove legacy touch delay on interactive elements */
   button,
   [type="button"],
   [type="submit"],

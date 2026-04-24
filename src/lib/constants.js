@@ -109,27 +109,46 @@ export const TYPE_GROUPS = {
   Activities: ['Attraction', 'Aquarium', 'Zoo', 'Indoor Play'],
 }
 
-export const TYPE_COLORS = {
-  // Outdoors
-  Park:       '#16A34A',
-  Playground: '#F97316',
-  Beach:      '#16A34A',
-  Farm:       '#16A34A',
-  // Eating
-  Café:       '#0D9488',
-  Restaurant: '#0D9488',
-  Bar:        '#0D9488',
-  Bakery:     '#0D9488',
-  // Culture
-  Museum:     '#9333EA',
-  Library:    '#0284C7',
-  // Activities
-  Attraction: '#7C2D12',
-  Aquarium:   '#7C2D12',
-  Zoo:        '#7C2D12',
-  'Indoor Play': '#7C2D12',
-  // Fallback
-  Other:      '#94a3b8',
+/**
+ * Maps each `place.type` to a `theme.css` `--cat-*` bucket (T26 — single source of truth for hexes).
+ * Colours live only in `theme.css`; consumers use `placeTypeColorVar()` / `placeTypeCategoryVarName()`.
+ */
+const PLACE_TYPE_CAT = {
+  Park: 'parks',
+  Playground: 'playgrounds',
+  Beach: 'nature',
+  Farm: 'nature',
+  Café: 'cafes',
+  Restaurant: 'cafes',
+  Bar: 'cafes',
+  Bakery: 'cafes',
+  Museum: 'museums',
+  Library: 'libraries',
+  Attraction: 'attractions',
+  Aquarium: 'attractions',
+  Zoo: 'attractions',
+  'Indoor Play': 'indoor-play',
+}
+
+/** @param {string | undefined} placeType */
+export function placeTypeCategoryVarName(placeType) {
+  const cat = PLACE_TYPE_CAT[placeType]
+  if (!cat) return '--cat-other'
+  return `--cat-${cat}`
+}
+
+/** @param {string | undefined} placeType */
+export function placeTypeColorVar(placeType) {
+  return `var(${placeTypeCategoryVarName(placeType)})`
+}
+
+/**
+ * Soft tinted surface for list/detail emoji tiles — reads category from tokens.
+ * @param {string | undefined} placeType
+ * @param {string} mix e.g. '22%'
+ */
+export function placeTypeIconSurface(placeType, mix = '22%') {
+  return `color-mix(in srgb, ${placeTypeColorVar(placeType)} ${mix}, var(--card))`
 }
 
 export const FEATURE_FILTER_CHIPS = [
@@ -141,25 +160,21 @@ export const FEATURE_FILTER_CHIPS = [
 ]
 
 
+/** Emoji only — colours come from `placeTypeColorVar(place.type)` (theme.css `--cat-*`). */
 export const CAT_CFG = {
-  // Outdoors
-  Park:       { emoji: '🌿', color: '#16A34A', lightColor: '#BBF7D0' },
-  Playground: { emoji: '🛝', color: '#F97316', lightColor: '#FDBA74' },
-  Beach:      { emoji: '🏖️', color: '#16A34A', lightColor: '#BBF7D0' },
-  Farm:       { emoji: '🚜', color: '#16A34A', lightColor: '#BBF7D0' },
-  // Eating
-  Café:       { emoji: '☕', color: '#0D9488', lightColor: '#99F6E4' },
-  Restaurant: { emoji: '🍽️', color: '#0D9488', lightColor: '#99F6E4' },
-  Bar:        { emoji: '🍺', color: '#0D9488', lightColor: '#99F6E4' },
-  Bakery:     { emoji: '🥐', color: '#0D9488', lightColor: '#99F6E4' },
-  // Culture
-  Museum:     { emoji: '🏛️', color: '#9333EA', lightColor: '#E9D5FF' },
-  Library:    { emoji: '📚', color: '#0284C7', lightColor: '#7DD3FC' },
-  // Activities
-  Attraction: { emoji: '⭐', color: '#7C2D12', lightColor: '#FDBA74' },
-  Aquarium:   { emoji: '🐟', color: '#7C2D12', lightColor: '#FDBA74' },
-  Zoo:        { emoji: '🦁', color: '#7C2D12', lightColor: '#FDBA74' },
-  'Indoor Play': { emoji: '🤸', color: '#7C2D12', lightColor: '#FDBA74' },
-  // Fallback
-  Other:      { emoji: '📍', color: '#94a3b8', lightColor: null },
+  Park:       { emoji: '🌿' },
+  Playground: { emoji: '🛝' },
+  Beach:      { emoji: '🏖️' },
+  Farm:       { emoji: '🚜' },
+  Café:       { emoji: '☕' },
+  Restaurant: { emoji: '🍽️' },
+  Bar:        { emoji: '🍺' },
+  Bakery:     { emoji: '🥐' },
+  Museum:     { emoji: '🏛️' },
+  Library:    { emoji: '📚' },
+  Attraction: { emoji: '⭐' },
+  Aquarium:   { emoji: '🐟' },
+  Zoo:        { emoji: '🦁' },
+  'Indoor Play': { emoji: '🤸' },
+  Other:      { emoji: '📍' },
 }
