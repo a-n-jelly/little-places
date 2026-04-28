@@ -6,7 +6,7 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import { CAT_CFG, placeTypeColorVar } from '../lib/constants'
 
 /** Clusters collapse into individual pins at this zoom level and above. */
-const CLUSTER_MAX_ZOOM = 12
+const CLUSTER_MAX_ZOOM = 11
 
 const SEATTLE_CENTER = { longitude: -122.33, latitude: 47.60 }
 
@@ -218,19 +218,19 @@ export default function MapView({ places = [], onSelectPlace, selectedPlace }) {
                   mapRef.current?.getMap().flyTo({ center: [lng, lat], zoom: expansionZoom })
                 }}
                 style={{
-                  width: 36,
-                  height: 36,
+                  width: 22,
+                  height: 22,
                   borderRadius: '50%',
-                  background: 'var(--foreground)',
-                  color: 'var(--background)',
-                  border: '2.5px solid var(--background)',
-                  fontSize: 12,
+                  background: 'var(--card)',
+                  color: 'var(--primary)',
+                  border: '2px solid var(--primary)',
+                  fontSize: 10,
                   fontWeight: 800,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
+                  boxShadow: 'var(--shadow-md)',
                 }}
               >
                 {point_count}
