@@ -1,7 +1,12 @@
+import { useState, useRef, useMemo, useCallback } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 import Map, { Marker, NavigationControl, GeolocateControl } from 'react-map-gl/mapbox'
+import useSupercluster from 'use-supercluster'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { CAT_CFG, placeTypeColorVar } from '../lib/constants'
+
+/** Clusters collapse into individual pins at this zoom level and above. */
+const CLUSTER_MAX_ZOOM = 12
 
 const SEATTLE_CENTER = { longitude: -122.33, latitude: 47.60 }
 
@@ -132,52 +137,158 @@ function DropPin({ typeColorVar, emoji, selected, gradientId }) {
   )
 }
 
+const MARKER_STYLE = {
+  background: 'transparent',
+  border: 'none',
+  padding: 0,
+  margin: 0,
+  boxShadow: 'none',
+  lineHeight: 0,
+}
+
 export default function MapView({ places = [], onSelectPlace, selectedPlace }) {
-  const placesWithCoords = places.filter((p) => p.lat != null && p.lng != null)
-  const sortedPlaces = [
-    ...placesWithCoords.filter(p => p.id !== selectedPlace?.id),
-    ...placesWithCoords.filter(p => p.id === selectedPlace?.id),
-  ]
+  const mapRef = useRef()
+  const [zoom, setZoom] = useState(12)
+  const [bounds, setBounds] = useState(null)
+
+  const onMove = useCallback((evt) => {
+    setZoom(evt.viewState.zoom)
+    if (mapRef.current) {
+      const b = mapRef.current.getMap().getBounds()
+      setBounds([b.getWest(), b.getSouth(), b.getEast(), b.getNorth()])
+    }
+  }, [])
+
+  // GeoJSON points — exclude selected place (always rendered individually below)
+  const points = useMemo(() =>
+    places
+      .filter(p => p.lat != null && p.lng != null && p.id !== selectedPlace?.id)
+      .map(p => ({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [p.lng, p.lat] },
+        properties: { cluster: false, placeId: p.id, place: p },
+      })),
+    [places, selectedPlace]
+  )
+
+  const { clusters, supercluster } = useSupercluster({
+    points,
+    bounds,
+    zoom,
+    options: { radius: 75, maxZoom: CLUSTER_MAX_ZOOM },
+  })
 
   return (
     <Map
+      ref={mapRef}
       mapboxAccessToken={import.meta.env.VITE_MAPBOX_TOKEN}
       initialViewState={{ ...SEATTLE_CENTER, zoom: 12 }}
       style={{ width: '100%', height: '100%' }}
       mapStyle={MAP_STYLE}
       config={{ basemap: { theme: 'faded', lightPreset: 'day' } }}
-
+      onMove={onMove}
+      logoPosition="bottom-left"
+      attributionControl={false}
     >
-      {sortedPlaces.map((place) => (
+      <NavigationControl position="top-right" showCompass={false} />
+      <GeolocateControl position="top-right" trackUserLocation={false} showUserHeading={false} />
+
+      {clusters.map((cluster) => {
+        const [lng, lat] = cluster.geometry.coordinates
+
+        if (cluster.properties.cluster) {
+          const { cluster_id, point_count } = cluster.properties
+          return (
+            <Marker
+              key={`cluster-${cluster_id}`}
+              longitude={lng}
+              latitude={lat}
+              anchor="center"
+              style={MARKER_STYLE}
+            >
+              <button
+                type="button"
+                data-testid="cluster-bubble"
+                aria-label={`${point_count} places in this area`}
+                onClick={() => {
+                  const expansionZoom = Math.min(
+                    supercluster.getClusterExpansionZoom(cluster_id),
+                    20
+                  )
+                  mapRef.current?.getMap().flyTo({ center: [lng, lat], zoom: expansionZoom })
+                }}
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: '50%',
+                  background: 'var(--foreground)',
+                  color: 'var(--background)',
+                  border: '2.5px solid var(--background)',
+                  fontSize: 12,
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
+                }}
+              >
+                {point_count}
+              </button>
+            </Marker>
+          )
+        }
+
+        const { place } = cluster.properties
+        return (
+          <Marker
+            key={place.id}
+            longitude={lng}
+            latitude={lat}
+            anchor="bottom"
+            style={MARKER_STYLE}
+          >
+            <button
+              type="button"
+              aria-label={place.name}
+              onClick={(e) => { e.stopPropagation(); onSelectPlace?.(place) }}
+              className="m-0 inline-flex cursor-pointer appearance-none items-end justify-center border-0 bg-transparent p-0 leading-none shadow-none transition-transform duration-100 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 active:scale-95"
+            >
+              <DropPin
+                typeColorVar={placeTypeColorVar(place.type)}
+                emoji={CAT_CFG[place.type]?.emoji ?? '📍'}
+                selected={false}
+                gradientId={String(place.id)}
+              />
+            </button>
+          </Marker>
+        )
+      })}
+
+      {/* Selected place always rendered as individual pin on top */}
+      {selectedPlace?.lat != null && selectedPlace?.lng != null && (
         <Marker
-          key={place.id}
-          longitude={place.lng}
-          latitude={place.lat}
+          key={`selected-${selectedPlace.id}`}
+          longitude={selectedPlace.lng}
+          latitude={selectedPlace.lat}
           anchor="bottom"
-          style={{
-            background: 'transparent',
-            border: 'none',
-            padding: 0,
-            margin: 0,
-            boxShadow: 'none',
-            lineHeight: 0,
-          }}
+          style={MARKER_STYLE}
         >
           <button
             type="button"
-            aria-label={place.name}
-            onClick={(e) => { e.stopPropagation(); onSelectPlace?.(place) }}
+            aria-label={selectedPlace.name}
+            onClick={(e) => { e.stopPropagation(); onSelectPlace?.(selectedPlace) }}
             className="m-0 inline-flex cursor-pointer appearance-none items-end justify-center border-0 bg-transparent p-0 leading-none shadow-none transition-transform duration-100 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 active:scale-95"
           >
             <DropPin
-              typeColorVar={placeTypeColorVar(place.type)}
-              emoji={CAT_CFG[place.type]?.emoji ?? '📍'}
-              selected={selectedPlace?.id === place.id}
-              gradientId={String(place.id)}
+              typeColorVar={placeTypeColorVar(selectedPlace.type)}
+              emoji={CAT_CFG[selectedPlace.type]?.emoji ?? '📍'}
+              selected={true}
+              gradientId={`selected-${selectedPlace.id}`}
             />
           </button>
         </Marker>
-      ))}
+      )}
     </Map>
   )
 }
