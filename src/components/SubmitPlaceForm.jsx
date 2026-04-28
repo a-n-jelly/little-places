@@ -180,7 +180,7 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
           value={venueQuery}
           onChange={handleVenueQueryChange}
           placeholder="Search for a venue…"
-          className="w-full rounded-xl border border-border bg-card px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring/30 placeholder:text-muted-foreground/50 text-foreground"
+          className="w-full rounded-xl border border-border bg-card px-3 py-2.5 text-base md:text-sm outline-none focus:ring-2 focus:ring-ring/30 placeholder:text-muted-foreground/50 text-foreground"
           autoComplete="off"
         />
         {venueSearching && (
@@ -216,7 +216,7 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
           value={form.address}
           onChange={(e) => setField('address', e.target.value)}
           placeholder="Auto-filled when you select a venue"
-          className="w-full rounded-xl border border-border bg-card px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring/30 placeholder:text-muted-foreground/50 text-muted-foreground"
+          className="w-full rounded-xl border border-border bg-card px-3 py-2.5 text-base md:text-sm outline-none focus:ring-2 focus:ring-ring/30 placeholder:text-muted-foreground/50 text-muted-foreground"
         />
       </div>
 
@@ -229,7 +229,7 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
           required
           value={form.type}
           onChange={(e) => setField('type', e.target.value)}
-          className="w-full rounded-xl border border-border bg-card px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring/30 text-foreground"
+          className="w-full rounded-xl border border-border bg-card px-3 py-2.5 text-base md:text-sm outline-none focus:ring-2 focus:ring-ring/30 text-foreground"
         >
           <option value="">Select a type…</option>
           {PLACE_TYPES.map((t) => (
@@ -248,7 +248,7 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
           value={form.tip_text}
           onChange={(e) => setField('tip_text', e.target.value)}
           placeholder="e.g. There's a dedicated baby swing and the café has high chairs inside."
-          className="w-full rounded-xl border border-border bg-card px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring/30 resize-none placeholder:text-muted-foreground/50"
+          className="w-full rounded-xl border border-border bg-card px-3 py-2.5 text-base md:text-sm outline-none focus:ring-2 focus:ring-ring/30 resize-none placeholder:text-muted-foreground/50"
         />
       </div>
 
@@ -312,7 +312,7 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
           value={form.display_name}
           onChange={(e) => setField('display_name', e.target.value)}
           placeholder="e.g. Mama Bear or Dad of 2"
-          className="w-full rounded-xl border border-border bg-card px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring/30 placeholder:text-muted-foreground/50 text-foreground"
+          className="w-full rounded-xl border border-border bg-card px-3 py-2.5 text-base md:text-sm outline-none focus:ring-2 focus:ring-ring/30 placeholder:text-muted-foreground/50 text-foreground"
         />
       </div>
 

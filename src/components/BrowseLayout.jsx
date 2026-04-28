@@ -63,14 +63,14 @@ function AddTipForm({ placeId, onSubmitted }) {
         value={tipText}
         onChange={e => setTipText(e.target.value)}
         placeholder="What makes it great for kids here?"
-        className="w-full rounded-xl border border-border bg-card px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring/30 resize-none placeholder:text-muted-foreground/50"
+        className="w-full rounded-xl border border-border bg-card px-3 py-2 text-base md:text-sm outline-none focus:ring-2 focus:ring-ring/30 resize-none placeholder:text-muted-foreground/50"
       />
       <input
         type="text"
         value={displayName}
         onChange={e => setDisplayName(e.target.value)}
         placeholder="e.g. Mama Bear or Dad of 2 (optional)"
-        className="w-full rounded-xl border border-border bg-card px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring/30 placeholder:text-muted-foreground/50"
+        className="w-full rounded-xl border border-border bg-card px-3 py-2 text-base md:text-sm outline-none focus:ring-2 focus:ring-ring/30 placeholder:text-muted-foreground/50"
       />
       <button
         type="submit"
@@ -316,7 +316,7 @@ export default function BrowseLayout({
             onChange={e => setSearch(e.target.value)}
             placeholder="Filter by name or type…"
             autoComplete="off"
-            className="w-full bg-off-white rounded-xl pl-9 pr-4 py-2.5 text-sm font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border border-border/50"
+            className="w-full bg-off-white rounded-xl pl-9 pr-4 py-2.5 text-base md:text-sm font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border border-border/50"
           />
         </div>
       ) : (
@@ -331,7 +331,7 @@ export default function BrowseLayout({
               placeholder="Rainy day with a toddler near Ballard?"
               disabled={agentLoading}
               autoComplete="off"
-              className="w-full bg-off-white rounded-xl pl-9 pr-3 py-2.5 text-sm font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border border-border/50 disabled:opacity-60"
+              className="w-full bg-off-white rounded-xl pl-9 pr-3 py-2.5 text-base md:text-sm font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border border-border/50 disabled:opacity-60"
             />
           </div>
           <button
