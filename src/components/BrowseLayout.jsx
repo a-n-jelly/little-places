@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { Search, Plus, Star, X, Sparkles, Map as MapIcon } from 'lucide-react'
+import { Search, Plus, Star, X, Sparkles, Home as HomeIcon } from 'lucide-react'
 import MapView from './MapView'
 import { FEATURE_FILTER_CHIPS, CAT_CFG, placeTypeIconSurface } from '../lib/constants'
 import { useAgentChat } from '../hooks/useAgentChat'
 import { AGENT_SUGGESTIONS } from '../lib/agentSuggestions'
-import { getTipsForPlace } from '../lib/places'
+import { getTipsForPlace, submitTip } from '../lib/places'
 
 const STAGE_LABELS = {
   baby:      'Baby',
@@ -34,8 +34,63 @@ function StarRow({ rating }) {
   )
 }
 
-function PlaceDetail({ place, tips = [] }) {
+function AddTipForm({ placeId, onSubmitted }) {
+  const [tipText, setTipText] = useState('')
+  const [displayName, setDisplayName] = useState(() => {
+    try { return localStorage.getItem('little-places-display-name') ?? '' } catch { return '' }
+  })
+  const [submitting, setSubmitting] = useState(false)
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    if (!tipText.trim()) return
+    setSubmitting(true)
+    try {
+      await submitTip(placeId, tipText.trim(), displayName)
+      if (displayName.trim()) {
+        try { localStorage.setItem('little-places-display-name', displayName.trim()) } catch {}
+      }
+      onSubmitted()
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="mt-3 space-y-2">
+      <textarea
+        rows={2}
+        value={tipText}
+        onChange={e => setTipText(e.target.value)}
+        placeholder="What makes it great for kids here?"
+        className="w-full rounded-xl border border-border bg-card px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring/30 resize-none placeholder:text-muted-foreground/50"
+      />
+      <input
+        type="text"
+        value={displayName}
+        onChange={e => setDisplayName(e.target.value)}
+        placeholder="e.g. Mama Bear or Dad of 2 (optional)"
+        className="w-full rounded-xl border border-border bg-card px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring/30 placeholder:text-muted-foreground/50"
+      />
+      <button
+        type="submit"
+        disabled={submitting || !tipText.trim()}
+        className="w-full rounded-xl bg-primary px-4 py-2 text-sm font-bold text-white disabled:opacity-40 transition-opacity"
+      >
+        {submitting ? 'Submitting…' : 'Submit tip'}
+      </button>
+    </form>
+  )
+}
+
+function PlaceDetail({ place, tips = [], onTipAdded }) {
   const cfg = CAT_CFG[place.type] ?? CAT_CFG.Other
+  const [showTipForm, setShowTipForm] = useState(false)
+
+  function handleTipSubmitted() {
+    setShowTipForm(false)
+    onTipAdded?.()
+  }
 
   return (
     <div className="p-5">
@@ -73,7 +128,7 @@ function PlaceDetail({ place, tips = [] }) {
       )}
 
       {tips.length > 0 && (
-        <div className="mt-2">
+        <div className="mt-2 mb-4">
           <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
             Community tips
           </h4>
@@ -88,6 +143,18 @@ function PlaceDetail({ place, tips = [] }) {
             ))}
           </ul>
         </div>
+      )}
+
+      {showTipForm ? (
+        <AddTipForm placeId={place.id} onSubmitted={handleTipSubmitted} />
+      ) : (
+        <button
+          type="button"
+          onClick={() => setShowTipForm(true)}
+          className="mt-2 w-full rounded-xl border border-border px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-muted transition-colors duration-100"
+        >
+          + Add a tip
+        </button>
       )}
     </div>
   )
@@ -354,7 +421,13 @@ export default function BrowseLayout({
           className="w-[360px] flex-shrink-0 flex flex-col h-full bg-white relative z-20"
           style={{ boxShadow: 'var(--shadow-md)', borderRight: '1px solid var(--border-subtle)' }}
         >
-          <div className="px-5 pt-5 pb-4 flex-shrink-0 border-b" style={{ borderColor: 'var(--border-subtle)' }}>
+          <div className="px-5 pt-4 pb-4 flex-shrink-0 border-b" style={{ borderColor: 'var(--border-subtle)' }}>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="flex items-center justify-center rounded-xl bg-primary shadow-sm shadow-primary/20" style={{ width: 28, height: 28 }}>
+                <HomeIcon size={14} className="text-primary-foreground" strokeWidth={2.5} />
+              </div>
+              <span className="font-serif font-bold text-base tracking-tight text-foreground">Little Places</span>
+            </div>
             {segmentBar}
             {unifiedInputDesktop}
           </div>
@@ -379,7 +452,7 @@ export default function BrowseLayout({
                     >
                       ← Back to list
                     </button>
-                    <PlaceDetail place={selectedPlace} tips={tips} />
+                    <PlaceDetail place={selectedPlace} tips={tips} onTipAdded={() => getTipsForPlace(selectedPlace.id).then(setTips).catch(() => {})} />
                   </motion.div>
                 ) : (
                   <motion.div
@@ -520,8 +593,8 @@ export default function BrowseLayout({
         <button
           onClick={onSubmitPlace}
           aria-label="Add a place"
-          className="absolute right-4 z-10 flex items-center justify-center rounded-full bg-primary text-white active:scale-90 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
-          style={{ width: 52, height: 52, boxShadow: 'var(--shadow-brand)', bottom: panelMode === 'ask' ? '5.75rem' : '5.5rem' }}
+          className="absolute bottom-8 right-4 z-10 flex items-center justify-center rounded-full bg-primary text-white active:scale-90 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
+          style={{ width: 52, height: 52, boxShadow: 'var(--shadow-brand)' }}
         >
           <Plus size={24} strokeWidth={2.5} />
         </button>
@@ -535,7 +608,7 @@ export default function BrowseLayout({
               exit={{ y: '108%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 280, mass: 0.9 }}
               className="absolute bottom-0 left-0 right-0 z-20 bg-white overflow-hidden"
-              style={{ borderRadius: '28px 28px 0 0', boxShadow: '0 -8px 32px rgba(0,0,0,0.12)', paddingBottom: '5rem' }}
+              style={{ borderRadius: '28px 28px 0 0', boxShadow: '0 -8px 32px rgba(0,0,0,0.12)' }}
             >
               <div className="flex justify-center pt-3 pb-1">
                 <div className="w-9 h-1 rounded-full bg-border" />
@@ -547,7 +620,7 @@ export default function BrowseLayout({
               >
                 <X size={13} strokeWidth={2.5} />
               </button>
-              <PlaceDetail place={selectedPlace} tips={tips} />
+              <PlaceDetail place={selectedPlace} tips={tips} onTipAdded={() => getTipsForPlace(selectedPlace.id).then(setTips).catch(() => {})} />
             </motion.div>
           )}
         </AnimatePresence>
