@@ -146,15 +146,8 @@ export default function MapView({ places = [], onSelectPlace, selectedPlace }) {
       style={{ width: '100%', height: '100%' }}
       mapStyle={MAP_STYLE}
       config={{ basemap: { theme: 'faded', lightPreset: 'day' } }}
-      logoPosition="bottom-left"
-      attributionControl={false}
+
     >
-      <NavigationControl position="top-right" showCompass={false} />
-      <GeolocateControl
-        position="top-right"
-        trackUserLocation={false}
-        showUserHeading={false}
-      />
       {sortedPlaces.map((place) => (
         <Marker
           key={place.id}
