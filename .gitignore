@@ -16,3 +16,14 @@ state.md
 plan.md
 .obsidian/
 observations.md
+backlog.md
+DECISIONS.md   
+.claude/
+.cursor/
+
+# Project files - not part of the app.
+/input/
+/output/
+/scripts/
+/FigmaUI/
+/FigmaPages/

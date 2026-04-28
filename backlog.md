@@ -10,6 +10,12 @@ Plan: yes = touches 3+ files or has meaningful risk of getting approach wrong fi
 
 ---
 
+T36 | P2 | feature | Auto-refresh PlaceDetail description after enrichment
+- Visible: after submitting a new place, the description only appears after a manual page refresh
+- Done: once a place is selected post-submit, PlaceDetail polls or re-fetches until a description lands (or times out after ~15s); no manual refresh needed
+- Constraint: enrichment is fire-and-forget so timing is variable; `selectedPlace` is passed down from list state in BrowseLayout — needs a re-fetch via `getPlaceById` after submit
+- Model: Sonnet · Plan: no
+
 T04 | P1 | bug | Design empty and error states in sidebar
 - Visible: no-results state and API error state are unstyled or missing
 - Done: no-results shows a friendly message; error state has a retry action; both match the app design

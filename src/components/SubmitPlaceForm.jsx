@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { submitPlace, submitTip } from '../lib/places'
 import { STAGES, FEATURE_VOCAB, PLACE_TYPES } from '../lib/constants'
+import { supabase } from '../lib/supabase'
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
 const SEATTLE_PROXIMITY = '-122.3321,47.6062'
@@ -145,6 +146,12 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
       if (tip_text.trim()) {
         await submitTip(place.id, tip_text.trim(), display_name)
       }
+      supabase.functions.invoke('enrich-place', {
+        body: {
+          place_id: place.id,
+          feature_vocab: FEATURE_VOCAB[placeData.type] ?? [],
+        },
+      }).catch(() => {})
       if (display_name.trim()) {
         try { localStorage.setItem('little-places-display-name', display_name.trim()) } catch {}
       }

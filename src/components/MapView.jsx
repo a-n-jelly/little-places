@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'motion/react'
-import Map, { Marker } from 'react-map-gl/mapbox'
+import Map, { Marker, NavigationControl, GeolocateControl } from 'react-map-gl/mapbox'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { CAT_CFG, placeTypeColorVar } from '../lib/constants'
 
