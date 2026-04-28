@@ -584,7 +584,7 @@ export default function BrowseLayout({
         >
           <Drawer.Portal>
             <Drawer.Content
-              className="bg-card flex flex-col rounded-t-3xl fixed bottom-0 left-0 right-0 z-10 outline-none border-t border-border/60"
+              className="bg-card flex flex-col rounded-t-3xl fixed bottom-0 left-0 right-0 z-10 outline-none border-t border-border/60 h-[100dvh]"
               style={{ boxShadow: '0 -8px 32px rgba(0,0,0,0.12)' }}
             >
               {snapPoint === '180px' ? (
