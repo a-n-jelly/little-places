@@ -167,6 +167,7 @@ export function useAgentChat() {
   const [response, setResponse] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [foundPlaces, setFoundPlaces] = useState([])
 
   async function handleSubmit(e) {
     if (e?.preventDefault) e.preventDefault()
@@ -176,6 +177,7 @@ export function useAgentChat() {
     setLoading(true)
     setError(null)
     setResponse(null)
+    setFoundPlaces([])
 
     try {
       const model = genAI.getGenerativeModel({
@@ -204,6 +206,16 @@ export function useAgentChat() {
           }))
         )
 
+        const newPlaces = toolResults
+          .filter(r => r.functionResponse.name === 'search_places')
+          .flatMap(r => r.functionResponse.response?.places ?? [])
+        if (newPlaces.length > 0) {
+          setFoundPlaces(prev => {
+            const ids = new Set(prev.map(p => p.id))
+            return [...prev, ...newPlaces.filter(p => !ids.has(p.id))]
+          })
+        }
+
         result = await chat.sendMessage(toolResults)
       }
     } catch (err) {
@@ -220,5 +232,6 @@ export function useAgentChat() {
     loading,
     error,
     handleSubmit,
+    foundPlaces,
   }
 }

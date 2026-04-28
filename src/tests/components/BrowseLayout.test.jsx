@@ -21,6 +21,29 @@ vi.mock('../../components/MapView', () => ({
   ),
 }))
 
+vi.mock('../../hooks/useAgentChat', () => ({
+  useAgentChat: () => ({
+    query: '',
+    setQuery: vi.fn(),
+    response: null,
+    loading: false,
+    error: null,
+    handleSubmit: vi.fn(),
+    foundPlaces: [],
+  }),
+}))
+
+vi.mock('vaul', () => ({
+  Drawer: {
+    Root: ({ children }) => <>{children}</>,
+    Portal: ({ children }) => <>{children}</>,
+    Content: ({ children, className, style }) => (
+      <div className={className} style={style}>{children}</div>
+    ),
+    Overlay: () => null,
+  },
+}))
+
 const places = [
   { id: '1', name: 'Green Lake Park', type: 'Park', address: '7201 E Green Lake Dr N', description: 'Great loop.', stages: [], child_friendly_features: [], tags: [], rating: 0 },
   { id: '2', name: 'Seattle Aquarium', type: 'Attraction', address: '1483 Alaskan Way', description: 'Marine life.', stages: [], child_friendly_features: [], tags: [], rating: 0 },
@@ -77,10 +100,26 @@ describe('BrowseLayout', () => {
     expect(screen.queryByRole('button', { name: 'Select Seattle Aquarium' })).not.toBeInTheDocument()
   })
 
-  it('clicking Ask AI tab requests ask mode', () => {
+  it('clicking Ask AI button opens the Ask AI overlay', async () => {
     render(<BrowseLayout {...defaultProps} />)
-    fireEvent.click(screen.getAllByRole('tab', { name: /ask ai/i })[0])
-    expect(defaultProps.setPanelMode).toHaveBeenCalledWith('ask')
+    // Mobile Ask AI button is a regular <button> (not role="tab"); desktop tab uses role="tab"
+    const askBtns = screen.getAllByRole('button', { name: /ask ai/i })
+    expect(askBtns.length).toBeGreaterThan(0)
+    fireEvent.click(askBtns[0])
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /back to explore/i })).toBeTruthy()
+    )
+  })
+
+  it('back arrow in Ask AI overlay closes the overlay', async () => {
+    render(<BrowseLayout {...defaultProps} />)
+    const askBtns = screen.getAllByRole('button', { name: /ask ai/i })
+    fireEvent.click(askBtns[0])
+    const backBtn = await waitFor(() => screen.getByRole('button', { name: /back to explore/i }))
+    fireEvent.click(backBtn)
+    await waitFor(() =>
+      expect(screen.queryByRole('button', { name: /back to explore/i })).toBeNull()
+    )
   })
 
   it('calls onSubmitPlace when FAB is clicked', () => {
@@ -106,6 +145,15 @@ describe('BrowseLayout', () => {
     fireEvent.click(screen.getAllByRole('button', { name: /stroller friendly/i })[0])
     expect(screen.getAllByText('Green Lake Park').length).toBeGreaterThan(0)
     expect(screen.queryByText('Seattle Aquarium')).not.toBeInTheDocument()
+  })
+
+  it('peek sheet renders place cards in the drawer portal', async () => {
+    render(<BrowseLayout {...defaultProps} />)
+    await waitFor(() => {
+      const names = Array.from(document.body.querySelectorAll('*'))
+        .filter(el => el.textContent === 'Green Lake Park' || el.textContent === 'Seattle Aquarium')
+      expect(names.length).toBeGreaterThan(0)
+    })
   })
 
   // ── Add a tip from PlaceDetail ────────────────────────────────────────────

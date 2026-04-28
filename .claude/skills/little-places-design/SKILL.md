@@ -73,6 +73,7 @@ The app imports Tailwind via `src/styles/tailwind.css` with **no custom `screens
 | **Explore (`BrowseLayout`)** | Map usable; list scrolls; panel tabs (Search / Ask AI) work; no broken stack. |
 | **Agent panel** | Content scrolls; input reachable; no overflow at 390px width. |
 | **Add place (`SubmitBottomSheet`)** | Sheet opens; full-width on mobile; centered card at `md+`; form scrolls inside sheet. |
+| **All inputs (mobile)** | Tapping any input must NOT zoom the page. Verify `index.html` has `maximum-scale=1.0` in the viewport meta. Any new `<input>` or `<textarea>` must use `text-base md:text-sm` (≥16px on mobile) as a secondary safeguard. |
 | **Tokens** | No stray brand hex — semantic tokens from `theme.css` only. |
 
 ## Automated viewport smoke
