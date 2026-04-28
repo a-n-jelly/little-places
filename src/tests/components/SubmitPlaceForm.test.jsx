@@ -15,10 +15,15 @@ const VENUE_SEARCH_DEBOUNCE_MS = 400
 
 const mockSubmitPlace = vi.hoisted(() => vi.fn())
 const mockSubmitTip = vi.hoisted(() => vi.fn())
+const mockFunctionsInvoke = vi.hoisted(() => vi.fn())
 
 vi.mock('../../lib/places', () => ({
   submitPlace: mockSubmitPlace,
   submitTip: mockSubmitTip,
+}))
+
+vi.mock('../../lib/supabase', () => ({
+  supabase: { functions: { invoke: mockFunctionsInvoke } },
 }))
 
 const newPlace = { id: 'abc', name: 'Woodland Park Zoo', type: 'Park', address: '5500 Phinney Ave N' }
@@ -77,6 +82,7 @@ describe('SubmitPlaceForm', () => {
     vi.clearAllMocks()
     vi.useRealTimers()
     mockFetch({ suggestions: [] })
+    mockFunctionsInvoke.mockResolvedValue({})
     Object.keys(_lsData).forEach(k => delete _lsData[k])
   })
 
@@ -253,6 +259,40 @@ describe('SubmitPlaceForm', () => {
       'Great swings for toddlers',
       'Dad of 2',
     ))
+  })
+
+  // ── Enrichment ──────────────────────────────────────────────────────────
+
+  it('fires enrich-place after successful submit with matching feature_vocab', async () => {
+    mockSubmitPlace.mockResolvedValueOnce(newPlace)
+    mockSubmitTip.mockResolvedValueOnce({})
+    mockFunctionsInvoke.mockResolvedValueOnce({})
+
+    render(<SubmitPlaceForm onSuccess={vi.fn()} />)
+    fillRequired()
+    fireEvent.change(screen.getByPlaceholderText(/dedicated baby swing/i), {
+      target: { value: 'Great open space' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /submit place/i }))
+
+    await waitFor(() => expect(mockFunctionsInvoke).toHaveBeenCalledWith(
+      'enrich-place',
+      expect.objectContaining({
+        body: expect.objectContaining({ place_id: newPlace.id }),
+      })
+    ))
+  })
+
+  it('does not block onSuccess if enrichment invoke fails', async () => {
+    mockSubmitPlace.mockResolvedValueOnce(newPlace)
+    mockFunctionsInvoke.mockRejectedValueOnce(new Error('Gemini down'))
+    const onSuccess = vi.fn()
+
+    render(<SubmitPlaceForm onSuccess={onSuccess} />)
+    fillRequired()
+    fireEvent.click(screen.getByRole('button', { name: /submit place/i }))
+
+    await waitFor(() => expect(onSuccess).toHaveBeenCalledWith(newPlace))
   })
 
   it('does not call submitTip when tip_text is empty', async () => {
