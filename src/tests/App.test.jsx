@@ -91,11 +91,11 @@ describe('App — T09 submission flow', () => {
     fillAndSubmitForm('Woodland Park Zoo')
 
     await waitFor(() =>
-      expect(screen.getByText('Woodland Park Zoo')).toBeInTheDocument()
+      expect(screen.getAllByText('Woodland Park Zoo').length).toBeGreaterThan(0)
     )
 
     // Original place still present
-    expect(screen.getByText('Green Lake Park')).toBeInTheDocument()
+    expect(screen.getAllByText('Green Lake Park').length).toBeGreaterThan(0)
   })
 
   it('sheet closes after a successful submit', async () => {

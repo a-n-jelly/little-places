@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { Search, Plus, Star, X, Sparkles, Home as HomeIcon } from 'lucide-react'
+import { Search, Plus, Star, X, Sparkles, Home as HomeIcon, ArrowLeft, ArrowUp } from 'lucide-react'
+import { Drawer } from 'vaul'
 import MapView from './MapView'
+import PlaceCard from './PlaceCard'
 import { FEATURE_FILTER_CHIPS, CAT_CFG, placeTypeIconSurface } from '../lib/constants'
 import { useAgentChat } from '../hooks/useAgentChat'
 import { AGENT_SUGGESTIONS } from '../lib/agentSuggestions'
@@ -229,7 +231,11 @@ export default function BrowseLayout({
     loading: agentLoading,
     error: agentError,
     handleSubmit: handleAgentSubmit,
+    foundPlaces,
   } = useAgentChat()
+
+  const [snapPoint, setSnapPoint] = useState('180px')
+  const [askOpen, setAskOpen] = useState(false)
 
   function setMode(next) {
     setPanelMode(next)
@@ -243,7 +249,6 @@ export default function BrowseLayout({
     const isDesktop = typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches
     if (panelMode === 'ask') {
       if (isDesktop) askInputDesktopRef.current?.focus()
-      else askInputMobileRef.current?.focus()
     } else {
       if (isDesktop) searchInputDesktopRef.current?.focus()
       else searchInputMobileRef.current?.focus()
@@ -252,13 +257,24 @@ export default function BrowseLayout({
   }, [panelMode])
 
   useEffect(() => {
+    if (askOpen) askInputMobileRef.current?.focus()
+  }, [askOpen])
+
+  useEffect(() => {
     if (!selectedPlace) { setTips([]); return }
     getTipsForPlace(selectedPlace.id).then(setTips).catch(() => setTips([]))
   }, [selectedPlace])
 
   function handleSelectPlace(place) {
     setSelectedPlace(place)
+    setSnapPoint('180px')
     setPanelMode('search')
+  }
+
+  function handleMapClick(e) {
+    if (e.target.tagName === 'CANVAS' && (snapPoint === 0.75 || snapPoint === 1)) {
+      setSnapPoint('180px')
+    }
   }
 
   function handleBackToList() {
@@ -521,84 +537,114 @@ export default function BrowseLayout({
 
       {/* ── Mobile ──────────────────────────────────────────────── */}
       <div className="md:hidden relative h-screen overflow-hidden">
-        <div className="absolute inset-0">
+        {/* Map layer */}
+        <div className="absolute inset-0" onClick={handleMapClick}>
           <MapView places={displayedPlaces} onSelectPlace={handleSelectPlace} selectedPlace={selectedPlace} />
         </div>
 
-        <div className="absolute top-4 left-0 right-0 z-20 flex justify-center pointer-events-none">
-          <div className="pointer-events-auto px-4 w-full flex justify-center overflow-x-auto" style={{ scrollbarWidth: 'none', maxWidth: '100%' }}>
+        {/* Top bar */}
+        <div className="absolute top-0 left-0 right-0 z-20 bg-white/90 backdrop-blur-md border-b border-border/40">
+          <div className="flex items-center gap-2 px-4 pt-3 pb-2">
+            <div className="relative flex-1 min-w-0">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/45 pointer-events-none" size={14} />
+              <input
+                ref={searchInputMobileRef}
+                type="search"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search places…"
+                autoComplete="off"
+                className="w-full bg-off-white rounded-xl pl-9 pr-4 py-2.5 text-base font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border border-border/50"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => setAskOpen(true)}
+              className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-primary text-white text-xs font-black shadow-sm active:scale-95 transition-transform duration-100"
+            >
+              <Sparkles size={13} strokeWidth={2.5} />
+              Ask AI
+            </button>
+          </div>
+          <div className="px-4 pb-3 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
             {featureChips}
           </div>
         </div>
 
-        <div
-          className="absolute top-[56px] left-4 right-4 z-10 rounded-2xl p-3 bg-white/95 backdrop-blur-sm border border-border/50"
-          style={{ boxShadow: 'var(--shadow-md)' }}
+        {/* Vaul peek sheet */}
+        <Drawer.Root
+          open={true}
+          onOpenChange={() => {}}
+          dismissible={false}
+          modal={false}
+          snapPoints={['180px', 0.75, 1]}
+          activeSnapPoint={snapPoint}
+          setActiveSnapPoint={setSnapPoint}
+          fadeFromIndex={1}
         >
-          {segmentBar}
-          <div className="mt-2">
-            {panelMode === 'search' ? (
-              <div className="relative">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/45 pointer-events-none" size={14} />
-                <input
-                  ref={searchInputMobileRef}
-                  type="search"
-                  value={search}
-                  onChange={e => setSearch(e.target.value)}
-                  placeholder="Filter by name or type…"
-                  autoComplete="off"
-                  className="w-full bg-off-white rounded-xl pl-9 pr-4 py-2.5 text-base md:text-sm font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border border-border/50"
-                />
-              </div>
-            ) : (
-              <form onSubmit={handleAgentSubmit} className="flex gap-2">
-                <div className="relative flex-1 min-w-0">
-                  <Sparkles className="absolute left-3.5 top-1/2 -translate-y-1/2 text-primary/70 pointer-events-none" size={14} />
-                  <input
-                    ref={askInputMobileRef}
-                    type="text"
-                    value={agentQuery}
-                    onChange={e => setAgentQuery(e.target.value)}
-                    placeholder="Rainy day with a toddler near Ballard?"
-                    disabled={agentLoading}
-                    autoComplete="off"
-                    className="w-full bg-off-white rounded-xl pl-9 pr-3 py-2.5 text-base md:text-sm font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border border-border/50 disabled:opacity-60"
-                  />
-                </div>
+          <Drawer.Portal>
+            <Drawer.Content
+              className="bg-card flex flex-col rounded-t-3xl fixed bottom-0 left-0 right-0 z-10 outline-none border-t border-border/60 h-[100dvh]"
+              style={{ boxShadow: '0 -8px 32px rgba(0,0,0,0.12)' }}
+            >
+              {snapPoint === '180px' ? (
                 <button
-                  type="submit"
-                  disabled={!agentQuery.trim() || agentLoading}
-                  className="flex-shrink-0 px-3 py-2 rounded-xl text-xs font-black bg-primary text-white shadow-sm disabled:opacity-40"
+                  type="button"
+                  onClick={() => setSnapPoint(0.75)}
+                  aria-label="Expand place list"
+                  className="w-full flex flex-col items-center pt-3 pb-2 flex-shrink-0"
                 >
-                  {agentLoading ? '…' : 'Ask'}
+                  <div className="w-10 h-1 rounded-full bg-border" />
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-2">
+                    {displayedPlaces.length} spot{displayedPlaces.length !== 1 ? 's' : ''}
+                  </p>
                 </button>
-              </form>
-            )}
-          </div>
-        </div>
+              ) : (
+                <div className="flex justify-center pt-3 pb-2 flex-shrink-0">
+                  <div className="w-10 h-1 rounded-full bg-border" />
+                </div>
+              )}
+              <div className="flex-1 overflow-y-auto overscroll-contain min-h-0">
+                {displayedPlaces.map(place => (
+                  <PlaceCard
+                    key={place.id}
+                    place={place}
+                    onClick={() => handleSelectPlace(place)}
+                    isSelected={selectedPlace?.id === place.id}
+                  />
+                ))}
+              </div>
+            </Drawer.Content>
+          </Drawer.Portal>
+        </Drawer.Root>
 
-        {panelMode === 'ask' && (
-          <div
-            className="absolute left-4 right-4 z-10 overflow-y-auto rounded-2xl bg-white/95 backdrop-blur-sm border border-border/50 p-4"
-            style={{
-              top: '11.5rem',
-              bottom: '5.75rem',
-              boxShadow: 'var(--shadow-md)',
-            }}
-          >
-            {agentExploreBody}
-          </div>
-        )}
+        {/* FAB — visible only at peek */}
+        <AnimatePresence>
+          {snapPoint === '180px' && (
+            <motion.button
+              key="fab"
+              initial={{ y: 8, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 8, opacity: 0 }}
+              transition={{ type: 'spring', damping: 18, stiffness: 300 }}
+              onClick={onSubmitPlace}
+              aria-label="Add a place"
+              className="absolute flex items-center gap-2 px-4 rounded-2xl bg-primary text-white text-sm font-black active:scale-95 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
+              style={{
+                bottom: 'calc(180px + 16px)',
+                right: '1rem',
+                zIndex: 15,
+                height: 44,
+                boxShadow: 'var(--shadow-brand)',
+              }}
+            >
+              <Plus size={18} strokeWidth={2.5} />
+              Add a place
+            </motion.button>
+          )}
+        </AnimatePresence>
 
-        <button
-          onClick={onSubmitPlace}
-          aria-label="Add a place"
-          className="absolute bottom-8 right-4 z-10 flex items-center justify-center rounded-full bg-primary text-white active:scale-90 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
-          style={{ width: 52, height: 52, boxShadow: 'var(--shadow-brand)' }}
-        >
-          <Plus size={24} strokeWidth={2.5} />
-        </button>
-
+        {/* PlaceDetail bottom sheet */}
         <AnimatePresence>
           {selectedPlace && (
             <motion.div
@@ -607,8 +653,8 @@ export default function BrowseLayout({
               animate={{ y: 0 }}
               exit={{ y: '108%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 280, mass: 0.9 }}
-              className="absolute bottom-0 left-0 right-0 z-20 bg-white overflow-hidden"
-              style={{ borderRadius: '28px 28px 0 0', boxShadow: '0 -8px 32px rgba(0,0,0,0.12)' }}
+              className="absolute bottom-0 left-0 right-0 bg-white overflow-hidden"
+              style={{ borderRadius: '28px 28px 0 0', boxShadow: '0 -8px 32px rgba(0,0,0,0.12)', zIndex: 30 }}
             >
               <div className="flex justify-center pt-3 pb-1">
                 <div className="w-9 h-1 rounded-full bg-border" />
@@ -616,11 +662,119 @@ export default function BrowseLayout({
               <button
                 onClick={handleBackToList}
                 aria-label="Back to list"
-                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center z-10 transition-colors duration-100 ease-out"
+                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center transition-colors duration-100 ease-out"
+                style={{ zIndex: 10 }}
               >
                 <X size={13} strokeWidth={2.5} />
               </button>
               <PlaceDetail place={selectedPlace} tips={tips} onTipAdded={() => getTipsForPlace(selectedPlace.id).then(setTips).catch(() => {})} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Ask AI full-screen overlay */}
+        <AnimatePresence>
+          {askOpen && (
+            <motion.div
+              key="ask-overlay"
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 28, stiffness: 280, mass: 0.9 }}
+              className="absolute inset-0 bg-white flex flex-col"
+              style={{ zIndex: 40 }}
+            >
+              <div className="flex items-center gap-3 px-4 pt-4 pb-3 border-b border-border/40 flex-shrink-0">
+                <button
+                  type="button"
+                  onClick={() => { setAskOpen(false); setAgentQuery('') }}
+                  aria-label="Back to Explore"
+                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-muted transition-colors duration-100"
+                >
+                  <ArrowLeft size={16} strokeWidth={2.5} />
+                </button>
+                <span className="font-bold text-foreground text-sm">Ask AI</span>
+              </div>
+
+              <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-4 min-h-0">
+                {!agentResponse && !agentLoading && !agentError && (
+                  <div className="pt-8 text-center">
+                    <p className="text-lg font-bold text-foreground mb-6">What are you looking for?</p>
+                    {/* TODO: replace with dynamic suggestions */}
+                    <div className="flex flex-wrap justify-center gap-3">
+                      {AGENT_SUGGESTIONS.map(s => (
+                        <motion.button
+                          key={s.label}
+                          type="button"
+                          whileTap={{ scale: 0.97 }}
+                          onClick={() => setAgentQuery(s.label)}
+                          className={`flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-bold border border-border/50 ${s.color}`}
+                        >
+                          <s.icon size={14} strokeWidth={2.5} />
+                          {s.label}
+                        </motion.button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {agentError && (
+                  <div className="mb-3 rounded-xl border border-destructive/20 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+                    {agentError}
+                  </div>
+                )}
+
+                {agentResponse && (
+                  <div className="mb-4 rounded-xl border border-border bg-off-white px-4 py-3 text-sm text-foreground leading-relaxed whitespace-pre-wrap">
+                    {agentResponse}
+                  </div>
+                )}
+
+                {foundPlaces.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {foundPlaces.map(p => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => { setSelectedPlace(p); setAskOpen(false) }}
+                        className="flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-bold bg-primary/10 text-primary border border-primary/20 active:scale-95 transition-transform duration-100"
+                      >
+                        {p.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {agentLoading && (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground mt-4">
+                    <span className="inline-block w-3 h-3 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                    Thinking…
+                  </div>
+                )}
+              </div>
+
+              <form
+                onSubmit={handleAgentSubmit}
+                className="flex items-center gap-2 px-4 py-3 border-t border-border/40 bg-white flex-shrink-0"
+              >
+                <input
+                  ref={askInputMobileRef}
+                  type="text"
+                  value={agentQuery}
+                  onChange={e => setAgentQuery(e.target.value)}
+                  placeholder="Type a message…"
+                  disabled={agentLoading}
+                  autoComplete="off"
+                  className="flex-1 bg-off-white rounded-xl px-4 py-3 text-base outline-none border border-border/50 disabled:opacity-60 placeholder:text-muted-foreground/40"
+                />
+                <button
+                  type="submit"
+                  disabled={!agentQuery.trim() || agentLoading}
+                  className="flex-shrink-0 w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center disabled:opacity-40 active:scale-95 transition-transform duration-100"
+                >
+                  <ArrowUp size={16} strokeWidth={2.5} />
+                </button>
+              </form>
             </motion.div>
           )}
         </AnimatePresence>

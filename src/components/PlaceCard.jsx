@@ -66,7 +66,7 @@ export default function PlaceCard({ place, onClick }) {
         })}
       </div>
 
-      {place.submitted_by && (
+      {place.submitted_by && place.submitted_by !== 'admin' && (
         <p className="text-xs text-muted-foreground/50 mt-3">Added by {place.submitted_by}</p>
       )}
     </div>

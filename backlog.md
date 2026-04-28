@@ -10,6 +10,19 @@ Plan: yes = touches 3+ files or has meaningful risk of getting approach wrong fi
 
 ---
 
+T37 | P1 | feature | Mobile bottom sheet + top search/Ask AI bar redesign
+- Visible: on mobile there is no browsable place list; search and Ask AI are in an overlay that competes with the map; no peek sheet
+- Done:
+  - Top bar: filter chips + search input + Ask AI button (replaces current overlay panel)
+  - Bottom peek sheet: always visible at ~180px (drag handle + 1 full card + top of second); tap anywhere to expand; swipe to control
+  - Sheet states: peek (~180px) → expanded (~75% screen, map still visible at top) → full (map hidden); tapping map in expanded state collapses to peek
+  - Selecting a place from the list opens PlaceDetail sheet over the list (same as tapping a map pin)
+  - Ask AI: full-screen takeover; back arrow returns to Explore (State 1); empty state has 3 hardcoded suggestion chips (placeholder — will be dynamic later); place chips in AI response open PlaceDetail
+  - FAB: stays 52×52px; positioned above the peek sheet; hides when sheet expands past peek state
+  - "Similar if nearby" label dropped — no geolocation in v1
+- Constraint: map stays primary; BrowseLayout is the target component; touches 3+ files; Framer Motion for sheet animation; existing agent logic wired to Ask AI panel
+- Model: Sonnet · Plan: yes
+
 T36 | P2 | feature | Auto-refresh PlaceDetail description after enrichment
 - Visible: after submitting a new place, the description only appears after a manual page refresh
 - Done: once a place is selected post-submit, PlaceDetail polls or re-fetches until a description lands (or times out after ~15s); no manual refresh needed
@@ -38,7 +51,7 @@ T16 | P1 | design | Clean up Browse nav and search layout
 - Visible: duplicate nav bar appears in side panel; search is not adjacent to filters
 - Done: one nav bar; search sits at top of side panel next to filters; no duplicate elements
 - Constraint: mobile layout must still work
-- May conflict with: T28-T30 (search moving to bottom bar — confirm scope before starting)
+- Superseded by: **T37** for mobile layout; desktop search cleanup still valid
 - Model: Sonnet · Plan: no (but confirm T28-T30 scope first)
 
 T33 | P1 | feature | Replace description input with tips; derive description via AI
