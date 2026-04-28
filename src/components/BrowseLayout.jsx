@@ -544,10 +544,7 @@ export default function BrowseLayout({
 
         {/* Top bar */}
         <div className="absolute top-0 left-0 right-0 z-20 bg-white/90 backdrop-blur-md border-b border-border/40">
-          <div className="px-4 pt-3 pb-1 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-            {featureChips}
-          </div>
-          <div className="flex items-center gap-2 px-4 pb-3">
+          <div className="flex items-center gap-2 px-4 pt-3 pb-2">
             <div className="relative flex-1 min-w-0">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/45 pointer-events-none" size={14} />
               <input
@@ -568,6 +565,9 @@ export default function BrowseLayout({
               <Sparkles size={13} strokeWidth={2.5} />
               Ask AI
             </button>
+          </div>
+          <div className="px-4 pb-3 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+            {featureChips}
           </div>
         </div>
 
@@ -623,23 +623,23 @@ export default function BrowseLayout({
           {snapPoint === '180px' && (
             <motion.button
               key="fab"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0, opacity: 0 }}
+              initial={{ y: 8, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 8, opacity: 0 }}
               transition={{ type: 'spring', damping: 18, stiffness: 300 }}
               onClick={onSubmitPlace}
               aria-label="Add a place"
-              className="absolute flex items-center justify-center rounded-full bg-primary text-white active:scale-90 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
+              className="absolute flex items-center gap-2 px-4 rounded-2xl bg-primary text-white text-sm font-black active:scale-95 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
               style={{
                 bottom: 'calc(180px + 16px)',
                 right: '1rem',
                 zIndex: 15,
-                width: 52,
-                height: 52,
+                height: 44,
                 boxShadow: 'var(--shadow-brand)',
               }}
             >
-              <Plus size={24} strokeWidth={2.5} />
+              <Plus size={18} strokeWidth={2.5} />
+              Add a place
             </motion.button>
           )}
         </AnimatePresence>
