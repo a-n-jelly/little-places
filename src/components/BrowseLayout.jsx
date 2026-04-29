@@ -403,7 +403,7 @@ export default function BrowseLayout({
             <button
               type="submit"
               disabled={!agentQuery.trim() || agentLoading}
-              className="absolute right-2 top-[11px] px-2.5 py-1 rounded-lg text-xs font-black bg-primary text-white disabled:opacity-40 disabled:cursor-not-allowed transition-opacity duration-100"
+              className="absolute right-2 bottom-[16px] px-2.5 py-1 rounded-lg text-xs font-black bg-primary text-white disabled:opacity-40 disabled:cursor-not-allowed transition-opacity duration-100"
             >
               {agentLoading ? '…' : 'Ask'}
             </button>
