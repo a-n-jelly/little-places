@@ -567,9 +567,9 @@ export default function BrowseLayout({
           <MapView places={displayedPlaces} onSelectPlace={handleSelectPlace} selectedPlace={selectedPlace} />
         </div>
 
-        {/* Top bar */}
+        {/* Top bar — single row */}
         <div className="absolute top-0 left-0 right-0 z-20 bg-white/90 backdrop-blur-md border-b border-border/40">
-          <div className="flex items-center gap-2 px-4 pt-3 pb-2">
+          <div className="flex items-center gap-2 px-4 py-3">
             <div className="relative flex-1 min-w-0">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/45 pointer-events-none" size={14} />
               <input
@@ -590,9 +590,6 @@ export default function BrowseLayout({
               <Sparkles size={13} strokeWidth={2.5} />
               Ask AI
             </button>
-          </div>
-          <div className="px-4 pb-3 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-            {featureChips}
           </div>
         </div>
 
@@ -629,6 +626,9 @@ export default function BrowseLayout({
                   <div className="w-10 h-1 rounded-full bg-border" />
                 </div>
               )}
+              <div className="px-4 pb-2 overflow-x-auto flex-shrink-0" style={{ scrollbarWidth: 'none' }}>
+                {featureChips}
+              </div>
               <div className="flex-1 overflow-y-auto overscroll-contain min-h-0">
                 {error && (
                   <div className="mx-4 mt-4 rounded-2xl border border-destructive/15 bg-destructive/5 px-4 py-5 text-center">
