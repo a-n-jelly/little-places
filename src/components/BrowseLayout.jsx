@@ -594,8 +594,13 @@ export default function BrowseLayout({
         </div>
 
         {/* Filter chips — floating over map */}
-        <div className="absolute left-0 right-0 z-20 overflow-x-auto px-4 pt-2" style={{ top: 68, scrollbarWidth: 'none' }}>
-          {featureChips}
+        <div className="absolute left-0 right-0 z-20 pt-2" style={{ top: 68 }}>
+          <div className="relative">
+            <div className="overflow-x-auto px-4" style={{ scrollbarWidth: 'none' }}>
+              {featureChips}
+            </div>
+            <div className="absolute right-0 top-0 bottom-0 w-10 pointer-events-none" style={{ background: 'linear-gradient(to right, transparent, rgba(0,0,0,0.18))' }} />
+          </div>
         </div>
 
         {/* Vaul peek sheet */}
