@@ -567,9 +567,9 @@ export default function BrowseLayout({
           <MapView places={displayedPlaces} onSelectPlace={handleSelectPlace} selectedPlace={selectedPlace} />
         </div>
 
-        {/* Top bar */}
+        {/* Search bar */}
         <div className="absolute top-0 left-0 right-0 z-20 bg-white/90 backdrop-blur-md border-b border-border/40">
-          <div className="flex items-center gap-2 px-4 pt-3 pb-2">
+          <div className="flex items-center gap-2 px-4 py-3">
             <div className="relative flex-1 min-w-0">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/45 pointer-events-none" size={14} />
               <input
@@ -591,9 +591,11 @@ export default function BrowseLayout({
               Ask AI
             </button>
           </div>
-          <div className="overflow-x-auto pb-2.5 px-4" style={{ scrollbarWidth: 'none' }}>
-            {featureChips}
-          </div>
+        </div>
+
+        {/* Filter chips — floating over map */}
+        <div className="absolute left-0 right-0 z-20 overflow-x-auto px-4 pt-2" style={{ top: 68, scrollbarWidth: 'none' }}>
+          {featureChips}
         </div>
 
         {/* Vaul peek sheet */}
