@@ -207,3 +207,11 @@
     touch-action: manipulation;
   }
 }
+
+/* Push Mapbox zoom controls above the mobile FAB (peek sheet = 180px, FAB = 44px, gap = 16px) */
+@media (max-width: 767px) {
+  .mobile-map .mapboxgl-ctrl-bottom-right {
+    bottom: 256px;
+    right: 1rem;
+  }
+}

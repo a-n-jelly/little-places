@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { Search, Plus, Star, X, Sparkles, Home as HomeIcon, ArrowLeft, ArrowUp } from 'lucide-react'
 import { Drawer } from 'vaul'
@@ -224,6 +224,26 @@ export default function BrowseLayout({
   const askInputMobileRef = useRef(null)
   const prevPanelMode = useRef(panelMode)
 
+  const LINE_HEIGHT = 22
+  const MAX_LINES = 5
+
+  const autoResize = useCallback((el) => {
+    if (!el) return
+    el.style.height = 'auto'
+    el.style.height = `${Math.min(el.scrollHeight, LINE_HEIGHT * MAX_LINES)}px`
+  }, [])
+
+  function handleAskSubmit(e) {
+    handleAgentSubmit(e)
+    resetTextarea(askInputDesktopRef.current)
+    resetTextarea(askInputMobileRef.current)
+  }
+
+  const resetTextarea = (el) => {
+    if (!el) return
+    el.style.height = 'auto'
+  }
+
   const {
     query: agentQuery,
     setQuery: setAgentQuery,
@@ -336,24 +356,39 @@ export default function BrowseLayout({
           />
         </div>
       ) : (
-        <form onSubmit={handleAgentSubmit} className="relative flex gap-1.5">
+        <form
+          onSubmit={handleAskSubmit}
+          className="relative flex gap-1.5 items-end"
+        >
           <div className="relative flex-1 min-w-0">
-            <Sparkles className="absolute left-3.5 top-1/2 -translate-y-1/2 text-primary/70 pointer-events-none" size={14} />
-            <input
+            <Sparkles className="absolute left-3.5 top-[11px] text-primary/70 pointer-events-none" size={14} />
+            <textarea
               ref={askInputDesktopRef}
-              type="text"
+              rows={1}
               value={agentQuery}
-              onChange={e => setAgentQuery(e.target.value)}
+              onChange={e => { setAgentQuery(e.target.value); autoResize(e.target) }}
+              onKeyDown={e => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault()
+                  if (agentQuery.trim() && !agentLoading) handleAskSubmit(e)
+                }
+                if (e.key === 'Escape') e.target.blur()
+              }}
               placeholder="Rainy day with a toddler near Ballard?"
               disabled={agentLoading}
               autoComplete="off"
-              className="w-full bg-off-white rounded-xl pl-9 pr-3 py-2.5 text-base md:text-sm font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border border-border/50 disabled:opacity-60"
+              className={`w-full bg-off-white rounded-xl pl-9 pr-3 py-2.5 text-base md:text-sm font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border transition-[border-color,box-shadow] duration-150 resize-none overflow-y-auto disabled:opacity-60 ${
+                agentLoading
+                  ? 'border-primary/40 shadow-[0_0_0_3px_rgba(55,48,163,0.08)]'
+                  : 'border-border/50 focus:border-primary/50 focus:shadow-[0_0_0_3px_rgba(55,48,163,0.08)]'
+              }`}
+              style={{ lineHeight: `${LINE_HEIGHT}px`, maxHeight: `${LINE_HEIGHT * MAX_LINES}px` }}
             />
           </div>
           <button
             type="submit"
             disabled={!agentQuery.trim() || agentLoading}
-            className="flex-shrink-0 px-3 py-2 rounded-xl text-xs font-black bg-primary text-white shadow-sm disabled:opacity-40 disabled:cursor-not-allowed transition-opacity duration-100"
+            className="flex-shrink-0 px-3 py-2 rounded-xl text-xs font-black bg-primary text-white shadow-sm disabled:opacity-40 disabled:cursor-not-allowed transition-opacity duration-100 mb-px"
           >
             {agentLoading ? '…' : 'Ask'}
           </button>
@@ -551,7 +586,7 @@ export default function BrowseLayout({
           <button
             onClick={onSubmitPlace}
             aria-label="Add a place"
-            className="absolute bottom-8 right-4 z-10 flex items-center gap-2 px-4 rounded-2xl bg-primary text-white text-sm font-black active:scale-95 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
+            className="absolute bottom-8 right-4 z-10 flex items-center gap-2 px-4 rounded-xl bg-primary text-white text-sm font-black active:scale-95 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
             style={{ height: 44, boxShadow: 'var(--shadow-brand)' }}
           >
             <Plus size={18} strokeWidth={2.5} />
@@ -563,7 +598,7 @@ export default function BrowseLayout({
       {/* ── Mobile ──────────────────────────────────────────────── */}
       <div className="md:hidden relative h-screen overflow-hidden">
         {/* Map layer */}
-        <div className="absolute inset-0" onClick={handleMapClick}>
+        <div className="absolute inset-0 mobile-map" onClick={handleMapClick}>
           <MapView places={displayedPlaces} onSelectPlace={handleSelectPlace} selectedPlace={selectedPlace} />
         </div>
 
@@ -696,7 +731,7 @@ export default function BrowseLayout({
               transition={{ type: 'spring', damping: 18, stiffness: 300 }}
               onClick={onSubmitPlace}
               aria-label="Add a place"
-              className="absolute flex items-center gap-2 px-4 rounded-2xl bg-primary text-white text-sm font-black active:scale-95 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
+              className="absolute flex items-center gap-2 px-4 rounded-xl bg-primary text-white text-sm font-black active:scale-95 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
               style={{
                 bottom: 'calc(180px + 16px)',
                 right: '1rem',
@@ -823,23 +858,35 @@ export default function BrowseLayout({
               </div>
 
               <form
-                onSubmit={handleAgentSubmit}
-                className="flex items-center gap-2 px-4 py-3 border-t border-border/40 bg-white flex-shrink-0"
+                onSubmit={handleAskSubmit}
+                className="flex items-end gap-2 px-4 py-3 border-t border-border/40 bg-white flex-shrink-0"
               >
-                <input
+                <textarea
                   ref={askInputMobileRef}
-                  type="text"
+                  rows={1}
                   value={agentQuery}
-                  onChange={e => setAgentQuery(e.target.value)}
-                  placeholder="Type a message…"
+                  onChange={e => { setAgentQuery(e.target.value); autoResize(e.target) }}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault()
+                      if (agentQuery.trim() && !agentLoading) handleAskSubmit(e)
+                    }
+                    if (e.key === 'Escape') e.target.blur()
+                  }}
+                  placeholder="Ask about a place, vibe, or age group…"
                   disabled={agentLoading}
                   autoComplete="off"
-                  className="flex-1 bg-off-white rounded-xl px-4 py-3 text-base outline-none border border-border/50 disabled:opacity-60 placeholder:text-muted-foreground/40"
+                  className={`flex-1 bg-off-white rounded-xl px-4 py-3 text-base outline-none border transition-[border-color,box-shadow] duration-150 resize-none overflow-y-auto disabled:opacity-60 placeholder:text-muted-foreground/40 ${
+                    agentLoading
+                      ? 'border-primary/40 shadow-[0_0_0_3px_rgba(55,48,163,0.08)]'
+                      : 'border-border/50 focus:border-primary/50 focus:shadow-[0_0_0_3px_rgba(55,48,163,0.08)]'
+                  }`}
+                  style={{ lineHeight: `${LINE_HEIGHT}px`, maxHeight: `${LINE_HEIGHT * MAX_LINES}px` }}
                 />
                 <button
                   type="submit"
                   disabled={!agentQuery.trim() || agentLoading}
-                  className="flex-shrink-0 w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center disabled:opacity-40 active:scale-95 transition-transform duration-100"
+                  className="flex-shrink-0 w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center disabled:opacity-40 active:scale-95 transition-transform duration-100 mb-px"
                 >
                   <ArrowUp size={16} strokeWidth={2.5} />
                 </button>
