@@ -365,8 +365,10 @@ export default function BrowseLayout({
   const agentExploreBody = (
     <div className="px-5 pt-2 pb-6 flex flex-col min-h-0">
       {agentError && (
-        <div className="mb-3 rounded-xl border border-destructive/20 bg-destructive/10 px-3 py-2 text-xs text-destructive">
-          {agentError}
+        <div className="mb-4 rounded-2xl border border-border/50 bg-muted/40 px-4 py-4 text-center">
+          <p className="text-xl mb-1">⏳</p>
+          <p className="text-sm font-bold text-foreground mb-1">The guide is busy right now</p>
+          <p className="text-xs text-muted-foreground">Try again in a moment — results may vary while still learning.</p>
         </div>
       )}
       {agentResponse && (
@@ -483,23 +485,45 @@ export default function BrowseLayout({
                         {loading ? 'Loading…' : `${displayedPlaces.length} spot${displayedPlaces.length !== 1 ? 's' : ''} nearby`}
                       </p>
                     </div>
+
                     {error && (
-                      <p className="text-center text-destructive py-8 text-sm px-5">{error}</p>
-                    )}
-                    {!loading && !error && places.length === 0 && (
-                      <div className="text-center py-16 px-6">
-                        <p className="font-bold text-foreground text-sm mb-1">No spots found</p>
+                      <div className="mx-5 mt-4 rounded-2xl border border-destructive/15 bg-destructive/5 px-5 py-5 text-center">
+                        <p className="text-2xl mb-2">😔</p>
+                        <p className="text-sm font-bold text-foreground mb-1">Couldn't load places</p>
+                        <p className="text-xs text-muted-foreground mb-4">Something went wrong connecting to the server.</p>
                         <button
                           type="button"
-                          onClick={() => {
-                            setSearch('')
-                          }}
-                          className="mt-2 text-xs font-bold text-primary underline"
+                          onClick={() => window.location.reload()}
+                          className="text-xs font-bold text-destructive underline underline-offset-2 hover:opacity-70 transition-opacity duration-100"
                         >
-                          Clear filters
+                          Try again
                         </button>
                       </div>
                     )}
+
+                    {!loading && !error && displayedPlaces.length === 0 && places.length > 0 && (
+                      <div className="mx-5 mt-4 rounded-2xl border border-border/50 bg-muted/40 px-5 py-8 text-center">
+                        <p className="text-2xl mb-2">🔍</p>
+                        <p className="text-sm font-bold text-foreground mb-1">No spots match your filters</p>
+                        <p className="text-xs text-muted-foreground mb-4">Try removing a filter or clearing your search.</p>
+                        <button
+                          type="button"
+                          onClick={() => { setSearch(''); setActiveChips([]) }}
+                          className="text-xs font-bold text-primary underline underline-offset-2 hover:opacity-70 transition-opacity duration-100"
+                        >
+                          Clear all filters
+                        </button>
+                      </div>
+                    )}
+
+                    {!loading && !error && places.length === 0 && (
+                      <div className="mx-5 mt-4 rounded-2xl border border-border/50 bg-muted/40 px-5 py-8 text-center">
+                        <p className="text-2xl mb-2">🗺️</p>
+                        <p className="text-sm font-bold text-foreground mb-1">No spots here yet</p>
+                        <p className="text-xs text-muted-foreground">Be the first to add a little place in this area.</p>
+                      </div>
+                    )}
+
                     {displayedPlaces.map(place => (
                       <PlaceListRow
                         key={place.id}
@@ -584,7 +608,7 @@ export default function BrowseLayout({
         >
           <Drawer.Portal>
             <Drawer.Content
-              className="bg-card flex flex-col rounded-t-3xl fixed bottom-0 left-0 right-0 z-10 outline-none border-t border-border/60 h-[100dvh]"
+              className="md:hidden bg-card flex flex-col rounded-t-3xl fixed bottom-0 left-0 right-0 z-10 outline-none border-t border-border/60 h-[100dvh]"
               style={{ boxShadow: '0 -8px 32px rgba(0,0,0,0.12)' }}
             >
               {snapPoint === '180px' ? (
@@ -605,6 +629,41 @@ export default function BrowseLayout({
                 </div>
               )}
               <div className="flex-1 overflow-y-auto overscroll-contain min-h-0">
+                {error && (
+                  <div className="mx-4 mt-4 rounded-2xl border border-destructive/15 bg-destructive/5 px-4 py-5 text-center">
+                    <p className="text-2xl mb-2">😔</p>
+                    <p className="text-sm font-bold text-foreground mb-1">Couldn't load places</p>
+                    <p className="text-xs text-muted-foreground mb-3">Something went wrong connecting to the server.</p>
+                    <button
+                      type="button"
+                      onClick={() => window.location.reload()}
+                      className="text-xs font-bold text-destructive underline underline-offset-2"
+                    >
+                      Try again
+                    </button>
+                  </div>
+                )}
+                {!loading && !error && displayedPlaces.length === 0 && places.length > 0 && (
+                  <div className="mx-4 mt-4 rounded-2xl border border-border/50 bg-muted/40 px-4 py-6 text-center">
+                    <p className="text-2xl mb-2">🔍</p>
+                    <p className="text-sm font-bold text-foreground mb-1">No spots match your filters</p>
+                    <p className="text-xs text-muted-foreground mb-3">Try removing a filter or clearing your search.</p>
+                    <button
+                      type="button"
+                      onClick={() => { setSearch(''); setActiveChips([]) }}
+                      className="text-xs font-bold text-primary underline underline-offset-2"
+                    >
+                      Clear all filters
+                    </button>
+                  </div>
+                )}
+                {!loading && !error && places.length === 0 && (
+                  <div className="mx-4 mt-4 rounded-2xl border border-border/50 bg-muted/40 px-4 py-6 text-center">
+                    <p className="text-2xl mb-2">🗺️</p>
+                    <p className="text-sm font-bold text-foreground mb-1">No spots here yet</p>
+                    <p className="text-xs text-muted-foreground">Be the first to add a little place in this area.</p>
+                  </div>
+                )}
                 {displayedPlaces.map(place => (
                   <PlaceCard
                     key={place.id}
@@ -719,8 +778,10 @@ export default function BrowseLayout({
                 )}
 
                 {agentError && (
-                  <div className="mb-3 rounded-xl border border-destructive/20 bg-destructive/10 px-3 py-2 text-xs text-destructive">
-                    {agentError}
+                  <div className="mb-4 rounded-2xl border border-border/50 bg-muted/40 px-4 py-4 text-center">
+                    <p className="text-xl mb-1">⏳</p>
+                    <p className="text-sm font-bold text-foreground mb-1">The guide is busy right now</p>
+                    <p className="text-xs text-muted-foreground">Try again in a moment — results may vary while still learning.</p>
                   </div>
                 )}
 
