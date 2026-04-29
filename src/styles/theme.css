@@ -208,7 +208,39 @@
   }
 }
 
-/* Push Mapbox zoom controls above the mobile FAB (peek sheet = 180px, FAB = 44px, gap = 16px) */
+/* Mapbox zoom control — on-brand sizing and style */
+.mapboxgl-ctrl-group {
+  border-radius: 12px !important;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+  border: none !important;
+}
+
+.mapboxgl-ctrl-group button {
+  width: 32px !important;
+  height: 32px !important;
+  background: #FFFFFF !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.mapboxgl-ctrl-group button + button {
+  border-top: 1px solid #EBEBEB !important;
+}
+
+.mapboxgl-ctrl-group button:hover {
+  background: #F8F7F6 !important;
+}
+
+.mapboxgl-ctrl-icon {
+  width: 16px !important;
+  height: 16px !important;
+  background-size: 16px 16px !important;
+}
+
+/* Push Mapbox zoom controls above the mobile FAB */
 @media (max-width: 767px) {
   .mobile-map .mapboxgl-ctrl-bottom-right {
     bottom: 256px;

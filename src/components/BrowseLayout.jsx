@@ -586,7 +586,7 @@ export default function BrowseLayout({
           <button
             onClick={onSubmitPlace}
             aria-label="Add a place"
-            className="absolute bottom-8 right-4 z-10 flex items-center gap-2 px-4 rounded-xl bg-primary text-white text-sm font-black active:scale-95 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
+            className="absolute bottom-8 right-4 z-10 flex items-center gap-2 px-4 rounded-2xl bg-primary text-white text-sm font-black active:scale-95 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
             style={{ height: 44, boxShadow: 'var(--shadow-brand)' }}
           >
             <Plus size={18} strokeWidth={2.5} />
@@ -731,7 +731,7 @@ export default function BrowseLayout({
               transition={{ type: 'spring', damping: 18, stiffness: 300 }}
               onClick={onSubmitPlace}
               aria-label="Add a place"
-              className="absolute flex items-center gap-2 px-4 rounded-xl bg-primary text-white text-sm font-black active:scale-95 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
+              className="absolute flex items-center gap-2 px-4 rounded-2xl bg-primary text-white text-sm font-black active:scale-95 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
               style={{
                 bottom: 'calc(180px + 16px)',
                 right: '1rem',
