@@ -254,7 +254,7 @@ export default function BrowseLayout({
     foundPlaces,
   } = useAgentChat()
 
-  const [snapPoint, setSnapPoint] = useState('180px')
+  const [snapPoint, setSnapPoint] = useState('130px')
   const [askOpen, setAskOpen] = useState(false)
   const [mapBounds, setMapBounds] = useState(null)
 
@@ -288,13 +288,13 @@ export default function BrowseLayout({
 
   function handleSelectPlace(place) {
     setSelectedPlace(place)
-    setSnapPoint('180px')
+    setSnapPoint('130px')
     setPanelMode('search')
   }
 
   function handleMapClick(e) {
     if (e.target.tagName === 'CANVAS' && (snapPoint === 0.75 || snapPoint === 1)) {
-      setSnapPoint('180px')
+      setSnapPoint('130px')
     }
   }
 
@@ -313,6 +313,16 @@ export default function BrowseLayout({
         p.lng <= mapBounds[2] && p.lat <= mapBounds[3]
       ).length
     : displayedPlaces.length
+
+  const sortedPlaces = mapBounds
+    ? [...displayedPlaces].sort((a, b) => {
+        const cLng = (mapBounds[0] + mapBounds[2]) / 2
+        const cLat = (mapBounds[1] + mapBounds[3]) / 2
+        const distA = (a.lng - cLng) ** 2 + (a.lat - cLat) ** 2
+        const distB = (b.lng - cLng) ** 2 + (b.lat - cLat) ** 2
+        return distA - distB
+      })
+    : displayedPlaces
 
   const segmentBar = (
     <div
@@ -393,7 +403,7 @@ export default function BrowseLayout({
             <button
               type="submit"
               disabled={!agentQuery.trim() || agentLoading}
-              className="absolute right-2 bottom-2 px-2.5 py-1 rounded-lg text-xs font-black bg-primary text-white disabled:opacity-40 disabled:cursor-not-allowed transition-opacity duration-100"
+              className="absolute right-2 top-[11px] px-2.5 py-1 rounded-lg text-xs font-black bg-primary text-white disabled:opacity-40 disabled:cursor-not-allowed transition-opacity duration-100"
             >
               {agentLoading ? '…' : 'Ask'}
             </button>
@@ -565,7 +575,7 @@ export default function BrowseLayout({
                       </div>
                     )}
 
-                    {displayedPlaces.map(place => (
+                    {sortedPlaces.map(place => (
                       <PlaceListRow
                         key={place.id}
                         place={place}
@@ -650,7 +660,7 @@ export default function BrowseLayout({
           onOpenChange={() => {}}
           dismissible={false}
           modal={false}
-          snapPoints={['180px', 0.75, 1]}
+          snapPoints={['130px', 0.75, 1]}
           activeSnapPoint={snapPoint}
           setActiveSnapPoint={setSnapPoint}
           fadeFromIndex={1}
@@ -660,7 +670,7 @@ export default function BrowseLayout({
               className="md:hidden bg-card flex flex-col rounded-t-3xl fixed bottom-0 left-0 right-0 z-10 outline-none border-t border-border/60 h-[100dvh]"
               style={{ boxShadow: '0 -8px 32px rgba(0,0,0,0.12)' }}
             >
-              {snapPoint === '180px' ? (
+              {snapPoint === '130px' ? (
                 <button
                   type="button"
                   onClick={() => setSnapPoint(0.75)}
@@ -713,7 +723,7 @@ export default function BrowseLayout({
                     <p className="text-xs text-muted-foreground">Be the first to add a little place in this area.</p>
                   </div>
                 )}
-                {displayedPlaces.map(place => (
+                {sortedPlaces.map(place => (
                   <PlaceCard
                     key={place.id}
                     place={place}
@@ -728,7 +738,7 @@ export default function BrowseLayout({
 
         {/* FAB — visible only at peek */}
         <AnimatePresence>
-          {snapPoint === '180px' && (
+          {snapPoint === '130px' && (
             <motion.button
               key="fab"
               initial={{ y: 8, opacity: 0 }}
@@ -739,7 +749,7 @@ export default function BrowseLayout({
               aria-label="Add a place"
               className="absolute flex items-center gap-2 px-4 rounded-full bg-primary text-white text-sm font-black active:scale-95 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
               style={{
-                bottom: 'calc(180px + 16px)',
+                bottom: 'calc(130px + 16px)',
                 right: '1rem',
                 zIndex: 15,
                 height: 44,

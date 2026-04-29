@@ -243,7 +243,7 @@
 /* Push Mapbox zoom controls above the mobile FAB */
 @media (max-width: 767px) {
   .mobile-map .mapboxgl-ctrl-bottom-right {
-    bottom: 256px;
+    bottom: 210px;
     right: 1rem;
   }
 }
