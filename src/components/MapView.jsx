@@ -146,7 +146,7 @@ const MARKER_STYLE = {
   lineHeight: 0,
 }
 
-export default function MapView({ places = [], onSelectPlace, selectedPlace }) {
+export default function MapView({ places = [], onSelectPlace, selectedPlace, onBoundsChange }) {
   const mapRef = useRef()
   const [zoom, setZoom] = useState(12)
   const [bounds, setBounds] = useState(null)
@@ -155,9 +155,11 @@ export default function MapView({ places = [], onSelectPlace, selectedPlace }) {
     setZoom(evt.viewState.zoom)
     if (mapRef.current) {
       const b = mapRef.current.getMap().getBounds()
-      setBounds([b.getWest(), b.getSouth(), b.getEast(), b.getNorth()])
+      const next = [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()]
+      setBounds(next)
+      onBoundsChange?.(next)
     }
-  }, [])
+  }, [onBoundsChange])
 
   // GeoJSON points — exclude selected place (always rendered individually below)
   const points = useMemo(() =>

@@ -256,6 +256,7 @@ export default function BrowseLayout({
 
   const [snapPoint, setSnapPoint] = useState('180px')
   const [askOpen, setAskOpen] = useState(false)
+  const [mapBounds, setMapBounds] = useState(null)
 
   function setMode(next) {
     setPanelMode(next)
@@ -304,6 +305,14 @@ export default function BrowseLayout({
   const displayedPlaces = activeChips.length > 0
     ? places.filter(p => activeChips.every(c => (p.child_friendly_features ?? []).includes(c)))
     : places
+
+  const visibleCount = mapBounds
+    ? displayedPlaces.filter(p =>
+        p.lat != null && p.lng != null &&
+        p.lng >= mapBounds[0] && p.lat >= mapBounds[1] &&
+        p.lng <= mapBounds[2] && p.lat <= mapBounds[3]
+      ).length
+    : displayedPlaces.length
 
   const segmentBar = (
     <div
@@ -517,7 +526,7 @@ export default function BrowseLayout({
                   >
                     <div className="px-5 pt-3.5 pb-2">
                       <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                        {loading ? 'Loading…' : `${displayedPlaces.length} spot${displayedPlaces.length !== 1 ? 's' : ''} nearby`}
+                        {loading ? 'Loading…' : `${visibleCount} spot${visibleCount !== 1 ? 's' : ''} in this area`}
                       </p>
                     </div>
 
@@ -575,7 +584,7 @@ export default function BrowseLayout({
         </aside>
 
         <div className="flex-1 relative">
-          <MapView places={displayedPlaces} onSelectPlace={handleSelectPlace} selectedPlace={selectedPlace} />
+          <MapView places={displayedPlaces} onSelectPlace={handleSelectPlace} selectedPlace={selectedPlace} onBoundsChange={setMapBounds} />
 
           <div className="absolute top-4 left-0 right-0 z-20 flex justify-center pointer-events-none">
             <div className="pointer-events-auto px-4">
@@ -599,7 +608,7 @@ export default function BrowseLayout({
       <div className="md:hidden relative h-screen overflow-hidden">
         {/* Map layer */}
         <div className="absolute inset-0 mobile-map" onClick={handleMapClick}>
-          <MapView places={displayedPlaces} onSelectPlace={handleSelectPlace} selectedPlace={selectedPlace} />
+          <MapView places={displayedPlaces} onSelectPlace={handleSelectPlace} selectedPlace={selectedPlace} onBoundsChange={setMapBounds} />
         </div>
 
         {/* Search bar */}
@@ -663,7 +672,7 @@ export default function BrowseLayout({
                 >
                   <div className="w-10 h-1 rounded-full bg-border" />
                   <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-2">
-                    {displayedPlaces.length} spot{displayedPlaces.length !== 1 ? 's' : ''}
+                    {visibleCount} spot{visibleCount !== 1 ? 's' : ''} in this area
                   </p>
                 </button>
               ) : (

@@ -210,7 +210,7 @@
 
 /* Mapbox zoom control — on-brand sizing and style */
 .mapboxgl-ctrl-group {
-  border-radius: 12px !important;
+  border-radius: 9999px !important;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
   border: none !important;
