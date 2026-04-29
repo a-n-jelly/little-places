@@ -118,6 +118,17 @@ T27 | P2 | design | Map marker interaction behaviour — zoom collapse and selec
 - Constraint: prerequisite T26; Mapbox GL JS collision detection when implementing tiers
 - Model: Sonnet · Plan: yes
 
+T38 | P2 | feature | SEO: landing page + indexable place detail pages
+- Visible: the app is a JS SPA — Google sees a blank shell; no way to rank for "family-friendly parks Seattle" or individual place names
+- Done:
+  - Landing page at `/` with headline, short value prop, and CTA to open the map (static, fully indexable)
+  - Place detail pages at `/places/[slug]` (slug = kebab-case name + id suffix); renders place name, type, description, address, and tips as server-renderable HTML; tapping a map pin deep-links here on mobile
+  - `<meta>` title + description on both routes
+  - React Router (or file-based routing if we adopt a framework) handles routing without reloading the map
+- Constraint: current app has no routing — adding React Router (or Vite SSG) is a prerequisite; assess scope before ticketing sub-tasks; don't break existing SPA behaviour; place pages can be CSR initially (Google can execute JS) — SSR/SSG is a later optimisation
+- Open question: stay on Vite SPA + React Router, or adopt Vite + vite-plugin-ssg, or migrate to a framework (Remix, Next)?
+- Model: Sonnet · Plan: yes (routing is an architectural change)
+
 T05 | P3 | bug | Remove out-of-Seattle data — understand why it's there first
 - Model: Haiku · Plan: no
 
