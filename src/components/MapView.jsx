@@ -193,6 +193,7 @@ export default function MapView({ places = [], onSelectPlace, selectedPlace, onB
       attributionControl={false}
     >
       <NavigationControl position="bottom-right" showCompass={false} />
+      <GeolocateControl position="bottom-right" trackUserLocation={false} showUserHeading={false} />
 
       {clusters.map((cluster) => {
         const [lng, lat] = cluster.geometry.coordinates

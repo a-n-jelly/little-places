@@ -654,6 +654,7 @@ export default function BrowseLayout({
           </div>
         </div>
 
+
         {/* Vaul peek sheet */}
         <Drawer.Root
           open={true}
