@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { Search, Plus, Star, X, Sparkles, Home as HomeIcon, ArrowLeft, ArrowUp } from 'lucide-react'
 import { Drawer } from 'vaul'
@@ -218,11 +218,39 @@ export default function BrowseLayout({
   const [selectedPlace, setSelectedPlace] = useState(null)
   const [tips, setTips] = useState([])
   const [activeChips, setActiveChips] = useState([])
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)')
+    const handler = (e) => setIsMobile(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
   const searchInputDesktopRef = useRef(null)
   const searchInputMobileRef = useRef(null)
   const askInputDesktopRef = useRef(null)
   const askInputMobileRef = useRef(null)
   const prevPanelMode = useRef(panelMode)
+
+  const LINE_HEIGHT = 22
+  const MAX_LINES = 5
+
+  const autoResize = useCallback((el) => {
+    if (!el) return
+    el.style.height = 'auto'
+    el.style.height = `${Math.min(el.scrollHeight, LINE_HEIGHT * MAX_LINES)}px`
+  }, [])
+
+  function handleAskSubmit(e) {
+    handleAgentSubmit(e)
+    resetTextarea(askInputDesktopRef.current)
+    resetTextarea(askInputMobileRef.current)
+  }
+
+  const resetTextarea = (el) => {
+    if (!el) return
+    el.style.height = 'auto'
+  }
 
   const {
     query: agentQuery,
@@ -234,8 +262,9 @@ export default function BrowseLayout({
     foundPlaces,
   } = useAgentChat()
 
-  const [snapPoint, setSnapPoint] = useState('180px')
+  const [snapPoint, setSnapPoint] = useState('130px')
   const [askOpen, setAskOpen] = useState(false)
+  const [mapBounds, setMapBounds] = useState(null)
 
   function setMode(next) {
     setPanelMode(next)
@@ -267,13 +296,13 @@ export default function BrowseLayout({
 
   function handleSelectPlace(place) {
     setSelectedPlace(place)
-    setSnapPoint('180px')
+    setSnapPoint('130px')
     setPanelMode('search')
   }
 
   function handleMapClick(e) {
     if (e.target.tagName === 'CANVAS' && (snapPoint === 0.75 || snapPoint === 1)) {
-      setSnapPoint('180px')
+      setSnapPoint('130px')
     }
   }
 
@@ -284,6 +313,24 @@ export default function BrowseLayout({
   const displayedPlaces = activeChips.length > 0
     ? places.filter(p => activeChips.every(c => (p.child_friendly_features ?? []).includes(c)))
     : places
+
+  const visibleCount = mapBounds
+    ? displayedPlaces.filter(p =>
+        p.lat != null && p.lng != null &&
+        p.lng >= mapBounds[0] && p.lat >= mapBounds[1] &&
+        p.lng <= mapBounds[2] && p.lat <= mapBounds[3]
+      ).length
+    : displayedPlaces.length
+
+  const sortedPlaces = mapBounds
+    ? [...displayedPlaces].sort((a, b) => {
+        const cLng = (mapBounds[0] + mapBounds[2]) / 2
+        const cLat = (mapBounds[1] + mapBounds[3]) / 2
+        const distA = (a.lng - cLng) ** 2 + (a.lat - cLat) ** 2
+        const distB = (b.lng - cLng) ** 2 + (b.lat - cLat) ** 2
+        return distA - distB
+      })
+    : displayedPlaces
 
   const segmentBar = (
     <div
@@ -336,27 +383,39 @@ export default function BrowseLayout({
           />
         </div>
       ) : (
-        <form onSubmit={handleAgentSubmit} className="relative flex gap-1.5">
-          <div className="relative flex-1 min-w-0">
-            <Sparkles className="absolute left-3.5 top-1/2 -translate-y-1/2 text-primary/70 pointer-events-none" size={14} />
-            <input
+        <form onSubmit={handleAskSubmit} className="relative">
+          <div className="relative">
+            <Sparkles className="absolute left-3.5 top-[11px] text-primary/70 pointer-events-none" size={14} />
+            <textarea
               ref={askInputDesktopRef}
-              type="text"
+              rows={1}
               value={agentQuery}
-              onChange={e => setAgentQuery(e.target.value)}
+              onChange={e => { setAgentQuery(e.target.value); autoResize(e.target) }}
+              onKeyDown={e => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault()
+                  if (agentQuery.trim() && !agentLoading) handleAskSubmit(e)
+                }
+                if (e.key === 'Escape') e.target.blur()
+              }}
               placeholder="Rainy day with a toddler near Ballard?"
               disabled={agentLoading}
               autoComplete="off"
-              className="w-full bg-off-white rounded-xl pl-9 pr-3 py-2.5 text-base md:text-sm font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border border-border/50 disabled:opacity-60"
+              className={`w-full bg-off-white rounded-xl pl-9 pr-14 py-2.5 text-base md:text-sm font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border transition-[border-color,box-shadow] duration-150 resize-none overflow-y-auto disabled:opacity-60 ${
+                agentLoading
+                  ? 'border-primary/40 shadow-[0_0_0_3px_rgba(55,48,163,0.08)]'
+                  : 'border-border/50 focus:border-primary/50 focus:shadow-[0_0_0_3px_rgba(55,48,163,0.08)]'
+              }`}
+              style={{ lineHeight: `${LINE_HEIGHT}px`, maxHeight: `${LINE_HEIGHT * MAX_LINES}px` }}
             />
+            <button
+              type="submit"
+              disabled={!agentQuery.trim() || agentLoading}
+              className="absolute right-2 bottom-[16px] px-2.5 py-1 rounded-lg text-xs font-black bg-primary text-white disabled:opacity-40 disabled:cursor-not-allowed transition-opacity duration-100"
+            >
+              {agentLoading ? '…' : 'Ask'}
+            </button>
           </div>
-          <button
-            type="submit"
-            disabled={!agentQuery.trim() || agentLoading}
-            className="flex-shrink-0 px-3 py-2 rounded-xl text-xs font-black bg-primary text-white shadow-sm disabled:opacity-40 disabled:cursor-not-allowed transition-opacity duration-100"
-          >
-            {agentLoading ? '…' : 'Ask'}
-          </button>
         </form>
       )}
     </div>
@@ -365,8 +424,10 @@ export default function BrowseLayout({
   const agentExploreBody = (
     <div className="px-5 pt-2 pb-6 flex flex-col min-h-0">
       {agentError && (
-        <div className="mb-3 rounded-xl border border-destructive/20 bg-destructive/10 px-3 py-2 text-xs text-destructive">
-          {agentError}
+        <div className="mb-4 rounded-2xl border border-border/50 bg-muted/40 px-4 py-4 text-center">
+          <p className="text-xl mb-1">⏳</p>
+          <p className="text-sm font-bold text-foreground mb-1">The guide is busy right now</p>
+          <p className="text-xs text-muted-foreground">Try again in a moment — results may vary while still learning.</p>
         </div>
       )}
       {agentResponse && (
@@ -480,27 +541,49 @@ export default function BrowseLayout({
                   >
                     <div className="px-5 pt-3.5 pb-2">
                       <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                        {loading ? 'Loading…' : `${displayedPlaces.length} spot${displayedPlaces.length !== 1 ? 's' : ''} nearby`}
+                        {loading ? 'Loading…' : `${visibleCount} spot${visibleCount !== 1 ? 's' : ''} in this area`}
                       </p>
                     </div>
+
                     {error && (
-                      <p className="text-center text-destructive py-8 text-sm px-5">{error}</p>
-                    )}
-                    {!loading && !error && places.length === 0 && (
-                      <div className="text-center py-16 px-6">
-                        <p className="font-bold text-foreground text-sm mb-1">No spots found</p>
+                      <div className="mx-5 mt-4 rounded-2xl border border-destructive/15 bg-destructive/5 px-5 py-5 text-center">
+                        <p className="text-2xl mb-2">😔</p>
+                        <p className="text-sm font-bold text-foreground mb-1">Couldn't load places</p>
+                        <p className="text-xs text-muted-foreground mb-4">Something went wrong connecting to the server.</p>
                         <button
                           type="button"
-                          onClick={() => {
-                            setSearch('')
-                          }}
-                          className="mt-2 text-xs font-bold text-primary underline"
+                          onClick={() => window.location.reload()}
+                          className="text-xs font-bold text-destructive underline underline-offset-2 hover:opacity-70 transition-opacity duration-100"
                         >
-                          Clear filters
+                          Try again
                         </button>
                       </div>
                     )}
-                    {displayedPlaces.map(place => (
+
+                    {!loading && !error && displayedPlaces.length === 0 && places.length > 0 && (
+                      <div className="mx-5 mt-4 rounded-2xl border border-border/50 bg-muted/40 px-5 py-8 text-center">
+                        <p className="text-2xl mb-2">🔍</p>
+                        <p className="text-sm font-bold text-foreground mb-1">No spots match your filters</p>
+                        <p className="text-xs text-muted-foreground mb-4">Try removing a filter or clearing your search.</p>
+                        <button
+                          type="button"
+                          onClick={() => { setSearch(''); setActiveChips([]) }}
+                          className="text-xs font-bold text-primary underline underline-offset-2 hover:opacity-70 transition-opacity duration-100"
+                        >
+                          Clear all filters
+                        </button>
+                      </div>
+                    )}
+
+                    {!loading && !error && places.length === 0 && (
+                      <div className="mx-5 mt-4 rounded-2xl border border-border/50 bg-muted/40 px-5 py-8 text-center">
+                        <p className="text-2xl mb-2">🗺️</p>
+                        <p className="text-sm font-bold text-foreground mb-1">No spots here yet</p>
+                        <p className="text-xs text-muted-foreground">Be the first to add a little place in this area.</p>
+                      </div>
+                    )}
+
+                    {sortedPlaces.map(place => (
                       <PlaceListRow
                         key={place.id}
                         place={place}
@@ -516,7 +599,7 @@ export default function BrowseLayout({
         </aside>
 
         <div className="flex-1 relative">
-          <MapView places={displayedPlaces} onSelectPlace={handleSelectPlace} selectedPlace={selectedPlace} />
+          <MapView places={displayedPlaces} onSelectPlace={handleSelectPlace} selectedPlace={selectedPlace} onBoundsChange={setMapBounds} />
 
           <div className="absolute top-4 left-0 right-0 z-20 flex justify-center pointer-events-none">
             <div className="pointer-events-auto px-4">
@@ -527,10 +610,11 @@ export default function BrowseLayout({
           <button
             onClick={onSubmitPlace}
             aria-label="Add a place"
-            className="absolute bottom-8 right-4 z-10 flex items-center justify-center rounded-full bg-primary text-white active:scale-90 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
-            style={{ width: 52, height: 52, boxShadow: 'var(--shadow-brand)' }}
+            className="absolute bottom-8 right-4 z-10 flex items-center gap-2 px-4 rounded-xl bg-primary text-white text-sm font-black active:scale-95 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
+            style={{ height: 44, boxShadow: 'var(--shadow-brand)' }}
           >
-            <Plus size={24} strokeWidth={2.5} />
+            <Plus size={18} strokeWidth={2.5} />
+            Add a place
           </button>
         </div>
       </div>
@@ -538,13 +622,13 @@ export default function BrowseLayout({
       {/* ── Mobile ──────────────────────────────────────────────── */}
       <div className="md:hidden relative h-screen overflow-hidden">
         {/* Map layer */}
-        <div className="absolute inset-0" onClick={handleMapClick}>
-          <MapView places={displayedPlaces} onSelectPlace={handleSelectPlace} selectedPlace={selectedPlace} />
+        <div className="absolute inset-0 mobile-map" onClick={handleMapClick}>
+          <MapView places={displayedPlaces} onSelectPlace={handleSelectPlace} selectedPlace={selectedPlace} onBoundsChange={setMapBounds} />
         </div>
 
-        {/* Top bar */}
+        {/* Search bar */}
         <div className="absolute top-0 left-0 right-0 z-20 bg-white/90 backdrop-blur-md border-b border-border/40">
-          <div className="flex items-center gap-2 px-4 pt-3 pb-2">
+          <div className="flex items-center gap-2 px-4 py-3">
             <div className="relative flex-1 min-w-0">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/45 pointer-events-none" size={14} />
               <input
@@ -566,18 +650,26 @@ export default function BrowseLayout({
               Ask AI
             </button>
           </div>
-          <div className="px-4 pb-3 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-            {featureChips}
+        </div>
+
+        {/* Filter chips — floating over map */}
+        <div className="absolute left-0 right-0 z-20 pt-2" style={{ top: 68 }}>
+          <div className="relative">
+            <div className="overflow-x-auto px-4" style={{ scrollbarWidth: 'none' }}>
+              {featureChips}
+            </div>
+            <div className="absolute right-0 top-0 bottom-0 w-10 pointer-events-none" style={{ background: 'linear-gradient(to right, transparent, rgba(0,0,0,0.18))' }} />
           </div>
         </div>
 
-        {/* Vaul peek sheet */}
-        <Drawer.Root
+
+        {/* Vaul peek sheet — only mounted on mobile to avoid portal leaking onto desktop */}
+        {isMobile && <Drawer.Root
           open={true}
           onOpenChange={() => {}}
           dismissible={false}
           modal={false}
-          snapPoints={['180px', 0.75, 1]}
+          snapPoints={['130px', 0.75, 1]}
           activeSnapPoint={snapPoint}
           setActiveSnapPoint={setSnapPoint}
           fadeFromIndex={1}
@@ -587,7 +679,7 @@ export default function BrowseLayout({
               className="bg-card flex flex-col rounded-t-3xl fixed bottom-0 left-0 right-0 z-10 outline-none border-t border-border/60 h-[100dvh]"
               style={{ boxShadow: '0 -8px 32px rgba(0,0,0,0.12)' }}
             >
-              {snapPoint === '180px' ? (
+              {snapPoint === '130px' ? (
                 <button
                   type="button"
                   onClick={() => setSnapPoint(0.75)}
@@ -596,7 +688,7 @@ export default function BrowseLayout({
                 >
                   <div className="w-10 h-1 rounded-full bg-border" />
                   <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-2">
-                    {displayedPlaces.length} spot{displayedPlaces.length !== 1 ? 's' : ''}
+                    {visibleCount} spot{visibleCount !== 1 ? 's' : ''} in this area
                   </p>
                 </button>
               ) : (
@@ -605,7 +697,42 @@ export default function BrowseLayout({
                 </div>
               )}
               <div className="flex-1 overflow-y-auto overscroll-contain min-h-0">
-                {displayedPlaces.map(place => (
+                {error && (
+                  <div className="mx-4 mt-4 rounded-2xl border border-destructive/15 bg-destructive/5 px-4 py-5 text-center">
+                    <p className="text-2xl mb-2">😔</p>
+                    <p className="text-sm font-bold text-foreground mb-1">Couldn't load places</p>
+                    <p className="text-xs text-muted-foreground mb-3">Something went wrong connecting to the server.</p>
+                    <button
+                      type="button"
+                      onClick={() => window.location.reload()}
+                      className="text-xs font-bold text-destructive underline underline-offset-2"
+                    >
+                      Try again
+                    </button>
+                  </div>
+                )}
+                {!loading && !error && displayedPlaces.length === 0 && places.length > 0 && (
+                  <div className="mx-4 mt-4 rounded-2xl border border-border/50 bg-muted/40 px-4 py-6 text-center">
+                    <p className="text-2xl mb-2">🔍</p>
+                    <p className="text-sm font-bold text-foreground mb-1">No spots match your filters</p>
+                    <p className="text-xs text-muted-foreground mb-3">Try removing a filter or clearing your search.</p>
+                    <button
+                      type="button"
+                      onClick={() => { setSearch(''); setActiveChips([]) }}
+                      className="text-xs font-bold text-primary underline underline-offset-2"
+                    >
+                      Clear all filters
+                    </button>
+                  </div>
+                )}
+                {!loading && !error && places.length === 0 && (
+                  <div className="mx-4 mt-4 rounded-2xl border border-border/50 bg-muted/40 px-4 py-6 text-center">
+                    <p className="text-2xl mb-2">🗺️</p>
+                    <p className="text-sm font-bold text-foreground mb-1">No spots here yet</p>
+                    <p className="text-xs text-muted-foreground">Be the first to add a little place in this area.</p>
+                  </div>
+                )}
+                {sortedPlaces.map(place => (
                   <PlaceCard
                     key={place.id}
                     place={place}
@@ -616,11 +743,11 @@ export default function BrowseLayout({
               </div>
             </Drawer.Content>
           </Drawer.Portal>
-        </Drawer.Root>
+        </Drawer.Root>}
 
         {/* FAB — visible only at peek */}
         <AnimatePresence>
-          {snapPoint === '180px' && (
+          {snapPoint === '130px' && (
             <motion.button
               key="fab"
               initial={{ y: 8, opacity: 0 }}
@@ -629,9 +756,9 @@ export default function BrowseLayout({
               transition={{ type: 'spring', damping: 18, stiffness: 300 }}
               onClick={onSubmitPlace}
               aria-label="Add a place"
-              className="absolute flex items-center gap-2 px-4 rounded-2xl bg-primary text-white text-sm font-black active:scale-95 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
+              className="absolute flex items-center gap-2 px-4 rounded-full bg-primary text-white text-sm font-black active:scale-95 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
               style={{
-                bottom: 'calc(180px + 16px)',
+                bottom: 'calc(130px + 16px)',
                 right: '1rem',
                 zIndex: 15,
                 height: 44,
@@ -719,8 +846,10 @@ export default function BrowseLayout({
                 )}
 
                 {agentError && (
-                  <div className="mb-3 rounded-xl border border-destructive/20 bg-destructive/10 px-3 py-2 text-xs text-destructive">
-                    {agentError}
+                  <div className="mb-4 rounded-2xl border border-border/50 bg-muted/40 px-4 py-4 text-center">
+                    <p className="text-xl mb-1">⏳</p>
+                    <p className="text-sm font-bold text-foreground mb-1">The guide is busy right now</p>
+                    <p className="text-xs text-muted-foreground">Try again in a moment — results may vary while still learning.</p>
                   </div>
                 )}
 
@@ -754,26 +883,40 @@ export default function BrowseLayout({
               </div>
 
               <form
-                onSubmit={handleAgentSubmit}
-                className="flex items-center gap-2 px-4 py-3 border-t border-border/40 bg-white flex-shrink-0"
+                onSubmit={handleAskSubmit}
+                className="px-4 py-3 border-t border-border/40 bg-white flex-shrink-0"
               >
-                <input
-                  ref={askInputMobileRef}
-                  type="text"
-                  value={agentQuery}
-                  onChange={e => setAgentQuery(e.target.value)}
-                  placeholder="Type a message…"
-                  disabled={agentLoading}
-                  autoComplete="off"
-                  className="flex-1 bg-off-white rounded-xl px-4 py-3 text-base outline-none border border-border/50 disabled:opacity-60 placeholder:text-muted-foreground/40"
-                />
-                <button
-                  type="submit"
-                  disabled={!agentQuery.trim() || agentLoading}
-                  className="flex-shrink-0 w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center disabled:opacity-40 active:scale-95 transition-transform duration-100"
-                >
-                  <ArrowUp size={16} strokeWidth={2.5} />
-                </button>
+                <div className="relative">
+                  <textarea
+                    ref={askInputMobileRef}
+                    rows={1}
+                    value={agentQuery}
+                    onChange={e => { setAgentQuery(e.target.value); autoResize(e.target) }}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault()
+                        if (agentQuery.trim() && !agentLoading) handleAskSubmit(e)
+                      }
+                      if (e.key === 'Escape') e.target.blur()
+                    }}
+                    placeholder="Ask about a place, vibe, or age group…"
+                    disabled={agentLoading}
+                    autoComplete="off"
+                    className={`w-full bg-off-white rounded-xl pl-4 pr-14 py-3 text-base outline-none border transition-[border-color,box-shadow] duration-150 resize-none overflow-y-auto disabled:opacity-60 placeholder:text-muted-foreground/40 ${
+                      agentLoading
+                        ? 'border-primary/40 shadow-[0_0_0_3px_rgba(55,48,163,0.08)]'
+                        : 'border-border/50 focus:border-primary/50 focus:shadow-[0_0_0_3px_rgba(55,48,163,0.08)]'
+                    }`}
+                    style={{ lineHeight: `${LINE_HEIGHT}px`, maxHeight: `${LINE_HEIGHT * MAX_LINES}px` }}
+                  />
+                  <button
+                    type="submit"
+                    disabled={!agentQuery.trim() || agentLoading}
+                    className="absolute right-2 bottom-2 w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center disabled:opacity-40 active:scale-95 transition-[opacity,transform] duration-100"
+                  >
+                    <ArrowUp size={16} strokeWidth={2.5} />
+                  </button>
+                </div>
               </form>
             </motion.div>
           )}

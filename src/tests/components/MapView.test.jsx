@@ -100,10 +100,10 @@ describe('MapView — clustering', () => {
     expect(screen.getByLabelText('Park A')).toBeTruthy()
   })
 
-  it('passes correct supercluster options — maxZoom 12 so zoom 13+ has no clusters', () => {
+  it('passes correct supercluster options — maxZoom 11 so zoom 12+ has no clusters', () => {
     render(<MapView places={[PLACE_A]} />)
     const callArgs = mockUseSupercluster.mock.calls[0]
     const options = callArgs[0].options // hook takes a single options object
-    expect(options.maxZoom).toBe(12)
+    expect(options.maxZoom).toBe(11)
   })
 })
