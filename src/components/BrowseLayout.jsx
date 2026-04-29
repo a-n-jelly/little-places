@@ -365,11 +365,8 @@ export default function BrowseLayout({
           />
         </div>
       ) : (
-        <form
-          onSubmit={handleAskSubmit}
-          className="relative flex gap-1.5 items-end"
-        >
-          <div className="relative flex-1 min-w-0">
+        <form onSubmit={handleAskSubmit} className="relative">
+          <div className="relative">
             <Sparkles className="absolute left-3.5 top-[11px] text-primary/70 pointer-events-none" size={14} />
             <textarea
               ref={askInputDesktopRef}
@@ -386,21 +383,21 @@ export default function BrowseLayout({
               placeholder="Rainy day with a toddler near Ballard?"
               disabled={agentLoading}
               autoComplete="off"
-              className={`w-full bg-off-white rounded-xl pl-9 pr-3 py-2.5 text-base md:text-sm font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border transition-[border-color,box-shadow] duration-150 resize-none overflow-y-auto disabled:opacity-60 ${
+              className={`w-full bg-off-white rounded-xl pl-9 pr-14 py-2.5 text-base md:text-sm font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border transition-[border-color,box-shadow] duration-150 resize-none overflow-y-auto disabled:opacity-60 ${
                 agentLoading
                   ? 'border-primary/40 shadow-[0_0_0_3px_rgba(55,48,163,0.08)]'
                   : 'border-border/50 focus:border-primary/50 focus:shadow-[0_0_0_3px_rgba(55,48,163,0.08)]'
               }`}
               style={{ lineHeight: `${LINE_HEIGHT}px`, maxHeight: `${LINE_HEIGHT * MAX_LINES}px` }}
             />
+            <button
+              type="submit"
+              disabled={!agentQuery.trim() || agentLoading}
+              className="absolute right-2 bottom-2 px-2.5 py-1 rounded-lg text-xs font-black bg-primary text-white disabled:opacity-40 disabled:cursor-not-allowed transition-opacity duration-100"
+            >
+              {agentLoading ? '…' : 'Ask'}
+            </button>
           </div>
-          <button
-            type="submit"
-            disabled={!agentQuery.trim() || agentLoading}
-            className="flex-shrink-0 px-3 py-2 rounded-xl text-xs font-black bg-primary text-white shadow-sm disabled:opacity-40 disabled:cursor-not-allowed transition-opacity duration-100 mb-px"
-          >
-            {agentLoading ? '…' : 'Ask'}
-          </button>
         </form>
       )}
     </div>
@@ -868,37 +865,39 @@ export default function BrowseLayout({
 
               <form
                 onSubmit={handleAskSubmit}
-                className="flex items-end gap-2 px-4 py-3 border-t border-border/40 bg-white flex-shrink-0"
+                className="px-4 py-3 border-t border-border/40 bg-white flex-shrink-0"
               >
-                <textarea
-                  ref={askInputMobileRef}
-                  rows={1}
-                  value={agentQuery}
-                  onChange={e => { setAgentQuery(e.target.value); autoResize(e.target) }}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault()
-                      if (agentQuery.trim() && !agentLoading) handleAskSubmit(e)
-                    }
-                    if (e.key === 'Escape') e.target.blur()
-                  }}
-                  placeholder="Ask about a place, vibe, or age group…"
-                  disabled={agentLoading}
-                  autoComplete="off"
-                  className={`flex-1 bg-off-white rounded-xl px-4 py-3 text-base outline-none border transition-[border-color,box-shadow] duration-150 resize-none overflow-y-auto disabled:opacity-60 placeholder:text-muted-foreground/40 ${
-                    agentLoading
-                      ? 'border-primary/40 shadow-[0_0_0_3px_rgba(55,48,163,0.08)]'
-                      : 'border-border/50 focus:border-primary/50 focus:shadow-[0_0_0_3px_rgba(55,48,163,0.08)]'
-                  }`}
-                  style={{ lineHeight: `${LINE_HEIGHT}px`, maxHeight: `${LINE_HEIGHT * MAX_LINES}px` }}
-                />
-                <button
-                  type="submit"
-                  disabled={!agentQuery.trim() || agentLoading}
-                  className="flex-shrink-0 w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center disabled:opacity-40 active:scale-95 transition-transform duration-100 mb-px"
-                >
-                  <ArrowUp size={16} strokeWidth={2.5} />
-                </button>
+                <div className="relative">
+                  <textarea
+                    ref={askInputMobileRef}
+                    rows={1}
+                    value={agentQuery}
+                    onChange={e => { setAgentQuery(e.target.value); autoResize(e.target) }}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault()
+                        if (agentQuery.trim() && !agentLoading) handleAskSubmit(e)
+                      }
+                      if (e.key === 'Escape') e.target.blur()
+                    }}
+                    placeholder="Ask about a place, vibe, or age group…"
+                    disabled={agentLoading}
+                    autoComplete="off"
+                    className={`w-full bg-off-white rounded-xl pl-4 pr-14 py-3 text-base outline-none border transition-[border-color,box-shadow] duration-150 resize-none overflow-y-auto disabled:opacity-60 placeholder:text-muted-foreground/40 ${
+                      agentLoading
+                        ? 'border-primary/40 shadow-[0_0_0_3px_rgba(55,48,163,0.08)]'
+                        : 'border-border/50 focus:border-primary/50 focus:shadow-[0_0_0_3px_rgba(55,48,163,0.08)]'
+                    }`}
+                    style={{ lineHeight: `${LINE_HEIGHT}px`, maxHeight: `${LINE_HEIGHT * MAX_LINES}px` }}
+                  />
+                  <button
+                    type="submit"
+                    disabled={!agentQuery.trim() || agentLoading}
+                    className="absolute right-2 bottom-2 w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center disabled:opacity-40 active:scale-95 transition-[opacity,transform] duration-100"
+                  >
+                    <ArrowUp size={16} strokeWidth={2.5} />
+                  </button>
+                </div>
               </form>
             </motion.div>
           )}
