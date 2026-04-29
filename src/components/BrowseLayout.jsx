@@ -551,10 +551,11 @@ export default function BrowseLayout({
           <button
             onClick={onSubmitPlace}
             aria-label="Add a place"
-            className="absolute bottom-8 right-4 z-10 flex items-center justify-center rounded-full bg-primary text-white active:scale-90 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
-            style={{ width: 52, height: 52, boxShadow: 'var(--shadow-brand)' }}
+            className="absolute bottom-8 right-4 z-10 flex items-center gap-2 px-4 rounded-2xl bg-primary text-white text-sm font-black active:scale-95 transition-[color,background-color,transform,box-shadow] duration-100 ease-out"
+            style={{ height: 44, boxShadow: 'var(--shadow-brand)' }}
           >
-            <Plus size={24} strokeWidth={2.5} />
+            <Plus size={18} strokeWidth={2.5} />
+            Add a place
           </button>
         </div>
       </div>
