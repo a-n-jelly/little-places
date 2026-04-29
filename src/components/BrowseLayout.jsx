@@ -218,6 +218,14 @@ export default function BrowseLayout({
   const [selectedPlace, setSelectedPlace] = useState(null)
   const [tips, setTips] = useState([])
   const [activeChips, setActiveChips] = useState([])
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)')
+    const handler = (e) => setIsMobile(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
   const searchInputDesktopRef = useRef(null)
   const searchInputMobileRef = useRef(null)
   const askInputDesktopRef = useRef(null)
@@ -655,8 +663,8 @@ export default function BrowseLayout({
         </div>
 
 
-        {/* Vaul peek sheet */}
-        <Drawer.Root
+        {/* Vaul peek sheet — only mounted on mobile to avoid portal leaking onto desktop */}
+        {isMobile && <Drawer.Root
           open={true}
           onOpenChange={() => {}}
           dismissible={false}
@@ -668,7 +676,7 @@ export default function BrowseLayout({
         >
           <Drawer.Portal>
             <Drawer.Content
-              className="md:hidden bg-card flex flex-col rounded-t-3xl fixed bottom-0 left-0 right-0 z-10 outline-none border-t border-border/60 h-[100dvh]"
+              className="bg-card flex flex-col rounded-t-3xl fixed bottom-0 left-0 right-0 z-10 outline-none border-t border-border/60 h-[100dvh]"
               style={{ boxShadow: '0 -8px 32px rgba(0,0,0,0.12)' }}
             >
               {snapPoint === '130px' ? (
@@ -735,7 +743,7 @@ export default function BrowseLayout({
               </div>
             </Drawer.Content>
           </Drawer.Portal>
-        </Drawer.Root>
+        </Drawer.Root>}
 
         {/* FAB — visible only at peek */}
         <AnimatePresence>
