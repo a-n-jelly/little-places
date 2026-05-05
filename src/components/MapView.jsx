@@ -274,7 +274,7 @@ export default function MapView({ places = [], onSelectPlace, selectedPlace, onB
           longitude={selectedPlace.lng}
           latitude={selectedPlace.lat}
           anchor="bottom"
-          style={MARKER_STYLE}
+          style={{ ...MARKER_STYLE, zIndex: 1 }}
         >
           <button
             type="button"

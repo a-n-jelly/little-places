@@ -277,13 +277,17 @@ export default function BrowseLayout({
     if (prevPanelMode.current === panelMode) return
     const isDesktop = typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches
     if (panelMode === 'ask') {
-      if (isDesktop) askInputDesktopRef.current?.focus()
+      if (isDesktop) {
+        askInputDesktopRef.current?.focus()
+        // textarea remounts on panel switch — restore height to match content
+        requestAnimationFrame(() => autoResize(askInputDesktopRef.current))
+      }
     } else {
       if (isDesktop) searchInputDesktopRef.current?.focus()
       else searchInputMobileRef.current?.focus()
     }
     prevPanelMode.current = panelMode
-  }, [panelMode])
+  }, [panelMode, autoResize])
 
   useEffect(() => {
     if (askOpen) askInputMobileRef.current?.focus()
@@ -371,16 +375,28 @@ export default function BrowseLayout({
     <div className="mt-3">
       {panelMode === 'search' ? (
         <div className="relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/40 pointer-events-none" size={14} />
-          <input
+          <Search className="absolute left-3.5 top-[11px] text-muted-foreground/40 pointer-events-none" size={14} />
+          <textarea
             ref={searchInputDesktopRef}
-            type="search"
+            rows={1}
             value={search}
-            onChange={e => setSearch(e.target.value)}
+            onChange={e => { setSearch(e.target.value); autoResize(e.target) }}
+            onKeyDown={e => { if (e.key === 'Enter') e.preventDefault() }}
             placeholder="Filter by name or type…"
             autoComplete="off"
-            className="w-full bg-off-white rounded-xl pl-9 pr-4 py-2.5 text-base md:text-sm font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border border-border/50"
+            className="w-full bg-off-white rounded-xl pl-9 pr-9 py-2.5 text-base md:text-sm font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border border-border/50 resize-none overflow-hidden"
+            style={{ lineHeight: `${LINE_HEIGHT}px` }}
           />
+          {search && (
+            <button
+              type="button"
+              onClick={() => { setSearch(''); if (searchInputDesktopRef.current) { searchInputDesktopRef.current.style.height = 'auto'; searchInputDesktopRef.current.focus() } }}
+              aria-label="Clear search"
+              className="absolute right-3 top-[11px] text-muted-foreground/50 hover:text-muted-foreground transition-colors duration-100"
+            >
+              <X size={14} />
+            </button>
+          )}
         </div>
       ) : (
         <form onSubmit={handleAskSubmit} className="relative">
@@ -398,23 +414,35 @@ export default function BrowseLayout({
                 }
                 if (e.key === 'Escape') e.target.blur()
               }}
-              placeholder="Rainy day with a toddler near Ballard?"
+              placeholder="Rainy day with a toddler?"
               disabled={agentLoading}
               autoComplete="off"
-              className={`w-full bg-off-white rounded-xl pl-9 pr-14 py-2.5 text-base md:text-sm font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border transition-[border-color,box-shadow] duration-150 resize-none overflow-y-auto disabled:opacity-60 ${
+              className={`w-full bg-off-white rounded-xl pl-9 pr-20 py-2.5 text-base md:text-sm font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border transition-[border-color,box-shadow] duration-150 resize-none overflow-y-auto ask-textarea disabled:opacity-60 ${
                 agentLoading
                   ? 'border-primary/40 shadow-[0_0_0_3px_rgba(55,48,163,0.08)]'
                   : 'border-border/50 focus:border-primary/50 focus:shadow-[0_0_0_3px_rgba(55,48,163,0.08)]'
               }`}
               style={{ lineHeight: `${LINE_HEIGHT}px`, maxHeight: `${LINE_HEIGHT * MAX_LINES}px` }}
             />
-            <button
-              type="submit"
-              disabled={!agentQuery.trim() || agentLoading}
-              className="absolute right-2 bottom-[16px] px-2.5 py-1 rounded-lg text-xs font-black bg-primary text-white disabled:opacity-40 disabled:cursor-not-allowed transition-opacity duration-100"
-            >
-              {agentLoading ? '…' : 'Ask'}
-            </button>
+            <div className="absolute right-2 bottom-[11px] flex items-center gap-1">
+              {agentQuery.trim() && (
+                <button
+                  type="button"
+                  onClick={() => { setAgentQuery(''); resetTextarea(askInputDesktopRef.current); askInputDesktopRef.current?.focus() }}
+                  aria-label="Clear"
+                  className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted/50 transition-colors duration-100"
+                >
+                  <X size={13} />
+                </button>
+              )}
+              <button
+                type="submit"
+                disabled={!agentQuery.trim() || agentLoading}
+                className="px-2.5 py-1 rounded-lg text-xs font-black bg-primary text-white disabled:opacity-40 disabled:cursor-not-allowed transition-opacity duration-100"
+              >
+                {agentLoading ? '…' : 'Ask'}
+              </button>
+            </div>
           </div>
         </form>
       )}
@@ -627,19 +655,31 @@ export default function BrowseLayout({
         </div>
 
         {/* Search bar */}
-        <div className="absolute top-0 left-0 right-0 z-20 bg-white/90 backdrop-blur-md border-b border-border/40">
+        <div className="absolute top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-border/40">
           <div className="flex items-center gap-2 px-4 py-3">
             <div className="relative flex-1 min-w-0">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground/45 pointer-events-none" size={14} />
-              <input
+              <Search className="absolute left-3.5 top-[11px] text-muted-foreground/45 pointer-events-none" size={14} />
+              <textarea
                 ref={searchInputMobileRef}
-                type="search"
+                rows={1}
                 value={search}
-                onChange={e => setSearch(e.target.value)}
+                onChange={e => { setSearch(e.target.value); autoResize(e.target) }}
+                onKeyDown={e => { if (e.key === 'Enter') e.preventDefault() }}
                 placeholder="Search places…"
                 autoComplete="off"
-                className="w-full bg-off-white rounded-xl pl-9 pr-4 py-2.5 text-base font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border border-border/50"
+                className="w-full bg-off-white rounded-xl pl-9 pr-9 py-2.5 text-base font-medium outline-none placeholder:text-muted-foreground/40 text-foreground border border-border/50 resize-none overflow-hidden"
+                style={{ lineHeight: `${LINE_HEIGHT}px` }}
               />
+              {search && (
+                <button
+                  type="button"
+                  onClick={() => { setSearch(''); if (searchInputMobileRef.current) { searchInputMobileRef.current.style.height = 'auto'; searchInputMobileRef.current.focus() } }}
+                  aria-label="Clear search"
+                  className="absolute right-3 top-[11px] text-muted-foreground/50 hover:text-muted-foreground transition-colors duration-100"
+                >
+                  <X size={14} />
+                </button>
+              )}
             </div>
             <button
               type="button"
@@ -654,17 +694,14 @@ export default function BrowseLayout({
 
         {/* Filter chips — floating over map */}
         <div className="absolute left-0 right-0 z-20 pt-2" style={{ top: 68 }}>
-          <div className="relative">
-            <div className="overflow-x-auto px-4" style={{ scrollbarWidth: 'none' }}>
-              {featureChips}
-            </div>
-            <div className="absolute right-0 top-0 bottom-0 w-10 pointer-events-none" style={{ background: 'linear-gradient(to right, transparent, rgba(0,0,0,0.18))' }} />
+          <div className="overflow-x-auto px-4" style={{ scrollbarWidth: 'none' }}>
+            {featureChips}
           </div>
         </div>
 
 
-        {/* Vaul peek sheet — only mounted on mobile to avoid portal leaking onto desktop */}
-        {isMobile && <Drawer.Root
+        {/* Vaul peek sheet — only mounted on mobile and when Ask AI overlay is closed */}
+        {isMobile && !askOpen && <Drawer.Root
           open={true}
           onOpenChange={() => {}}
           dismissible={false}
@@ -809,7 +846,7 @@ export default function BrowseLayout({
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 280, mass: 0.9 }}
               className="absolute inset-0 bg-white flex flex-col"
-              style={{ zIndex: 40 }}
+              style={{ zIndex: 60 }}
             >
               <div className="flex items-center gap-3 px-4 pt-4 pb-3 border-b border-border/40 flex-shrink-0">
                 <button
@@ -902,20 +939,32 @@ export default function BrowseLayout({
                     placeholder="Ask about a place, vibe, or age group…"
                     disabled={agentLoading}
                     autoComplete="off"
-                    className={`w-full bg-off-white rounded-xl pl-4 pr-14 py-3 text-base outline-none border transition-[border-color,box-shadow] duration-150 resize-none overflow-y-auto disabled:opacity-60 placeholder:text-muted-foreground/40 ${
+                    className={`w-full bg-off-white rounded-xl pl-4 pr-20 py-3 text-base outline-none border transition-[border-color,box-shadow] duration-150 resize-none overflow-y-auto ask-textarea disabled:opacity-60 placeholder:text-muted-foreground/40 ${
                       agentLoading
                         ? 'border-primary/40 shadow-[0_0_0_3px_rgba(55,48,163,0.08)]'
                         : 'border-border/50 focus:border-primary/50 focus:shadow-[0_0_0_3px_rgba(55,48,163,0.08)]'
                     }`}
                     style={{ lineHeight: `${LINE_HEIGHT}px`, maxHeight: `${LINE_HEIGHT * MAX_LINES}px` }}
                   />
-                  <button
-                    type="submit"
-                    disabled={!agentQuery.trim() || agentLoading}
-                    className="absolute right-2 bottom-2 w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center disabled:opacity-40 active:scale-95 transition-[opacity,transform] duration-100"
-                  >
-                    <ArrowUp size={16} strokeWidth={2.5} />
-                  </button>
+                  <div className="absolute right-2 bottom-[11px] flex items-center gap-1">
+                    {agentQuery.trim() && (
+                      <button
+                        type="button"
+                        onClick={() => { setAgentQuery(''); resetTextarea(askInputMobileRef.current); askInputMobileRef.current?.focus() }}
+                        aria-label="Clear"
+                        className="w-7 h-7 rounded-lg flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted/50 transition-colors duration-100"
+                      >
+                        <X size={13} />
+                      </button>
+                    )}
+                    <button
+                      type="submit"
+                      disabled={!agentQuery.trim() || agentLoading}
+                      className="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center disabled:opacity-40 active:scale-95 transition-[opacity,transform] duration-100"
+                    >
+                      <ArrowUp size={16} strokeWidth={2.5} />
+                    </button>
+                  </div>
                 </div>
               </form>
             </motion.div>
