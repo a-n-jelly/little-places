@@ -84,6 +84,13 @@ T02 | P3 | bug | Fix layout reflow shake when resizing across `md` breakpoint
 T08 | P2 | bug | Fix animations — identify which transitions are broken or missing and fix them
 - Model: Sonnet · Plan: no
 
+T40 | P2 | feature | Multi-turn agent conversation
+- Visible: each query starts cold — "show me something closer" or "what about toddlers?" loses all context; clarifying questions impossible without memory
+- Done: chat history persists within a session; agent can refine on follow-up; zero-results case can suggest narrowing/broadening without starting over
+- Constraint: useAgentChat needs to maintain message history across handleSubmit calls; UI needs to show conversation thread not just last response; AgentPanel needs redesign for thread view
+- Blocks: clarifying questions when nothing is found
+- Model: Sonnet · Plan: yes
+
 T09 | P2 | feature | Fix filter/search persistence when navigating via map pin clicks
 - Visible (v1 scope): unclear what map pin click should do beyond opening detail
 - Done (v1 / incremental): tapping a map pin **opens the place in the sidebar detail** (same as list row select); filters and search query unchanged for now — do **not** require clearing search, resetting chips, or list scroll in this ticket yet

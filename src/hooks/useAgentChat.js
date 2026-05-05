@@ -276,8 +276,11 @@ export function useAgentChat() {
         )
 
         const newPlaces = toolResults
-          .filter(r => r.functionResponse.name === 'search_places')
-          .flatMap(r => r.functionResponse.response?.places ?? [])
+          .filter(r => ['search_places', 'get_place_detail'].includes(r.functionResponse.name))
+          .flatMap(r => {
+            const res = r.functionResponse.response
+            return res?.places ?? (res?.place ? [res.place] : [])
+          })
         if (newPlaces.length > 0) {
           setFoundPlaces(prev => {
             const ids = new Set(prev.map(p => p.id))
