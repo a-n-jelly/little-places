@@ -1,16 +1,12 @@
 import { useState, useEffect, useMemo } from 'react'
-import { getPlaces, searchPlaces } from '../lib/places'
+import { getPlaces } from '../lib/places'
 
 export function usePlaces() {
-  const [allPlaces, setAllPlaces]         = useState([])
-  const [loading, setLoading]             = useState(true)
-  const [error, setError]                 = useState(null)
-  const [search, setSearch]               = useState('')
-  const [selectedStages, setSelectedStages]   = useState([])
-  const [selectedAccess, setSelectedAccess]   = useState([])
-  const [selectedTypes, setSelectedTypes]     = useState([])
+  const [allPlaces, setAllPlaces] = useState([])
+  const [loading, setLoading]     = useState(true)
+  const [error, setError]         = useState(null)
+  const [search, setSearch]       = useState('')
 
-  // Load all places on mount
   useEffect(() => {
     async function load() {
       try {
@@ -26,74 +22,20 @@ export function usePlaces() {
     load()
   }, [])
 
-  // Client-side filtering
-  const filtered = useMemo(() => {
-    let results = allPlaces
-
-    if (search.trim()) {
-      const q = search.toLowerCase()
-      results = results.filter(
-        (p) =>
-          p.name?.toLowerCase().includes(q) ||
-          p.description?.toLowerCase().includes(q) ||
-          p.type?.toLowerCase().includes(q)
-      )
-    }
-
-    if (selectedStages.length > 0) {
-      results = results.filter((p) =>
-        selectedStages.some((s) => p.stages?.includes(s))
-      )
-    }
-
-    if (selectedAccess.length > 0) {
-      results = results.filter((p) =>
-        selectedAccess.every((a) => p.child_friendly_features?.includes(a))
-      )
-    }
-
-    if (selectedTypes.length > 0) {
-      results = results.filter((p) => selectedTypes.includes(p.type))
-    }
-
-    return results
-  }, [allPlaces, search, selectedStages, selectedAccess, selectedTypes])
-
-  function toggleStage(id) {
-    setSelectedStages((prev) =>
-      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
+  const places = useMemo(() => {
+    if (!search.trim()) return allPlaces
+    const q = search.toLowerCase()
+    return allPlaces.filter(p =>
+      p.name?.toLowerCase().includes(q) ||
+      p.description?.toLowerCase().includes(q) ||
+      p.type?.toLowerCase().includes(q) ||
+      p.address?.toLowerCase().includes(q)
     )
-  }
-
-  function toggleAccess(id) {
-    setSelectedAccess((prev) =>
-      prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]
-    )
-  }
-
-  function toggleType(type) {
-    setSelectedTypes((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
-    )
-  }
+  }, [allPlaces, search])
 
   function addPlace(place) {
-    setAllPlaces((prev) => [place, ...prev])
+    setAllPlaces(prev => [place, ...prev])
   }
 
-  return {
-    places: filtered,
-    allPlaces,
-    loading,
-    error,
-    search,
-    setSearch,
-    selectedStages,
-    selectedAccess,
-    selectedTypes,
-    toggleStage,
-    toggleAccess,
-    toggleType,
-    addPlace,
-  }
+  return { places, loading, error, search, setSearch, addPlace }
 }

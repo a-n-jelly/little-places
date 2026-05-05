@@ -11,6 +11,50 @@ import { getTipsForPlace, submitTip } from '../lib/places'
 import { supabase } from '../lib/supabase'
 import { track } from '../lib/analytics'
 
+function ErrorState({ onRetry }) {
+  return (
+    <div className="mx-5 mt-4 rounded-2xl border border-destructive/15 bg-destructive/5 px-5 py-5 text-center">
+      <p className="text-2xl mb-2">😔</p>
+      <p className="text-sm font-bold text-foreground mb-1">Couldn't load places</p>
+      <p className="text-xs text-muted-foreground mb-4">Something went wrong connecting to the server.</p>
+      <button
+        type="button"
+        onClick={onRetry}
+        className="text-xs font-bold text-destructive underline underline-offset-2 hover:opacity-70 transition-opacity duration-100"
+      >
+        Try again
+      </button>
+    </div>
+  )
+}
+
+function NoResultsState({ onClear }) {
+  return (
+    <div className="mx-5 mt-4 rounded-2xl border border-border/50 bg-muted/40 px-5 py-8 text-center">
+      <p className="text-2xl mb-2">🔍</p>
+      <p className="text-sm font-bold text-foreground mb-1">No spots match your filters</p>
+      <p className="text-xs text-muted-foreground mb-4">Try removing a filter or clearing your search.</p>
+      <button
+        type="button"
+        onClick={onClear}
+        className="text-xs font-bold text-primary underline underline-offset-2 hover:opacity-70 transition-opacity duration-100"
+      >
+        Clear all filters
+      </button>
+    </div>
+  )
+}
+
+function EmptyAreaState() {
+  return (
+    <div className="mx-5 mt-4 rounded-2xl border border-border/50 bg-muted/40 px-5 py-8 text-center">
+      <p className="text-2xl mb-2">🗺️</p>
+      <p className="text-sm font-bold text-foreground mb-1">No spots here yet</p>
+      <p className="text-xs text-muted-foreground">Be the first to add a little place in this area.</p>
+    </div>
+  )
+}
+
 const STAGE_LABELS = {
   baby:      'Baby',
   toddler:   'Toddler',
@@ -211,12 +255,6 @@ export default function BrowseLayout({
   error,
   search,
   setSearch,
-  selectedStages,
-  selectedAccess,
-  selectedTypes,
-  onStageToggle,
-  onAccessToggle,
-  onTypeToggle,
   onSubmitPlace,
   panelMode,
   setPanelMode,
@@ -513,7 +551,6 @@ export default function BrowseLayout({
                 : [...activeChips, chip.id]
               setActiveChips(next)
               track('filter_chip_toggled', { chip: chip.id, active: !activeChips.includes(chip.id) })
-              onAccessToggle?.(chip.id)
             }}
             className={`flex-shrink-0 flex items-center px-3 py-[7px] rounded-full text-xs font-semibold border-2 transition-[color,background-color,border-color,box-shadow,transform] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-white ${
               isActive
@@ -587,43 +624,11 @@ export default function BrowseLayout({
                       </p>
                     </div>
 
-                    {error && (
-                      <div className="mx-5 mt-4 rounded-2xl border border-destructive/15 bg-destructive/5 px-5 py-5 text-center">
-                        <p className="text-2xl mb-2">😔</p>
-                        <p className="text-sm font-bold text-foreground mb-1">Couldn't load places</p>
-                        <p className="text-xs text-muted-foreground mb-4">Something went wrong connecting to the server.</p>
-                        <button
-                          type="button"
-                          onClick={() => window.location.reload()}
-                          className="text-xs font-bold text-destructive underline underline-offset-2 hover:opacity-70 transition-opacity duration-100"
-                        >
-                          Try again
-                        </button>
-                      </div>
-                    )}
-
+                    {error && <ErrorState onRetry={() => window.location.reload()} />}
                     {!loading && !error && displayedPlaces.length === 0 && places.length > 0 && (
-                      <div className="mx-5 mt-4 rounded-2xl border border-border/50 bg-muted/40 px-5 py-8 text-center">
-                        <p className="text-2xl mb-2">🔍</p>
-                        <p className="text-sm font-bold text-foreground mb-1">No spots match your filters</p>
-                        <p className="text-xs text-muted-foreground mb-4">Try removing a filter or clearing your search.</p>
-                        <button
-                          type="button"
-                          onClick={() => { setSearch(''); setActiveChips([]) }}
-                          className="text-xs font-bold text-primary underline underline-offset-2 hover:opacity-70 transition-opacity duration-100"
-                        >
-                          Clear all filters
-                        </button>
-                      </div>
+                      <NoResultsState onClear={() => { setSearch(''); setActiveChips([]) }} />
                     )}
-
-                    {!loading && !error && places.length === 0 && (
-                      <div className="mx-5 mt-4 rounded-2xl border border-border/50 bg-muted/40 px-5 py-8 text-center">
-                        <p className="text-2xl mb-2">🗺️</p>
-                        <p className="text-sm font-bold text-foreground mb-1">No spots here yet</p>
-                        <p className="text-xs text-muted-foreground">Be the first to add a little place in this area.</p>
-                      </div>
-                    )}
+                    {!loading && !error && places.length === 0 && <EmptyAreaState />}
 
                     {sortedPlaces.map(place => (
                       <PlaceListRow
@@ -748,41 +753,11 @@ export default function BrowseLayout({
                 </div>
               )}
               <div className="mobile-bottom-sheet-scroll flex-1 overflow-y-auto overscroll-contain min-h-0">
-                {error && (
-                  <div className="mx-4 mt-4 rounded-2xl border border-destructive/15 bg-destructive/5 px-4 py-5 text-center">
-                    <p className="text-2xl mb-2">😔</p>
-                    <p className="text-sm font-bold text-foreground mb-1">Couldn't load places</p>
-                    <p className="text-xs text-muted-foreground mb-3">Something went wrong connecting to the server.</p>
-                    <button
-                      type="button"
-                      onClick={() => window.location.reload()}
-                      className="text-xs font-bold text-destructive underline underline-offset-2"
-                    >
-                      Try again
-                    </button>
-                  </div>
-                )}
+                {error && <ErrorState onRetry={() => window.location.reload()} />}
                 {!loading && !error && displayedPlaces.length === 0 && places.length > 0 && (
-                  <div className="mx-4 mt-4 rounded-2xl border border-border/50 bg-muted/40 px-4 py-6 text-center">
-                    <p className="text-2xl mb-2">🔍</p>
-                    <p className="text-sm font-bold text-foreground mb-1">No spots match your filters</p>
-                    <p className="text-xs text-muted-foreground mb-3">Try removing a filter or clearing your search.</p>
-                    <button
-                      type="button"
-                      onClick={() => { setSearch(''); setActiveChips([]) }}
-                      className="text-xs font-bold text-primary underline underline-offset-2"
-                    >
-                      Clear all filters
-                    </button>
-                  </div>
+                  <NoResultsState onClear={() => { setSearch(''); setActiveChips([]) }} />
                 )}
-                {!loading && !error && places.length === 0 && (
-                  <div className="mx-4 mt-4 rounded-2xl border border-border/50 bg-muted/40 px-4 py-6 text-center">
-                    <p className="text-2xl mb-2">🗺️</p>
-                    <p className="text-sm font-bold text-foreground mb-1">No spots here yet</p>
-                    <p className="text-xs text-muted-foreground">Be the first to add a little place in this area.</p>
-                  </div>
-                )}
+                {!loading && !error && places.length === 0 && <EmptyAreaState />}
                 {sortedPlaces.map(place => (
                   <PlaceListRow
                     key={place.id}

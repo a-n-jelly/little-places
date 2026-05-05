@@ -6,20 +6,7 @@ import SubmitBottomSheet from './components/SubmitBottomSheet'
 function App() {
   const [panelMode, setPanelMode] = useState('search')
   const [showSubmitForm, setShowSubmitForm] = useState(false)
-  const {
-    places,
-    loading,
-    error,
-    search,
-    setSearch,
-    selectedStages,
-    selectedAccess,
-    selectedTypes,
-    toggleStage,
-    toggleAccess,
-    toggleType,
-    addPlace,
-  } = usePlaces()
+  const { places, loading, error, search, setSearch, addPlace } = usePlaces()
 
   function handleSubmitSuccess(place) {
     addPlace(place)
@@ -35,12 +22,6 @@ function App() {
           error={error}
           search={search}
           setSearch={setSearch}
-          selectedStages={selectedStages}
-          selectedAccess={selectedAccess}
-          selectedTypes={selectedTypes}
-          onStageToggle={toggleStage}
-          onAccessToggle={toggleAccess}
-          onTypeToggle={toggleType}
           onSubmitPlace={() => setShowSubmitForm(true)}
           panelMode={panelMode}
           setPanelMode={setPanelMode}
