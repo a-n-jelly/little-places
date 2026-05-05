@@ -240,10 +240,25 @@
   background-size: 20px 20px !important;
 }
 
-/* Push Mapbox zoom controls above the mobile FAB */
+/* Push Mapbox zoom/geolocate controls above the mobile FAB */
 @media (max-width: 767px) {
   .mobile-map .mapboxgl-ctrl-bottom-right {
     bottom: 210px;
     right: 1rem;
+  }
+}
+
+/* Ask AI textarea — scrollable past max height but no visible scrollbar */
+.ask-textarea {
+  scrollbar-width: none;
+}
+.ask-textarea::-webkit-scrollbar {
+  display: none;
+}
+
+/* Push zoom/geolocate controls up on desktop so they don't overlap the FAB */
+@media (min-width: 768px) {
+  .mapboxgl-ctrl-bottom-right {
+    bottom: 80px !important;
   }
 }
