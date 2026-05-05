@@ -16,7 +16,7 @@ export const AGENT_TOOLS = [
       properties: {
         keyword: {
           type: 'string',
-          description: 'Search term to match against place name, description, or type',
+          description: 'Search term to match against place name, description, address, or type',
         },
         stages: {
           type: 'array',
@@ -40,6 +40,22 @@ export const AGENT_TOOLS = [
         },
       },
       required: [],
+    },
+  },
+  {
+    name: 'get_place_detail',
+    description:
+      'Get full details for a specific place including community tips from parents. ' +
+      'Use this when you want to explain why a place is child-friendly or share what parents say about it.',
+    parameters: {
+      type: 'object',
+      properties: {
+        place_id: {
+          type: 'string',
+          description: 'The UUID of the place to fetch details for',
+        },
+      },
+      required: ['place_id'],
     },
   },
   {
@@ -87,7 +103,7 @@ export async function runAgentTool(name, input) {
 
     if (keyword?.trim()) {
       query = query.or(
-        `name.ilike.%${keyword}%,description.ilike.%${keyword}%,type.ilike.%${keyword}%`
+        `name.ilike.%${keyword}%,description.ilike.%${keyword}%,type.ilike.%${keyword}%,address.ilike.%${keyword}%`
       )
     }
     if (stages.length > 0) query = query.overlaps('stages', stages)
@@ -96,6 +112,25 @@ export async function runAgentTool(name, input) {
     const { data, error } = await query
     if (error) return { error: error.message }
     return { places: data ?? [] }
+  }
+
+  if (name === 'get_place_detail') {
+    const { place_id } = input
+    const [placeRes, tipsRes] = await Promise.all([
+      supabase
+        .from('places')
+        .select('id, name, type, address, description, stages, child_friendly_features')
+        .eq('id', place_id)
+        .single(),
+      supabase
+        .from('tips')
+        .select('tip_text, display_name')
+        .eq('place_id', place_id)
+        .order('created_at', { ascending: false })
+        .limit(10),
+    ])
+    if (placeRes.error) return { error: placeRes.error.message }
+    return { place: placeRes.data, tips: tipsRes.data ?? [] }
   }
 
   if (name === 'get_events') {
@@ -180,6 +215,8 @@ export function useAgentChat() {
     setFoundPlaces([])
 
     try {
+      console.log('[agent] query', trimmed)
+
       const model = genAI.getGenerativeModel({
         model: import.meta.env.VITE_GEMINI_MODEL ?? 'gemini-2.0-flash',
         systemInstruction: SYSTEM_PROMPT,
@@ -189,21 +226,30 @@ export function useAgentChat() {
       const chat = model.startChat()
       let result = await chat.sendMessage(trimmed)
 
-      while (true) {
+      const MAX_ROUNDS = 5
+      let rounds = 0
+
+      while (rounds < MAX_ROUNDS) {
         const functionCalls = result.response.functionCalls()
 
         if (!functionCalls || functionCalls.length === 0) {
-          setResponse(result.response.text())
+          const text = result.response.text()
+          console.log('[agent] response (round %d)', rounds, text)
+          setResponse(text)
           break
         }
 
+        console.log('[agent] round %d — %d tool call(s)', rounds, functionCalls.length)
         const toolResults = await Promise.all(
-          functionCalls.map(async (fc) => ({
-            functionResponse: {
-              name: fc.name,
-              response: await runAgentTool(fc.name, fc.args),
-            },
-          }))
+          functionCalls.map(async (fc) => {
+            console.log('[agent] tool call', fc.name, fc.args)
+            const response = await runAgentTool(fc.name, fc.args)
+            console.log('[agent] tool result', fc.name, response)
+            if (fc.name === 'search_places' && response.places?.length === 0) {
+              response.message = 'No places found matching those criteria. Let the user know and suggest they try broader search terms or a different category.'
+            }
+            return { functionResponse: { name: fc.name, response } }
+          })
         )
 
         const newPlaces = toolResults
@@ -217,6 +263,12 @@ export function useAgentChat() {
         }
 
         result = await chat.sendMessage(toolResults)
+        rounds++
+      }
+
+      if (rounds === MAX_ROUNDS) {
+        console.warn('[agent] hit MAX_ROUNDS (%d) — aborting', MAX_ROUNDS)
+        setError('Something went wrong — please try again.')
       }
     } catch (err) {
       setError(err.message ?? 'Something went wrong')
