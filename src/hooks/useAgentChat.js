@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { supabase } from '../lib/supabase'
+import { track } from '../lib/analytics'
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY)
 
@@ -216,6 +217,7 @@ export function useAgentChat() {
 
     try {
       console.log('[agent] query', trimmed)
+      track('agent_query', { query: trimmed })
 
       const model = genAI.getGenerativeModel({
         model: import.meta.env.VITE_GEMINI_MODEL ?? 'gemini-2.0-flash',
@@ -235,6 +237,7 @@ export function useAgentChat() {
         if (!functionCalls || functionCalls.length === 0) {
           const text = result.response.text()
           console.log('[agent] response (round %d)', rounds, text)
+          track('agent_response', { rounds, result_length: text.length })
           setResponse(text)
           break
         }
@@ -245,6 +248,12 @@ export function useAgentChat() {
             console.log('[agent] tool call', fc.name, fc.args)
             const response = await runAgentTool(fc.name, fc.args)
             console.log('[agent] tool result', fc.name, response)
+            track('agent_tool_call', {
+              tool: fc.name,
+              args: fc.args,
+              result_count: response.places?.length ?? response.events?.length ?? null,
+              zero_results: fc.name === 'search_places' ? response.places?.length === 0 : undefined,
+            })
             if (fc.name === 'search_places' && response.places?.length === 0) {
               response.message = 'No places found matching those criteria. Let the user know and suggest they try broader search terms or a different category.'
             }
@@ -268,9 +277,11 @@ export function useAgentChat() {
 
       if (rounds === MAX_ROUNDS) {
         console.warn('[agent] hit MAX_ROUNDS (%d) — aborting', MAX_ROUNDS)
+        track('agent_error', { reason: 'max_rounds' })
         setError('Something went wrong — please try again.')
       }
     } catch (err) {
+      track('agent_error', { reason: err.message })
       setError(err.message ?? 'Something went wrong')
     } finally {
       setLoading(false)

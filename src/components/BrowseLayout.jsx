@@ -9,6 +9,7 @@ import { useAgentChat } from '../hooks/useAgentChat'
 import { AGENT_SUGGESTIONS } from '../lib/agentSuggestions'
 import { getTipsForPlace, submitTip } from '../lib/places'
 import { supabase } from '../lib/supabase'
+import { track } from '../lib/analytics'
 
 const STAGE_LABELS = {
   baby:      'Baby',
@@ -45,6 +46,7 @@ function AddTipForm({ placeId, placeType, onSubmitted }) {
       supabase.functions.invoke('enrich-place', {
         body: { place_id: placeId, feature_vocab: FEATURE_VOCAB[placeType] ?? [] },
       }).catch(() => {})
+      track('tip_submitted', { place_id: placeId, place_type: placeType })
       onSubmitted()
     } finally {
       setSubmitting(false)
@@ -306,6 +308,7 @@ export default function BrowseLayout({
     setSelectedPlace(place)
     setSnapPoint('130px')
     setPanelMode('search')
+    track('place_selected', { place_id: place.id, place_type: place.type, place_name: place.name })
   }
 
   function handleMapClick(e) {
@@ -503,6 +506,7 @@ export default function BrowseLayout({
                 ? activeChips.filter(c => c !== chip.id)
                 : [...activeChips, chip.id]
               setActiveChips(next)
+              track('filter_chip_toggled', { chip: chip.id, active: !activeChips.includes(chip.id) })
               onAccessToggle?.(chip.id)
             }}
             className={`flex-shrink-0 flex items-center px-3 py-[7px] rounded-full text-xs font-semibold border-2 transition-[color,background-color,border-color,box-shadow,transform] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-white ${
