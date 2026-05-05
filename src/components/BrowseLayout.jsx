@@ -232,6 +232,12 @@ export default function BrowseLayout({
     mq.addEventListener('change', handler)
     return () => mq.removeEventListener('change', handler)
   }, [])
+
+  useEffect(() => {
+    if (!search.trim()) return
+    const t = setTimeout(() => track('browse_search', { query: search.trim() }), 800)
+    return () => clearTimeout(t)
+  }, [search])
   const searchInputDesktopRef = useRef(null)
   const searchInputMobileRef = useRef(null)
   const askInputDesktopRef = useRef(null)
