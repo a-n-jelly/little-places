@@ -18,7 +18,7 @@ React + Vite + Tailwind + Supabase + Anthropic SDK + Mapbox
 
 ## Protected files (no modification without tests)
 
-`PlaceCard.jsx`, `FilterBar.jsx`, `SearchBar.jsx`, `usePlaces.js`, `places.js`, `constants.js`
+`BrowseLayout.jsx`, `FilterBar.jsx`, `SearchBar.jsx`, `usePlaces.js`, `places.js`, `constants.js`, `placeListRow.js`
 
 Run `npm test` before every commit. Never push failing tests.
 
