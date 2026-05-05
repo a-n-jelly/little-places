@@ -129,9 +129,6 @@ T38 | P2 | feature | SEO: landing page + indexable place detail pages
 - Open question: stay on Vite SPA + React Router, or adopt Vite + vite-plugin-ssg, or migrate to a framework (Remix, Next)?
 - Model: Sonnet · Plan: yes (routing is an architectural change)
 
-T05 | P3 | bug | Remove out-of-Seattle data — understand why it's there first
-- Model: Haiku · Plan: no
-
 T15 | P3 | idea | Per-type emoji/icon beyond PLACE_TYPES — revisit when google_types is persisted
 - Model: Haiku · Plan: no
 
