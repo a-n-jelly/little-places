@@ -84,6 +84,13 @@ T02 | P3 | bug | Fix layout reflow shake when resizing across `md` breakpoint
 T08 | P2 | bug | Fix animations — identify which transitions are broken or missing and fix them
 - Model: Sonnet · Plan: no
 
+T40 | P2 | feature | Multi-turn agent conversation
+- Visible: each query starts cold — "show me something closer" or "what about toddlers?" loses all context; clarifying questions impossible without memory
+- Done: chat history persists within a session; agent can refine on follow-up; zero-results case can suggest narrowing/broadening without starting over
+- Constraint: useAgentChat needs to maintain message history across handleSubmit calls; UI needs to show conversation thread not just last response; AgentPanel needs redesign for thread view
+- Blocks: clarifying questions when nothing is found
+- Model: Sonnet · Plan: yes
+
 T09 | P2 | feature | Fix filter/search persistence when navigating via map pin clicks
 - Visible (v1 scope): unclear what map pin click should do beyond opening detail
 - Done (v1 / incremental): tapping a map pin **opens the place in the sidebar detail** (same as list row select); filters and search query unchanged for now — do **not** require clearing search, resetting chips, or list scroll in this ticket yet
@@ -128,9 +135,6 @@ T38 | P2 | feature | SEO: landing page + indexable place detail pages
 - Constraint: current app has no routing — adding React Router (or Vite SSG) is a prerequisite; assess scope before ticketing sub-tasks; don't break existing SPA behaviour; place pages can be CSR initially (Google can execute JS) — SSR/SSG is a later optimisation
 - Open question: stay on Vite SPA + React Router, or adopt Vite + vite-plugin-ssg, or migrate to a framework (Remix, Next)?
 - Model: Sonnet · Plan: yes (routing is an architectural change)
-
-T05 | P3 | bug | Remove out-of-Seattle data — understand why it's there first
-- Model: Haiku · Plan: no
 
 T15 | P3 | idea | Per-type emoji/icon beyond PLACE_TYPES — revisit when google_types is persisted
 - Model: Haiku · Plan: no
