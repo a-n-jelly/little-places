@@ -1,13 +1,15 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { Search, Plus, Star, X, Sparkles, Home as HomeIcon, ArrowLeft, ArrowUp } from 'lucide-react'
+import { Search, Plus, X, Sparkles, Home as HomeIcon, ArrowLeft, ArrowUp } from 'lucide-react'
 import { Drawer } from 'vaul'
 import MapView from './MapView'
-import PlaceCard from './PlaceCard'
-import { FEATURE_FILTER_CHIPS, CAT_CFG, placeTypeIconSurface } from '../lib/constants'
+import { FEATURE_FILTER_CHIPS, CAT_CFG, FEATURE_VOCAB, placeTypeIconSurface } from '../lib/constants'
+import { formatStageSpan, getStandoutFeatureShort } from '../lib/placeListRow'
 import { useAgentChat } from '../hooks/useAgentChat'
 import { AGENT_SUGGESTIONS } from '../lib/agentSuggestions'
 import { getTipsForPlace, submitTip } from '../lib/places'
+import { supabase } from '../lib/supabase'
+import { track } from '../lib/analytics'
 
 const STAGE_LABELS = {
   baby:      'Baby',
@@ -25,18 +27,7 @@ const STAGE_STYLE = {
   tweens:    { background: 'var(--stage-tweens-bg)',    color: 'var(--stage-tweens-text)'    },
 }
 
-function StarRow({ rating }) {
-  return (
-    <div className="flex items-center gap-1">
-      {[1, 2, 3, 4, 5].map(i => (
-        <Star key={i} size={11} className={i <= Math.round(rating) ? 'text-yellow fill-current' : 'text-foreground/10'} />
-      ))}
-      <span className="text-sm font-bold text-foreground ml-1">{rating > 0 ? rating : '—'}</span>
-    </div>
-  )
-}
-
-function AddTipForm({ placeId, onSubmitted }) {
+function AddTipForm({ placeId, placeType, onSubmitted }) {
   const [tipText, setTipText] = useState('')
   const [displayName, setDisplayName] = useState(() => {
     try { return localStorage.getItem('little-places-display-name') ?? '' } catch { return '' }
@@ -52,6 +43,10 @@ function AddTipForm({ placeId, onSubmitted }) {
       if (displayName.trim()) {
         try { localStorage.setItem('little-places-display-name', displayName.trim()) } catch {}
       }
+      supabase.functions.invoke('enrich-place', {
+        body: { place_id: placeId, feature_vocab: FEATURE_VOCAB[placeType] ?? [] },
+      }).catch(() => {})
+      track('tip_submitted', { place_id: placeId, place_type: placeType })
       onSubmitted()
     } finally {
       setSubmitting(false)
@@ -109,7 +104,6 @@ function PlaceDetail({ place, tips = [], onTipAdded }) {
         </div>
       </div>
 
-      {place.rating > 0 && <div className="mb-3"><StarRow rating={place.rating} /></div>}
 
       {place.description && (
         <p className="text-sm text-muted-foreground font-medium leading-relaxed mb-4">{place.description}</p>
@@ -148,7 +142,7 @@ function PlaceDetail({ place, tips = [], onTipAdded }) {
       )}
 
       {showTipForm ? (
-        <AddTipForm placeId={place.id} onSubmitted={handleTipSubmitted} />
+        <AddTipForm placeId={place.id} placeType={place.type} onSubmitted={handleTipSubmitted} />
       ) : (
         <button
           type="button"
@@ -164,15 +158,16 @@ function PlaceDetail({ place, tips = [], onTipAdded }) {
 
 function PlaceListRow({ place, isSelected, onClick }) {
   const cfg = CAT_CFG[place.type] ?? CAT_CFG.Other
-  const accessTags = (place.tags ?? []).filter(tag =>
-    ['accessible', 'stroller', 'sensory', 'elevator', 'wheelchair'].some(k => tag.toLowerCase().includes(k))
-  )
+  const stageSpan = formatStageSpan(place.stages)
+  const standout = getStandoutFeatureShort(place)
+  const sublineType = place.type ?? 'Place'
+  const sublineAddress = place.address ?? ''
 
   return (
     <motion.button
       whileHover={{ x: 2, transition: { type: 'tween', duration: 0.08, ease: 'easeOut' } }}
       onClick={onClick}
-      className={`flex items-center gap-3.5 px-5 py-4 w-full text-left border-b border-border/50 transition-colors duration-100 ease-out ${
+      className={`flex items-center gap-3.5 px-5 py-3.5 w-full text-left border-b border-border/50 transition-colors duration-100 ease-out ${
         isSelected ? 'bg-primary/[0.05] border-l-[3px] border-l-primary pl-[17px]' : 'hover:bg-muted/40'
       }`}
     >
@@ -184,14 +179,25 @@ function PlaceListRow({ place, isSelected, onClick }) {
       </div>
       <div className="flex-1 min-w-0">
         <p className="font-bold text-foreground text-sm truncate">{place.name}</p>
-        <p className="text-xs text-muted-foreground/70 mt-0.5 truncate">{place.address}</p>
-        {accessTags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-1.5">
-            {accessTags.map(tag => (
-              <span key={tag} className="text-[9px] font-black text-sage bg-sage/10 px-1.5 py-0.5 rounded border border-sage/15 uppercase tracking-wide">
-                {tag}
+        <p className="text-xs text-muted-foreground/70 mt-0.5 truncate">
+          <span>{sublineType}</span>
+          {sublineAddress ? <span> · {sublineAddress}</span> : null}
+        </p>
+        {(stageSpan || standout) && (
+          <div className="flex flex-wrap gap-1.5 mt-1.5">
+            {stageSpan && (
+              <span
+                className="text-[9px] font-black px-2 py-0.5 rounded-full"
+                style={{ background: 'var(--btn-secondary-bg)', color: 'var(--btn-secondary-text)' }}
+              >
+                {stageSpan}
               </span>
-            ))}
+            )}
+            {standout && (
+              <span className="text-[9px] font-black text-sage bg-sage/10 px-2 py-0.5 rounded border border-sage/15">
+                {standout}
+              </span>
+            )}
           </div>
         )}
       </div>
@@ -226,6 +232,12 @@ export default function BrowseLayout({
     mq.addEventListener('change', handler)
     return () => mq.removeEventListener('change', handler)
   }, [])
+
+  useEffect(() => {
+    if (!search.trim()) return
+    const t = setTimeout(() => track('browse_search', { query: search.trim() }), 800)
+    return () => clearTimeout(t)
+  }, [search])
   const searchInputDesktopRef = useRef(null)
   const searchInputMobileRef = useRef(null)
   const askInputDesktopRef = useRef(null)
@@ -302,6 +314,7 @@ export default function BrowseLayout({
     setSelectedPlace(place)
     setSnapPoint('130px')
     setPanelMode('search')
+    track('place_selected', { place_id: place.id, place_type: place.type, place_name: place.name })
   }
 
   function handleMapClick(e) {
@@ -499,6 +512,7 @@ export default function BrowseLayout({
                 ? activeChips.filter(c => c !== chip.id)
                 : [...activeChips, chip.id]
               setActiveChips(next)
+              track('filter_chip_toggled', { chip: chip.id, active: !activeChips.includes(chip.id) })
               onAccessToggle?.(chip.id)
             }}
             className={`flex-shrink-0 flex items-center px-3 py-[7px] rounded-full text-xs font-semibold border-2 transition-[color,background-color,border-color,box-shadow,transform] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-white ${
@@ -733,7 +747,7 @@ export default function BrowseLayout({
                   <div className="w-10 h-1 rounded-full bg-border" />
                 </div>
               )}
-              <div className="flex-1 overflow-y-auto overscroll-contain min-h-0">
+              <div className="mobile-bottom-sheet-scroll flex-1 overflow-y-auto overscroll-contain min-h-0">
                 {error && (
                   <div className="mx-4 mt-4 rounded-2xl border border-destructive/15 bg-destructive/5 px-4 py-5 text-center">
                     <p className="text-2xl mb-2">😔</p>
@@ -770,11 +784,11 @@ export default function BrowseLayout({
                   </div>
                 )}
                 {sortedPlaces.map(place => (
-                  <PlaceCard
+                  <PlaceListRow
                     key={place.id}
                     place={place}
-                    onClick={() => handleSelectPlace(place)}
                     isSelected={selectedPlace?.id === place.id}
+                    onClick={() => handleSelectPlace(place)}
                   />
                 ))}
               </div>

@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { submitPlace, submitTip } from '../lib/places'
 import { STAGES, FEATURE_VOCAB, PLACE_TYPES } from '../lib/constants'
 import { supabase } from '../lib/supabase'
+import { track } from '../lib/analytics'
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN
 const SEATTLE_PROXIMITY = '-122.3321,47.6062'
@@ -158,6 +159,7 @@ export default function SubmitPlaceForm({ onSuccess, onCancel }) {
       setForm({ ...EMPTY_FORM, display_name: display_name.trim() })
       setVenueQuery('')
       setVenueSelected(false)
+      track('place_submitted', { place_id: place.id, place_type: placeData.type })
       onSuccess?.(place)
     } catch (err) {
       setError(err.message)

@@ -256,6 +256,14 @@
   display: none;
 }
 
+/* Mobile bottom sheet (Vaul drawer) — scroll without visible scrollbar */
+.mobile-bottom-sheet-scroll {
+  scrollbar-width: none;
+}
+.mobile-bottom-sheet-scroll::-webkit-scrollbar {
+  display: none;
+}
+
 /* Push zoom/geolocate controls up on desktop so they don't overlap the FAB */
 @media (min-width: 768px) {
   .mapboxgl-ctrl-bottom-right {
